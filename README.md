@@ -5,7 +5,7 @@
 
 
 #### 🛠Used Stacks
-<img src="https://img.shields.io/badge/Spring Boot-6DB33F?style=flat-square&logo=Spring Boot&logoColor=white"/>&nbsp;<img src="https://img.shields.io/badge/IntelliJ IDEA-000000?style=flat-square&logo=IntelliJ IDEA&logoColor=white"/>&nbsp;<img src="https://img.shields.io/badge/Thymeleaf-#005F0F?style=flat-square&logo=Thymeleaf&logoColor=#005F0F"/>&nbsp;
+<img src="https://img.shields.io/badge/Spring Boot-6DB33F?style=flat-square&logo=Spring Boot&logoColor=white"/>&nbsp;<img src="https://img.shields.io/badge/IntelliJ IDEA-000000?style=flat-square&logo=IntelliJ IDEA&logoColor=white"/>&nbsp;<img src="https://img.shields.io/badge/Thymeleaf-005F0F?style=flat-square&logo=Thymeleaf&logoColor=005F0F"/>&nbsp;<img src="https://img.shields.io/badge/Java-007396?style=flat-square&logo=Java&logoColor=white"/>&nbsp;<img src="https://img.shields.io/badge/SpringDataJPA-007396?style=flat-square&logo=SpringDataJPA&logoColor=6DB33F"/>&nbsp;
 
 
 ### 📏 Code Convention
@@ -54,6 +54,7 @@
 
 #### 🛠 Development Environment
 <p align="left">
-<img src ="https://img.shields.io/badge/Swift-5.0-ff69b4">
-<img src ="https://img.shields.io/badge/Xcode-13.3-blue">
-<img src ="https://img.shields.io/badge/iOS-15.0-blue">
+<img src ="https://img.shields.io/badge/Thymeleaf-5.0-005F0F">
+<img src ="https://img.shields.io/badge/SpringBoot-13.3-6DB33F">
+<img src ="https://img.shields.io/badge/SpringDataJPA-15.0-6DB33F">
+<img src ="https://img.shields.io/badge/Java-17.0-white">
