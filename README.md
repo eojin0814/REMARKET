@@ -1,15 +1,15 @@
-### REMARKET
+# REMARKET
 소프트웨어 시스템 개발 2팀
 
-### 프로젝트 개요
+## 프로젝트 개요
 
 
-#### 🛠Used Stacks
+### 🛠Used Stacks
 <img src="https://img.shields.io/badge/Spring Boot-6DB33F?style=flat-square&logo=Spring Boot&logoColor=white"/>&nbsp;<img src="https://img.shields.io/badge/IntelliJ IDEA-000000?style=flat-square&logo=IntelliJ IDEA&logoColor=white"/>&nbsp;<img src="https://img.shields.io/badge/Thymeleaf-005F0F?style=flat-square&logo=Thymeleaf&logoColor=005F0F"/>&nbsp;<img src="https://img.shields.io/badge/Java-007396?style=flat-square&logo=Java&logoColor=white"/>&nbsp;<img src="https://img.shields.io/badge/SpringDataJPA-007396?style=flat-square&logo=SpringDataJPA&logoColor=6DB33F"/>&nbsp;
 
 
-### 📏 Code Convention
-[https://naver.github.io/hackday-conventions-java/](NAVER 코드 컨벤션) 
+### 💻 Code Convention
+[NAVER 코드 컨벤션](https://naver.github.io/hackday-conventions-java/) 
 
 
 ### ✉️ Commit Convention
@@ -30,7 +30,7 @@
 | [REFACTOR] | 전면 수정이 있을 때 사용 |
 | [TEST] | 테스트 코드 추가 시 사용 |
 
-### Git Working Process
+### 💡Git Working Process
 1. issue를 등록한다.
 2. 깃 컨벤션에 맞게 Branch를 생성한다.
 3. Add - Commit - Push - Pull Request 의 과정을 거친다.
