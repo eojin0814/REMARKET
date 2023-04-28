@@ -6,12 +6,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/thymeleaf")
+@RequestMapping("/")
 public class TymeleafExController {
 
-    @GetMapping(value = "/hi")
+    @GetMapping()
     public String typeleafExExample(Model model) {
-        model.addAttribute("say", "Hello");
         return "layout/default";
     }
 }
