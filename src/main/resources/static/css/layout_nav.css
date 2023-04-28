@@ -1,0 +1,13 @@
+@charset "UTF-8";
+
+#logo {
+	font-size : 32px;
+	color : #91A77F;
+}
+
+li {
+	font-size : 16px;
+}
+ a:link { color: black; text-decoration: none;}
+ a:visited { color: black; text-decoration: none;}
+ a:hover { color: #91A77F; text-decoration: none;}
