@@ -4,11 +4,13 @@ import com.softwareapplication.remarket.dto.UserDto;
 
 public interface UserService {
 
-    public Long saveUser(UserDto.SaveRequest userRequest);
+    public Long saveUser(UserDto.Request userRequest);
 
-    public void updateUser(Long id, UserDto.UpdateRequest updateRequest);
+    public void updateUser(Long id, UserDto.Request updateRequest);
 
     public void deleteUser(Long id);
 
-    public UserDto.getUserResponse getUserById(Long id);
+    public UserDto.Info getUserByUserId(String email, String password);
+
+    public int checkEmail(String email);
 }
