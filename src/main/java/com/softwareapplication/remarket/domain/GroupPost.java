@@ -40,6 +40,6 @@ public class GroupPost{
 
     private String  image; //이미지 첨부
 
-    @Column(name = "user_id") //fk 공동구매 작성자(user_id)
+    @Column(name = "user_id", nullable = false) //fk 공동구매 작성자(user_id)
     private Long userId;
 }
