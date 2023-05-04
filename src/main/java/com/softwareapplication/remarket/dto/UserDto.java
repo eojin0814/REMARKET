@@ -37,6 +37,7 @@ public class UserDto {
         private Long userId;
 
         @Email
+        @NotBlank(message = "이메일은 필수로 입력해주세요")
         private String email;
 
         @Size(min=5,message="비밀번호는 5자 이상이어야 합니다")
@@ -125,7 +126,7 @@ public class UserDto {
     @AllArgsConstructor
     @Data
     public static class LoginRequest{
-        private String userId;
+        private String email;
         private String password;
     }
 }

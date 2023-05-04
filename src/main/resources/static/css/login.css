@@ -1,0 +1,8 @@
+@charset "UTF-8";
+input{
+	max-width: 100%;
+	border:none;
+	outline: solid 1px;
+	width:260px;
+	height:30px;
+}
