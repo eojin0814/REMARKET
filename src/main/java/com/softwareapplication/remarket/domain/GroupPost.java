@@ -11,9 +11,10 @@ import java.util.Date;
 @Getter @Setter
 @DynamicInsert
 @Entity
+@Table(name = "GroupPost")
 @NoArgsConstructor
 @AllArgsConstructor
-public class Group extends BaseEntity {
+public class GroupPost{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "group_id")
@@ -32,10 +33,10 @@ public class Group extends BaseEntity {
     private String content; //기타사항
 
     @Column(name="num_people", nullable = false)
-    private Integer numPeople; //목표 인원수
+    private int numPeople; //목표 인원수
 
     @Column(nullable = false)
-    private Integer price; //물품 1개당 가격
+    private int price; //물품 1개당 가격
 
     private String  image; //이미지 첨부
 
