@@ -1,29 +1,32 @@
 package com.softwareapplication.remarket.controller;
 
+import com.softwareapplication.remarket.domain.User;
 import com.softwareapplication.remarket.dto.UserDto;
 import com.softwareapplication.remarket.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @RestController
 @RequestMapping("user")
 @RequiredArgsConstructor
 public class UserController {
+
     private final UserService userService;
 
     @GetMapping("/signup")
     public ModelAndView signUp() {
         ModelAndView mav = new ModelAndView("content/user/user_signup");
         mav.addObject("userReq", new UserDto.Request());
-
         return mav;
     }
 
@@ -53,7 +56,7 @@ public class UserController {
         out.println("<script>alert('회원가입 되었습니다.'); location.replace('/user/login');</script>");
         out.flush();
         userService.saveUser(req);
-        return new ModelAndView("redirect: /user/login");
+        return new ModelAndView("redirect:/");
     }
 
     @PostMapping("/checkEmail")
@@ -79,5 +82,64 @@ public class UserController {
         phone1.add("018");
         phone1.add("019");
         return phone1;
+    }
+
+    @GetMapping("/login")
+    public ModelAndView loginPage(Model model) {
+        ModelAndView mav = new ModelAndView("content/user/user_login");
+        mav.addObject("loginRequest", new UserDto.LoginRequest());
+        return mav;
+    }
+
+    @PostMapping("/login")
+    public ModelAndView login(@ModelAttribute UserDto.LoginRequest loginRequest, BindingResult bindingResult,
+                              HttpServletRequest httpServletRequest) {
+        User user = userService.login(loginRequest);
+
+        // 로그인 아이디나 비밀번호가 틀린 경우 global error return
+        if(user == null) {
+            bindingResult.reject("loginFail", "로그인 아이디 또는 비밀번호가 틀렸습니다.");
+        }
+
+        if(bindingResult.hasErrors()) {
+            return new ModelAndView("content/user/user_login");
+        }
+
+        // 로그인 성공 => 세션 생성
+        // 세션을 생성하기 전에 기존의 세션 파기
+        httpServletRequest.getSession().invalidate();
+        HttpSession session = httpServletRequest.getSession(true);  // Session이 없으면 생성
+        // 세션에 userId를 넣어줌
+        session.setAttribute("email", user.getEmail());
+        session.setMaxInactiveInterval(1800); // Session이 30분동안 유지
+
+        sessionList.put(session.getId(), session);
+
+        return new ModelAndView("redirect:/");
+    }
+
+    @GetMapping("/logout")
+    public ModelAndView logout(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);  // Session이 없으면 null return
+        if(session != null) {
+            sessionList.remove(session.getId());
+            session.invalidate();
+        }
+        return new ModelAndView("redirect:/");
+    }
+
+    // 세션 리스트 확인용 코드
+    public static Hashtable sessionList = new Hashtable();
+
+    @GetMapping("/session-list")
+    @ResponseBody
+    public Map<String, String> sessionList() {
+        Enumeration elements = sessionList.elements();
+        Map<String, String> lists = new HashMap<>();
+        while(elements.hasMoreElements()) {
+            HttpSession session = (HttpSession)elements.nextElement();
+            lists.put(session.getId(), String.valueOf(session.getAttribute("userId")));
+        }
+        return lists;
     }
 }

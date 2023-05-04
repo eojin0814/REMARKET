@@ -2,23 +2,27 @@
 #div-thumbnail{
 	width : 30%;
 }
-	
+
 #div-thumbnail img{
 	max-width: 100%;
-    height: auto;
+	height: auto;
 }
+
 svg{
 	margin-top:10px;
 }
+
 input{
 	border:none;
 	outline:#DFDFDF solid 1px;
 	width:260px;
 	height:30px;
 }
+
 #info{
 	margin-left:50px;
 }
+
 #checkEmailBtn {
 	width:94px;
 	height:30px;
@@ -31,43 +35,51 @@ input{
 #tel {
 	width:100px;
 }
+
 .btn-primary{
 	position:relative;
 	height:20px;
 	padding: 10px;
 }
+
 .btn-primary p{
 	position: absolute;
-  	top: 50%;
-  	left: 50%;
-  	transform: translate(-50%, -50%);
-  	margin: 0;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	margin: 0;
 }
+
 #dropdownMenuLink{
 	background-color : white;
 	border: none;
 	color : black;
 }
+
 #submit, #quit{
 	width:150px;
 	border-radius: 10px;
 }
+
 #submit{
-	background-color : #91A77F;
+	background-color : blanchedalmond;
 	color : white;
 	border: none;
 }
+
 #submit:hover,#confirmbtn:hover,#checkEmailBtn:hover {
 	color : white;
 	background-color : #68785B;
 	transition-duration: 0.3s;
 	text-align: center;
 }
+
 #quit{
 	background-color : white;
 	color : black;
 	border:1px solid #91A77F;
 }
+
 #quit:hover{
 	color : white;
 	background-color : #91A77F;

@@ -54,6 +54,33 @@ public class UserServiceImpl implements UserService{
         return 0;
     }
 
+    @Override
+    public User getLoginUserByEmail(String email) {
+        if(email == null) return null;
+        return userRepository.findUserByEmail(email);
+    }
+
+    /**
+     *  로그인 기능
+     *  화면에서 LoginRequest(email, password)을 입력받아 email, password가 일치하면 User return
+     *  email이 존재하지 않거나 password가 일치하지 않으면 null return
+     */
+    @Override
+    public User login(UserDto.LoginRequest req) {
+        User user = userRepository.findUserByEmail(req.getEmail());
+
+        // email과 일치하는 User가 없으면 null return
+        if (user == null) {
+            return null;
+        }
+
+        // 찾아온 User의 password와 입력된 password가 다르면 null return
+        if (!user.getPassword().equals(req.getPassword())) {
+            return null;
+        }
+        return user;
+    }
+
     @Transactional(readOnly = true)
     public UserDto.Response getUserInfo(Long userId) {
         User userEntity = userRepository.findById(userId).orElseThrow();
