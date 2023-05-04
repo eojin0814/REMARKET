@@ -1,16 +1,21 @@
 package com.softwareapplication.remarket.service;
 
+import com.softwareapplication.remarket.domain.User;
 import com.softwareapplication.remarket.dto.UserDto;
 
 public interface UserService {
 
-    public Long saveUser(UserDto.Request userRequest);
+    Long saveUser(UserDto.Request userRequest);
 
-    public void updateUser(Long id, UserDto.Request updateRequest);
+    void updateUser(Long id, UserDto.Request updateRequest);
 
-    public void deleteUser(Long id);
+    void deleteUser(Long id);
 
-    public UserDto.Info getUserByUserId(String email, String password);
+    UserDto.Info getUserByUserId(String email, String password);
 
-    public int checkEmail(String email);
+    int checkEmail(String email);
+
+    User getLoginUserByEmail(String email);
+
+    User login(UserDto.LoginRequest req);
 }
