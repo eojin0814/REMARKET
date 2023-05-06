@@ -23,6 +23,22 @@ public class GroupPostService {
     }
 
     @Transactional
+    public GroupPostDto findPost(Long id){
+        GroupPost groupPost = groupPostRepository.findGroupPostById(id);
+        return groupPost.toDto();
+    }
+
+    @Transactional
+    public Long updatePost(GroupPostDto groupPostDto){
+        return groupPostRepository.save(groupPostDto.toEntity()).getId();
+    }
+
+    @Transactional
+    public void deletePost(Long id){
+        groupPostRepository.deleteById(id);
+    }
+
+    @Transactional
     public List<GroupPostDto> getGroupPostList(){
         List<GroupPost> groupPostList = groupPostRepository.findAll();
         List<GroupPostDto> groupPostDtoList = new ArrayList<>();
