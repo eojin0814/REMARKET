@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/")
 public class TymeleafExController {
-
-    @GetMapping()
-    public String typeleafExExample(Model model) {
-        return "layout/default";
-    }
+//
+//    @GetMapping()
+//    public String typeleafExExample(Model model) {
+//        return "layout/default";
+//    }
 }
