@@ -1,9 +1,10 @@
 package com.softwareapplication.remarket.dto;
 
 import com.softwareapplication.remarket.domain.GroupPost;
+import jakarta.validation.constraints.*;
 import lombok.*;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
@@ -11,13 +12,29 @@ import java.util.Date;
 @Getter
 public class GroupPostDto {
     private Long id;
+
+    @NotBlank
     private String title;
-    private Date dueDate;
+
+    @FutureOrPresent
+    private LocalDateTime dueDate;
+
+    @NotBlank
     private String product;
+
     private String content;
+
+    @NotNull
+    @Positive
     private int numPeople;
+
+    @NotNull
+    @Positive
     private int price;
+
     private String image;
+
+    @NotNull
     private Long userId;
 
     public GroupPost toEntity(){
@@ -36,7 +53,7 @@ public class GroupPostDto {
     }
 
     @Builder
-    public GroupPostDto(Long id, String title, Date dueDate, String product, String content, int numPeople, int price, String image, Long userId){
+    public GroupPostDto(Long id, String title, LocalDateTime dueDate, String product, String content, int numPeople, int price, String image, Long userId){
         this.id = id;
         this.title = title;
         this.dueDate = dueDate;
