@@ -10,4 +10,6 @@ import java.util.List;
 public interface GroupPostRepository extends JpaRepository<GroupPost, Long> {
 
     List<GroupPost> findAll();
+
+    GroupPost findGroupPostById(Long id);
 }
