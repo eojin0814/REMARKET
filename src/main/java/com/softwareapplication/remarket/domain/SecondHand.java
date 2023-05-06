@@ -5,6 +5,7 @@ import lombok.*;
 
 import java.util.Date;
 
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -35,6 +36,12 @@ public class SecondHand {
     @ManyToOne
     @JoinColumn(name = "user_Id")
     private User user;
+
+    public void update(String title, String image, String content){
+        this.title=title;
+        this.image=image;
+        this.content=content;
+    }
 
 }
 //ㄷㅏ음주까지 엔티티 서비스 컨트롤러 할 수 있는 곳까지, 엔티티 다해오기
