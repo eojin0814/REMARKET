@@ -1,9 +1,11 @@
 package com.softwareapplication.remarket.domain;
 
+import com.softwareapplication.remarket.dto.GroupPostDto;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 
@@ -24,8 +26,7 @@ public class GroupPost{
     private String title; //게시글 제목
 
     @Column(name="due_date", nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date dueDate; //공동구매 마감일
+    private LocalDateTime dueDate; //공동구매 마감일
 
     @Column(nullable = false)
     private String product; //물품명
@@ -42,4 +43,21 @@ public class GroupPost{
 
     @Column(name = "user_id", nullable = false) //fk 공동구매 작성자(user_id)
     private Long userId;
+
+    public GroupPostDto toDto(){
+        GroupPostDto build = GroupPostDto.builder()
+                .id(id)
+                .title(title)
+                .dueDate(dueDate)
+                .product(product)
+                .content(content)
+                .numPeople(numPeople)
+                .price(price)
+                .image(image)
+                .userId(userId)
+                .build();
+        return build;
+    }
+
+
 }
