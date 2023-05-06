@@ -17,5 +17,7 @@ public interface UserService {
 
     User getLoginUserByEmail(String email);
 
+    UserDto.Info getUserByUserId(Long userId);
+
     User login(UserDto.LoginRequest req);
 }

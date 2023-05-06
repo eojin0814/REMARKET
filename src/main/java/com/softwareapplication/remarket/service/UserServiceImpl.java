@@ -60,6 +60,13 @@ public class UserServiceImpl implements UserService{
         return userRepository.findUserByEmail(email);
     }
 
+    @Override //detailGroupPost 기능을 위해 추가
+    public UserDto.Info getUserByUserId(Long userId) {
+        User user = userRepository.findByUserId(userId);
+        return new UserDto.Info(user.getUserId(), user.getEmail(), user.getPassword(),
+                user.getName(), user.getPhone(), user.getAddress(), user.getImageUrl());
+    }
+
     /**
      *  로그인 기능
      *  화면에서 LoginRequest(email, password)을 입력받아 email, password가 일치하면 User return
