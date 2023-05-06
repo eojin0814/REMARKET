@@ -39,10 +39,24 @@
 </head>
 <body>
     <div layout:fragment="content" class="content">
-        <h1 style = "text-align: center">공동구매 게시판</h1>
-        <div>
+        <h1>공동구매 게시판</h1>
+        <div style="margin-left: 20px">
             <a th:href="@{/group/create}" class="btn btn-primary" role="button">작성하기</a>
         </div>
+        <th:block th:each ="groupPost:${gList}">
+            <div style=" display:inline-block; margin-left: 20px">
+                <div class = "card" style = "width: 18rem;">
+                    <th:block th:if="${groupPost.image == null}" >
+                        <img src="/image/curby.png" class="card-img-top" >
+                    </th:block><br>
+                    <div class ="card-body">
+                        제목:<a th:href="@{/group/detail(id=${groupPost.id})}"><h3 th:text ="${groupPost.title}"></h3></a>
+                    </div>
+                </div>
+            </div>
+        </th:block>
+        <br>
+
     </div>
 </body>
 </html>
