@@ -18,7 +18,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long userId;
 
-    @Column(unique = true, nullable = false, length = 20)
+    @Column(unique = true, nullable = false, length = 40)
     private String email;
 
     @Column(nullable = false, length = 16)
@@ -33,7 +33,9 @@ public class User {
     @Column(length = 50)
     private String address;
 
-    private String imageUrl;
+    @OneToOne
+    @JoinColumn(name="img_id")
+    private Image image;
 
     public boolean matchPassword(String newPassword) {
         return newPassword.equals(password);
@@ -45,8 +47,8 @@ public class User {
         this.phone = phone;
         this.address = address;
     }
-    public void updateProfileImage(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void updateProfileImage(Image image) {
+        this.image = image;
     }
 
     public void updatePassword(String password) {
