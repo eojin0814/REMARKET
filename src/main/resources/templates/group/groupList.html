@@ -2,14 +2,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout/default}">
+      layout:decorate="~{layout/default2}">
 <th:block layout:fragment="head">
-    <title>로그인</title>
+    <title>공동구매 게시판</title>
     <meta charset="utf-8">
 
     <!-- css -->
     <link th:href="@{/css/layout_content.css}" rel="stylesheet"/>
-    <link th:href="@{/css/login.css}" rel="stylesheet"/>
 
     <!-- Bootstrap CSS -->
     <link
@@ -34,42 +33,30 @@
     <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
     <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.12.4.min.js"></script>
 </th:block>
+<head>
+    <meta charset="UTF-8">
+    <title>공동구매 게시판</title>
+</head>
 <body>
-<div layout:fragment="content" class="content">
-    <div class="container w-75">
-        <form th:method="post" th:action="@{/user/login}" th:object="${loginRequest}">
-            <div class="row pt-5">
-                <div class="col bg-white text-center">
-                    <b>로그인</b>
-                </div>
-            </div>
-            <hr>
-            <div class="row">
-                <div class="col bg-white text-center" id="info">
-                    <div>
-                        <label th:for="email">이메일 : </label>
-                        <input type="text" id="email" th:field="*{email}"/>
-                        <span class='text-danger' th:errors="*{email}"></span>
-                    </div>
-                    <div>
-                        <label th:for="password">비밀번호 : </label>
-                        <input type="password" id="password" th:field="*{password}">
-                        <span class='text-danger' th:errors="*{password}"></span>
+    <div layout:fragment="content" class="content">
+        <h1>공동구매 게시판</h1>
+        <div style="margin-left: 20px">
+            <a th:href="@{/group/create}" class="btn btn-primary" role="button">작성하기</a>
+        </div>
+        <th:block th:each ="groupPost:${gList}">
+            <div style=" display:inline-block; margin-left: 20px">
+                <div class = "card" style = "width: 18rem;">
+                    <th:block th:if="${groupPost.image == null}" >
+                        <img src="/image/curby.png" class="card-img-top" >
+                    </th:block><br>
+                    <div class ="card-body">
+                        제목:<a th:href="@{/group/detail(id=${groupPost.id})}"><h3 th:text ="${groupPost.title}"></h3></a>
                     </div>
                 </div>
             </div>
-            <hr>
-            <div class="d-flex justify-content-center">
-                <div class="row">
-                        <button class="btn btn-warning" type="submit" value="submit" id="submit">로그인</button>
-                        &nbsp;
-                        <button class="btn btn-warning" id="signup" type="button"
-                                onClick="location.href='/user/signup'">회원가입</button>
-                </div>
-            </div>
-        </form>
+        </th:block>
         <br>
+
     </div>
-</div>
 </body>
 </html>

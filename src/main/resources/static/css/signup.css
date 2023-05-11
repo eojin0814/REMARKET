@@ -2,10 +2,10 @@
 #div-thumbnail{
 	width : 30%;
 }
-	
+
 #div-thumbnail img{
 	max-width: 100%;
-    height: auto;
+	height: auto;
 }
 
 svg{
@@ -44,10 +44,10 @@ input{
 
 .btn-primary p{
 	position: absolute;
-  	top: 50%;
-  	left: 50%;
-  	transform: translate(-50%, -50%);
-  	margin: 0;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	margin: 0;
 }
 
 #dropdownMenuLink{

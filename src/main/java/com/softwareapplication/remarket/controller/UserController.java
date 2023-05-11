@@ -101,7 +101,7 @@ public class UserController {
 
     @PostMapping("/login")
     public ModelAndView login(@ModelAttribute UserDto.LoginRequest loginRequest, BindingResult bindingResult,
-                        HttpServletRequest httpServletRequest) {
+                              HttpServletRequest httpServletRequest) {
         User user = userService.login(loginRequest);
 
         // 로그인 아이디나 비밀번호가 틀린 경우 global error return
