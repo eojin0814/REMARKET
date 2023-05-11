@@ -64,7 +64,7 @@ public class UserServiceImpl implements UserService{
     public UserDto.Info getUserByUserId(Long userId) {
         User user = userRepository.findByUserId(userId);
         return new UserDto.Info(user.getUserId(), user.getEmail(), user.getPassword(),
-                user.getName(), user.getPhone(), user.getAddress(), user.getImageUrl());
+                user.getName(), user.getPhone(), user.getAddress(), user.getImage());
     }
 
     /**
