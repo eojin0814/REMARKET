@@ -45,7 +45,7 @@ public class UserServiceImpl implements UserService{
     public UserDto.Info getUserByUserId(String email, String password) {
         User user = userRepository.findUserByEmailAndPassword(email, password);
         return new UserDto.Info(user.getUserId(), user.getEmail(), user.getPassword(),
-                user.getName(), user.getPhone(), user.getAddress(), user.getImageUrl());
+                user.getName(), user.getPhone(), user.getAddress(), user.getImage());
     }
 
     @Override
@@ -60,11 +60,6 @@ public class UserServiceImpl implements UserService{
         return userRepository.findUserByEmail(email);
     }
 
-    /**
-     *  로그인 기능
-     *  화면에서 LoginRequest(email, password)을 입력받아 email, password가 일치하면 User return
-     *  email이 존재하지 않거나 password가 일치하지 않으면 null return
-     */
     @Override
     public User login(UserDto.LoginRequest req) {
         User user = userRepository.findUserByEmail(req.getEmail());
