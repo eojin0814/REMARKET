@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Builder
 @Getter
 @Setter
@@ -36,6 +39,9 @@ public class User {
     @OneToOne
     @JoinColumn(name="img_id")
     private Image image;
+
+    @OneToMany(mappedBy = "author", cascade = {CascadeType.ALL}, fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<SharePost> shareList = new ArrayList<SharePost>();
 
     public boolean matchPassword(String newPassword) {
         return newPassword.equals(password);
