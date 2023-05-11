@@ -23,6 +23,6 @@ public class MainController {
         if(loginUser != null) {
             model.addAttribute("email", loginUser.getEmail());
         }
-        return "default_main";
+        return "layout/default_main";
     }
 }
