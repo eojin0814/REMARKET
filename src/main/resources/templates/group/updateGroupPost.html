@@ -80,7 +80,9 @@
     <h1 style = "text-align: center">공동구매 게시글 수정</h1>
     <div class="container w-75">
         <form id = "form" th:action = "@{/group/update}" th:object = "${groupPostDto}" th:method="post">
+            <input type="hidden" id = "id" th:field="*{id}">
             <input type="hidden" id = "userId" th:field="*{userId}">
+            <input type ="hidden" id = "updatedAt" th:field = "*{updated}">
             <div class="form-group">
                 <label for="title">제목</label>
                 <input type = "text" id = "title" th:field="*{title}" class="form-control">
