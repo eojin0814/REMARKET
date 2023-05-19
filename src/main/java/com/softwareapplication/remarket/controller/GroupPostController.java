@@ -15,6 +15,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @Controller
@@ -25,9 +27,15 @@ public class GroupPostController {
     private final GroupPostService groupPostService;
     private final UserService userService;
     @GetMapping("/groupList")
-    public ModelAndView groupList() {
+    public ModelAndView groupList(@SessionAttribute(name = "email", required = false) String email) {
+        User loginUser = userService.getLoginUserByEmail(email);
+
         ModelAndView mav = new ModelAndView("group/groupList");
         mav.addObject("gList", groupPostService.getGroupPostList());
+
+        if(loginUser != null) {
+            mav.addObject("email", loginUser.getEmail());
+        }
         return mav;
     }
 
@@ -35,9 +43,14 @@ public class GroupPostController {
     public String createPost(HttpServletRequest httpServletRequest, Model model, GroupPostDto groupPostDto){
         HttpSession session = httpServletRequest.getSession();
         String email = (String)session.getAttribute("email");
-        User user = userService.getLoginUserByEmail(email);
-        groupPostDto.setUserId(user.getUserId());
+        User loginUser = userService.getLoginUserByEmail(email);
+
+        groupPostDto.setUserId(loginUser.getUserId());
         model.addAttribute("groupPostDto", groupPostDto);
+
+        if(loginUser != null) {
+            model.addAttribute("email", loginUser.getEmail());
+        }
         return "group/createGroupPost";
     }
 
@@ -54,24 +67,32 @@ public class GroupPostController {
     public ModelAndView detailPost(@RequestParam("id")Long id, HttpServletRequest httpServletRequest){
         GroupPostDto groupPostDto = groupPostService.findPost(id);
         UserDto.Info postUser = userService.getUserByUserId(groupPostDto.getUserId());
-
         HttpSession session = httpServletRequest.getSession();
         String email = (String)session.getAttribute("email");
-        User currentUser = userService.getLoginUserByEmail(email);
+        User loginUser = userService.getLoginUserByEmail(email);
 
         ModelAndView mav = new ModelAndView("group/detailGroupPost");
         mav.addObject("groupPostDto", groupPostDto);
         mav.addObject("postUser", postUser);
-        mav.addObject("currentUser", currentUser);
+        mav.addObject("loginUser", loginUser);
+
+        if(loginUser != null) {
+            mav.addObject("email", loginUser.getEmail());
+        }
 
         return mav;
     }
 
     @GetMapping("/update")
-    public ModelAndView updatePost(@RequestParam("id")Long id){
+    public ModelAndView updatePost(@SessionAttribute(name = "email", required = false) String email, @RequestParam("id")Long id){
         ModelAndView mav = new ModelAndView("/group/updateGroupPost");
+        User loginUser = userService.getLoginUserByEmail(email);
+
         GroupPostDto groupPostDto = groupPostService.findPost(id);
         mav.addObject("groupPostDto", groupPostDto);
+        if(loginUser != null) {
+            mav.addObject("email", loginUser.getEmail());
+        }
         return mav;
     }
 
