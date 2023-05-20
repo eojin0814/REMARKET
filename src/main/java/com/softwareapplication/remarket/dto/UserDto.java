@@ -125,6 +125,7 @@ public class UserDto {
     @NoArgsConstructor
     @AllArgsConstructor
     @Data
+
     public static class LoginRequest{
         private String email;
         private String password;
