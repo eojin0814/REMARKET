@@ -39,18 +39,27 @@
 </head>
 <body>
 <div layout:fragment="content" class="content">
+  <br><br>
 <table style = "margin-left:auto; margin-right: auto;">
   <tr>
     <td>
       <th:block th:if="${groupPostDto.image == null}" >
         <img src="/image/curby.png" width="500px" height="300px">
       </th:block>
-      &nbsp;&nbsp;
+      <br>
+      <th:block>
+        생성시간: <h6 th:text = "${#temporals.format(groupPostDto.created,'yyyy-dd-MM HH:mm')}"></h6>
+      </th:block>
+      <th:block>
+        수정시간: <h6 th:text = "${#temporals.format(groupPostDto.updated,'yyyy-dd-MM HH:mm')}"></h6>
+      </th:block>
     </td>
+    <td>&nbsp;&nbsp;</td>
     <td>
       <table class ="table table-borderless">
         <thead>
           <tr th:text = "${postUser.name}"></tr>
+
           <tr><h3 th:text="${groupPostDto.title}"></h3></tr>
         </thead>
         <tbody>
@@ -77,7 +86,7 @@
           </tr>
           <tr>
             <td>희망 종료 예정일</td>
-            <td th:text = "${groupPostDto.dueDate}"></td>
+            <td th:text = "${#temporals.format(groupPostDto.dueDate,'yyyy-dd-MM HH:mm')}"></td>
           </tr>
           <tr>
             <td>현재 모집율</td>
@@ -85,12 +94,12 @@
           </tr>
         </tbody>
       </table>
-      <th:block th:if = "${postUser.userId} == ${currentUser.userId}">
+      <th:block th:if = "${postUser.userId} == ${loginUser.userId}">
         <a th:href="@{/}" class="btn btn-info" role="button">신청 목록보기</a>
         <a th:href="@{/group/update(id=${groupPostDto.id})}" class="btn btn-primary" role="button">글 수정하기</a>
         <a th:href="@{/group/delete(id=${groupPostDto.id})}" class="btn btn-danger" role="button">글 삭제하기</a>
       </th:block>
-      <th:block th:unless = "${postUser.userId} == ${currentUser.userId}">
+      <th:block th:unless = "${postUser.userId} == ${loginUser.userId}">
         <a th:href="@{/}" class="btn btn-primary" role="button">신청하기</a>
       </th:block>
     </td>

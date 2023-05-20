@@ -1,8 +1,13 @@
 package com.softwareapplication.remarket.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.softwareapplication.remarket.domain.GroupPost;
+import com.softwareapplication.remarket.domain.Image;
 import jakarta.validation.constraints.*;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 
@@ -13,10 +18,17 @@ import java.time.LocalDateTime;
 public class GroupPostDto {
     private Long id;
 
+    @CreatedDate
+    private LocalDateTime created; //게시글 최초 작성
+
+    @LastModifiedDate
+    private LocalDateTime updated; //게시글 수정 날짜
+
     @NotBlank
     private String title;
 
     @FutureOrPresent
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime dueDate;
 
     @NotBlank
@@ -25,14 +37,14 @@ public class GroupPostDto {
     private String content;
 
     @NotNull
-    @Positive
+    @Positive(message = "인원수를 다시 입력해주세요.")
     private int numPeople;
 
     @NotNull
-    @Positive
+    @Positive(message = "금액을 다시 입력해주세요.")
     private int price;
 
-    private String image;
+    private Image image;
 
     @NotNull
     private Long userId;
@@ -40,6 +52,8 @@ public class GroupPostDto {
     public GroupPost toEntity(){
         GroupPost build = GroupPost.builder()
                 .id(id)
+                .created(created)
+                .updated(updated)
                 .title(title)
                 .dueDate(dueDate)
                 .product(product)
@@ -53,8 +67,10 @@ public class GroupPostDto {
     }
 
     @Builder
-    public GroupPostDto(Long id, String title, LocalDateTime dueDate, String product, String content, int numPeople, int price, String image, Long userId){
+    public GroupPostDto(Long id, LocalDateTime created, LocalDateTime updated, String title, LocalDateTime dueDate, String product, String content, int numPeople, int price, Image image, Long userId){
         this.id = id;
+        this.created = created;
+        this.updated = updated;
         this.title = title;
         this.dueDate = dueDate;
         this.product = product;

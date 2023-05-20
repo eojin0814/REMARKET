@@ -1,5 +1,6 @@
 package com.softwareapplication.remarket.dto;
 
+import com.softwareapplication.remarket.domain.Image;
 import com.softwareapplication.remarket.domain.User;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -26,7 +27,7 @@ public class UserDto {
         private String name;
         private String phone;
         private String address;
-        private String imageUrl;
+        private Image imageIdx;
     }
 
     @NoArgsConstructor
@@ -60,6 +61,7 @@ public class UserDto {
         private String phone3;
         private String phone;
         private String address;
+        private Image image;
         private String imgUrl;
         private MultipartFile file;
 
@@ -71,7 +73,7 @@ public class UserDto {
                     .name(name)
                     .address(address)
                     .phone(phone1+phone2+phone3)
-                    .imageUrl(imgUrl)
+                    .image(image)
                     .build();
         }
         public Request(User user) {
@@ -82,7 +84,7 @@ public class UserDto {
             this.phone=user.getPhone();
             this.address=user.getAddress();
             try {
-                this.imgUrl=getUploadDirPath(user.getImageUrl());
+                this.imgUrl=getUploadDirPath(user.getImage().getUrl());
             } catch (Exception e ) {
                 this.imgUrl = "";
             }
@@ -110,8 +112,8 @@ public class UserDto {
             this.password = user.getPassword();
             this.name = user.getName();
             setPhoneNumber(user.getPhone());
-            if(user.getImageUrl() != null)
-                this.imageUrl = getUploadDirPath(user.getImageUrl());
+            if(user.getImage() != null)
+                this.imageUrl = getUploadDirPath(user.getImage().getUrl());
             this.address = user.getAddress();
         }
 

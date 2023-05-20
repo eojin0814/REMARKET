@@ -45,6 +45,8 @@ public class GroupPostService {
         for(GroupPost groupPost : groupPostList){
             GroupPostDto groupPostDto = GroupPostDto.builder()
                     .id(groupPost.getId())
+                    .created(groupPost.getCreated())
+                    .updated(groupPost.getUpdated())
                     .title(groupPost.getTitle())
                     .dueDate(groupPost.getDueDate())
                     .product(groupPost.getProduct())

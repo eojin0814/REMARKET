@@ -1,7 +1,9 @@
 package com.softwareapplication.remarket.controller;
-
+import com.softwareapplication.remarket.domain.Image;
 import com.softwareapplication.remarket.domain.User;
+import com.softwareapplication.remarket.dto.ImageDto;
 import com.softwareapplication.remarket.dto.UserDto;
+import com.softwareapplication.remarket.service.ImageService;
 import com.softwareapplication.remarket.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -22,6 +24,7 @@ import java.util.*;
 public class UserController {
 
     private final UserService userService;
+    private final ImageService imageService;
 
     @GetMapping("/signup")
     public ModelAndView signUp() {
@@ -47,6 +50,11 @@ public class UserController {
 
         if (!req.getPassword().equals(req.getRepeatedPassword())) {
             msg += "  비밀번호가 일치하지 않습니다.";
+        }
+        if(!req.getFile().getOriginalFilename().equals("")) {
+            ImageDto.Request imgReq = new ImageDto.Request(req.getFile());
+            Image img = imageService.uploadFile(imgReq.getImageFile());
+            req.setImage(img);
         }
         if (!msg.equals("")) {
             out.println("<script>alert('" + msg + "');location.replace('/user/signup');</script>");

@@ -1,9 +1,14 @@
 package com.softwareapplication.remarket.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.softwareapplication.remarket.dto.GroupPostDto;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -16,16 +21,26 @@ import java.util.Date;
 @Table(name = "GroupPost")
 @NoArgsConstructor
 @AllArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 public class GroupPost{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "group_id")
     private Long id; //게시글 id
 
+    @CreatedDate
+    @Column(updatable = false)
+    private LocalDateTime created; //게시글 최초 작성
+
+    @LastModifiedDate
+    @Column
+    private LocalDateTime updated; //게시글 수정 날짜
+
     @Column(nullable = false)
     private String title; //게시글 제목
 
     @Column(name="due_date", nullable = false)
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime dueDate; //공동구매 마감일
 
     @Column(nullable = false)
@@ -39,7 +54,9 @@ public class GroupPost{
     @Column(nullable = false)
     private int price; //물품 1개당 가격
 
-    private String  image; //이미지 첨부
+    @OneToOne
+    @JoinColumn(name="img_id")
+    private Image  image; //이미지 첨부
 
     @Column(name = "user_id", nullable = false) //fk 공동구매 작성자(user_id)
     private Long userId;
@@ -47,6 +64,8 @@ public class GroupPost{
     public GroupPostDto toDto(){
         GroupPostDto build = GroupPostDto.builder()
                 .id(id)
+                .created(created)
+                .updated(updated)
                 .title(title)
                 .dueDate(dueDate)
                 .product(product)
