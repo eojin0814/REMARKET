@@ -1,0 +1,79 @@
+@charset "UTF-8";
+
+#fav-card, #all-card {
+	border-radius: 15px;
+	height: 360px;
+}
+
+#postList-img {
+	border-radius: 15px 15px 0 0;
+}
+
+#fav-card {
+	background-color: #EFF2EC;
+}
+
+#isDone {
+	background-color: #91A77F;
+}
+
+.card-img-top {
+	height: 15vw;
+	object-fit: cover;
+}
+
+#btn-newPost {
+	border-radius: 10px;
+	border-color: #91A77F;
+}
+
+#btn-newPost:hover {
+	color: white;
+	background-color: #91A77F;
+}
+
+#search-option, #search-category {
+	border-radius: 5px;
+	height: 40px;
+	border-color: grey;
+}
+
+a {
+	display: block;
+	text-decoration: none !important;
+	color: inherit !important;
+}
+.card-title{
+	text-decoration: none;
+}
+#fav-card:hover, #all-card:hover{
+    transform: scale(1.1, 1.1);
+    transition-duration: 0.5s;
+  }
+#fav-card, #all-card{
+    transition-duration: 1s;
+  }
+
+.share.pagination li.active,
+.share.pagination > .active > a, 
+.share.pagination > .active > span, 
+.share.pagination > .active > a:hover, 
+.share.pagination > .active > span:hover, 
+.share.pagination > .active > a:focus, 
+.share.pagination > .active > span:focus {
+  background: #68785B;
+  border-color: #68785B;
+  color: white;
+}
+
+.group.pagination li.active,
+.group.pagination > .active > a, 
+.group.pagination > .active > span, 
+.group.pagination > .active > a:hover, 
+.group.pagination > .active > span:hover, 
+.group.pagination > .active > a:focus, 
+.group.pagination > .active > span:focus {
+  background: #735C3F;
+  border-color: #735C3F;
+  color: white;
+}
