@@ -41,6 +41,9 @@ public class SharePost extends BaseTime {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "author_id")
 	private User author;
+
+	@OneToMany(mappedBy="post", cascade = CascadeType.ALL)
+	private List<MessageRoom> rooms = new ArrayList<MessageRoom>();
 	
 	@PrePersist
 	public void prePersist(){
