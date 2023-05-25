@@ -69,7 +69,6 @@ public class UserController {
 
     @PostMapping("/checkEmail")
     public String checkId(@RequestParam("email") String email) throws Exception {
-        System.out.println(email);
         if (email.isEmpty())
             return "필수값입니다.";
         String text;
@@ -103,12 +102,10 @@ public class UserController {
     public ModelAndView login(@ModelAttribute UserDto.LoginRequest loginRequest, BindingResult bindingResult,
                               HttpServletRequest httpServletRequest) {
         User user = userService.login(loginRequest);
-
         // 로그인 아이디나 비밀번호가 틀린 경우 global error return
         if(user == null) {
             bindingResult.reject("loginFail", "로그인 아이디 또는 비밀번호가 틀렸습니다.");
         }
-
         if(bindingResult.hasErrors()) {
             return new ModelAndView("content/user/user_login");
         }
@@ -119,16 +116,14 @@ public class UserController {
         HttpSession session = httpServletRequest.getSession(true);  // Session이 없으면 생성
         // 세션에 userId를 넣어줌
         session.setAttribute("email", user.getEmail());
-        session.setMaxInactiveInterval(1800); // Session이 30분동안 유지
-
+        session.setMaxInactiveInterval(1800);
         sessionList.put(session.getId(), session);
-
         return new ModelAndView("redirect:/");
     }
 
     @GetMapping("/logout")
     public ModelAndView logout(HttpServletRequest request) {
-        HttpSession session = request.getSession(false);  // Session이 없으면 null return
+        HttpSession session = request.getSession(false);
         if(session != null) {
             sessionList.remove(session.getId());
             session.invalidate();
@@ -146,7 +141,7 @@ public class UserController {
         Map<String, String> lists = new HashMap<>();
         while(elements.hasMoreElements()) {
             HttpSession session = (HttpSession)elements.nextElement();
-            lists.put(session.getId(), String.valueOf(session.getAttribute("userId")));
+            lists.put(session.getId(), String.valueOf(session.getAttribute("email")));
         }
         return lists;
     }
