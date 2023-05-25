@@ -37,9 +37,9 @@
 </head>
 
 <body>
-<th:block th:replace="fragments/header_form::header"></th:block>
+<th:block th:replace="~{fragments/header_form::header}"></th:block>
 <div layout:fragment="content" class="content"></div>
 <br><br>
-<th:block th:replace="fragments/footer::footer"></th:block>
+<th:block th:replace="~{fragments/footer::footer}"></th:block>
 </body>
 </html>
