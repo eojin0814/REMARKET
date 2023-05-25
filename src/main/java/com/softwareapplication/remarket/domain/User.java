@@ -37,11 +37,17 @@ public class User {
     private String address;
 
     @OneToOne
-    @JoinColumn(name="img_id")
+    @JoinColumn(name="image_id")
     private Image image;
 
     @OneToMany(mappedBy = "author", cascade = {CascadeType.ALL}, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<SharePost> shareList = new ArrayList<SharePost>();
+
+    @OneToMany(mappedBy = "roomId")
+    private List<MessageRoom> messageRoomList = new ArrayList<MessageRoom>();
+
+    @OneToMany(mappedBy = "sender", cascade = {CascadeType.ALL}, fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<MessageRoom> participatemessageRoomList = new ArrayList<MessageRoom>();
 
     public boolean matchPassword(String newPassword) {
         return newPassword.equals(password);
