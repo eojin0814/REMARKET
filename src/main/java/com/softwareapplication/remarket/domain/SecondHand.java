@@ -11,7 +11,6 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-@Setter
 @Entity
 @Table(name="SecondHand")
 @EntityListeners(AuditingEntityListener.class)
