@@ -19,15 +19,16 @@ public class SecondHandController {
 
     private final SecondHandService secondHandService;
 
-    @GetMapping("/post")
-    public ModelAndView post(@Validated @ModelAttribute("secondHandReq") SecondHandDto secondHandDto,
-                             BindingResult error, HttpServletResponse response)throws Exception{
-        secondHandService.save(secondHandDto);
-        return new ModelAndView("redirect: /secondHand"); //수정 될 가능성 ..
+    @PostMapping("/post")
+    public Long post(@RequestPart("secondHandDto") SecondHandDto secondHandDto)throws Exception{
+        System.out.println(secondHandDto.getTitle());
+
+        return secondHandService.save(secondHandDto);
+        //new ModelAndView("redirect: /secondHand"); //수정 될 가능성 ..
     }
 
     @GetMapping("/post/list")
-    public List<SecondHand> postList(BindingResult error, HttpServletResponse response)throws Exception{
+    public List<SecondHand> postList()throws Exception{
         List<SecondHand> secondHand = secondHandService.findByAll();
         return secondHand; //수정 될 가능성 ..
     }
@@ -35,6 +36,11 @@ public class SecondHandController {
     public List<SecondHand> postkeyword(@PathVariable("keyword") String keyword)throws Exception{
         List<SecondHand> secondHand = secondHandService.search(keyword);
         return secondHand; //수정 될 가능성 ..
+    }
+
+    @DeleteMapping("/post/delete/{postId}")
+    public Long postkeyword(@PathVariable("postId") Long postId)throws Exception{
+        return secondHandService.delete(postId);
     }
 
 }
