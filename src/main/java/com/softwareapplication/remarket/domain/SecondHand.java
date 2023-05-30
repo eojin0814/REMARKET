@@ -2,6 +2,8 @@ package com.softwareapplication.remarket.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.util.Date;
 
@@ -12,6 +14,7 @@ import java.util.Date;
 @Setter
 @Entity
 @Table(name="SecondHand")
+@EntityListeners(AuditingEntityListener.class)
 public class SecondHand {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -27,6 +30,7 @@ public class SecondHand {
     @Column
     private String image;
 
+    @CreatedDate
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdDate;
 
