@@ -28,9 +28,11 @@ public class SecondHandController {
     }
 
     @GetMapping("/post/list")
-    public List<SecondHand> postList()throws Exception{
+    public ModelAndView postList()throws Exception{
         List<SecondHand> secondHand = secondHandService.findByAll();
-        return secondHand; //수정 될 가능성 ..
+        ModelAndView mav = new ModelAndView("secondHand");
+        mav.addObject("secondHand", secondHand);
+        return mav; //수정 될 가능성 ..
     }
     @GetMapping("/post/{keyword}")
     public List<SecondHand> postkeyword(@PathVariable("keyword") String keyword)throws Exception{
