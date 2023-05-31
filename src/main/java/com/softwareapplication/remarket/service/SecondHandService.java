@@ -35,7 +35,7 @@ public class SecondHandService {
     @Transactional
     public Long update(Long id, SecondHandDto secondHandDto){
         SecondHand secondHand= secondHandRepository.findById(id).orElseThrow(()->new IllegalArgumentException("해당 게시글이 없습니다. id:"+id));
-        secondHand.update(secondHandDto.getTitle(),secondHandDto.getImage(),secondHandDto.getContent());
+        //secondHand.update(secondHandDto.toEntity());
         return id;
     }
 
