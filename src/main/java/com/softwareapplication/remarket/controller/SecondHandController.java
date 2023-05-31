@@ -32,12 +32,12 @@ public class SecondHandController {
         List<SecondHand> secondHand = secondHandService.findByAll();
         ModelAndView mav = new ModelAndView("secondHand");
         mav.addObject("secondHand", secondHand);
-        return mav; //수정 될 가능성 ..
+        return mav;
     }
     @GetMapping("/post/{keyword}")
     public List<SecondHand> postkeyword(@PathVariable("keyword") String keyword)throws Exception{
         List<SecondHand> secondHand = secondHandService.search(keyword);
-        return secondHand; //수정 될 가능성 ..
+        return secondHand;
     }
 
     @DeleteMapping("/post/delete/{postId}")
