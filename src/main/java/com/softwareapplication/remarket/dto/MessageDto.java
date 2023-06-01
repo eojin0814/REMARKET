@@ -18,14 +18,14 @@ public class MessageDto {
 	@NoArgsConstructor
 	@Data
 	public static class Info{
-		private Long roomIdx;
-		private Long postIdx;
-		private Long authorIdx;
+		private Long roomId;
+		private Long postId;
+		private Long authorId;
 		private String authorName;
 		private String authorImgUrl;
 		private String title;
 		private String postImgUrl;
-		private Long senderIdx;
+		private Long senderId;
 		private String senderName;
 		private String senderImgUrl;
 		private String content;
@@ -39,12 +39,12 @@ public class MessageDto {
 		 
 		private String content;
 		private User sender;
-		private Long senderIdx;
+		private Long senderId;
 		private SharePost post;
 		private MessageRoom room;
 		private User author;
-		private Long authorIdx;
-		private Long roomIdx;
+		private Long authorId;
+		private Long roomId;
 		
 		public MessageRoom toRoomEntity() {
 			return MessageRoom.builder()
@@ -67,19 +67,19 @@ public class MessageDto {
 	@Data
 	public static class MessageResponse{
 		
-		private Long messageIdx;
+		private Long messageId;
 		private String content;
 		private LocalDateTime sendDate;
 		private boolean isRead;
-		private Long senderIdx;
+		private Long senderId;
 		private String senderName;
 		private String senderImgUrl;
-		private Long authorIdx;
+		private Long authorId;
 		private String authorName;
 		private String authorImgUrl;
 		
 		public MessageResponse(MessageInfo message) {
-			this.messageIdx = message.getMessageId();
+			this.messageId = message.getMessageId();
 			this.content = message.getContent();
 			this.sendDate = message.getCreatedDate();
 			
@@ -90,7 +90,7 @@ public class MessageDto {
 				isRead = false;
 			this.isRead = isRead;
 		
-			this.senderIdx = message.getSender().getUserId();
+			this.senderId = message.getSender().getUserId();
 			this.senderName = message.getSender().getName();
 			
 			try {
@@ -98,7 +98,7 @@ public class MessageDto {
 			}catch (Exception e ) {	           
 				this.senderImgUrl = "";
 			}
-			this.authorIdx = message.getRoom().getPost().getAuthor().getUserId();
+			this.authorId = message.getRoom().getPost().getAuthor().getUserId();
 			this.authorName = message.getRoom().getPost().getAuthor().getName();
 			try {
 				this.authorImgUrl = getUploadDirPath(message.getRoom().getPost().getAuthor().getImage().getUrl());
