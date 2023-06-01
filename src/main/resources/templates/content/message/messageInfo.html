@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+
+<script src="http://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script type="text/javascript" th:inline="javascript">
+
+    var postId = [[${postId}]];
+    var roomId = [[${roomId}]];
+
+    $(document).ready(function () {
+        getMsgList(roomId);
+        setInterval(function () {
+            getMsgList(roomId)
+        }, 3000);
+
+        $('#btn_reply').click(function () {
+            var insertData = $('#msg_content').val();
+            if (insertData.length > 255) {
+                alert("메세지는 255자를 넘길 수 없습니다!");
+            } else {
+                if (insertData !== "")
+                    sendMessage(insertData);
+                else
+                    alert("메세지를 입력하세요!");
+            }
+        });
+
+    });
+
+    //메세지 보내기
+    function sendMessage(insertData) {
+        $.ajax({
+            url: '/messages/' + roomId,
+            type: 'POST',
+            datatype: 'json',
+            contentType: 'application/json; charset=UTF-8',
+            data: JSON.stringify({
+                'content': insertData
+            }),
+            success: function (data) {
+                if (data != 0) {
+                    $('#content').val('');
+                    /* alert("성공!"); */
+                    location.reload();
+                } else alert("전송 실패입니다. 잠시 후에 다시 시도해주세요.");
+            }
+        });
+    }
+
+    //msg 리스트
+    function getMsgList(roomId) {
+        $.ajax({
+            url: '/messages/' + roomId,
+            type: 'GET',
+            success: function (data) {
+                $('#msg-container').replaceWith(data);
+                $("#msg-container").scrollTop($("#msg-container")[0].scrollHeight);
+            },
+            error: function onError(error) {
+                console.error(error);
+            }
+        });
+    }
+
+    // 엔터키로 전송
+    function enterkey() {
+        if (window.event.keyCode === 13) {
+            window.event.preventDefault();
+            var insertData = $('#msg_content').val();
+            if (insertData.length > 255) {
+                alert("메세지는 255자를 넘길 수 없습니다!");
+            } else {
+                if (insertData != null && insertData != "") {
+                    sendMessage(insertData);
+                } else
+                    alert("메세지를 입력하세요!");
+            }
+        }
+    }
+
+</script>
+
+<body>
+<div class="content">
+    <div class="container w-75">
+        <a th:href="@{/messages}" >
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="grey" class="bi bi-arrow-left"
+                 viewBox="0 0 16 16">
+                <path fill-rule="evenodd"
+                      d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
+            </svg>
+        </a>
+        <!-- post info -->
+        <div class="row mx-auto mt-3">
+            <div class="col-1" th:if="${not #strings.isEmpty(postInfo.imgUrl)}">
+                <img style="width: 100%;height: 100%" th:src="@{${postInfo.imgUrl}}" id="img-post" alt="...">
+            </div>
+            <div class="col-1" th:unless="${not #strings.isEmpty(postInfo.imgUrl)}">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="silver" class="bi bi-shop me-5" viewBox="0 0 16 16 "
+                     width="64" height="64">
+                    <path d="M2.97 1.35A1 1 0 0 1 3.73 1h8.54a1 1 0 0 1 .76.35l2.609 3.044A1.5 1.5 0 0 1 16 5.37v.255a2.375 2.375 0 0 1-4.25 1.458A2.371 2.371 0 0 1 9.875 8 2.37 2.37 0 0 1 8 7.083 2.37 2.37 0 0 1 6.125 8a2.37 2.37 0 0 1-1.875-.917A2.375 2.375 0 0 1 0 5.625V5.37a1.5 1.5 0 0 1 .361-.976l2.61-3.045zm1.78 4.275a1.375 1.375 0 0 0 2.75 0 .5.5 0 0 1 1 0 1.375 1.375 0 0 0 2.75 0 .5.5 0 0 1 1 0 1.375 1.375 0 1 0 2.75 0V5.37a.5.5 0 0 0-.12-.325L12.27 2H3.73L1.12 5.045A.5.5 0 0 0 1 5.37v.255a1.375 1.375 0 0 0 2.75 0 .5.5 0 0 1 1 0zM1.5 8.5A.5.5 0 0 1 2 9v6h1v-5a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1v5h6V9a.5.5 0 0 1 1 0v6h.5a.5.5 0 0 1 0 1H.5a.5.5 0 0 1 0-1H1V9a.5.5 0 0 1 .5-.5zM4 15h3v-5H4v5zm5-5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1v-3zm3 0h-2v3h2v-3z"/>
+                </svg>
+            </div>
+
+            <div class="col-10">
+                <div th:text="${postInfo.title}" id="page_title"><b>두루마루 휴지 나눕합니다</b></div>
+                <div th:text="${#temporals.format(postInfo.enrollDate, 'yyyy/MM/dd HH:mm')}" id="small_content">
+                    2023/06/19 23:36
+                </div>
+            </div>
+
+            <div class="col-1 mt-3">
+                <a th:href="@{/share-posts/{postId}(postId=${postInfo.getPostId})}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor"
+                         class="bi bi-chevron-right" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd"
+                              d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+        <hr>
+        <div id="msg-container">
+            <th:block th:each="msg : ${msgList}">
+                <th:block th:if="${userId} != ${msg.senderId}">
+                    <div class="mt-1">
+                        <!-- 작성자일때 -->
+                        <div th:if="${userId} == ${msg.authorId}" class="d-flex">
+                            <div>
+                                <img style="width: 50px;height: 50px" th:if="${not #strings.isEmpty(msg.senderImgUrl)}" th:src="@{${msg.senderImgUrl}}"
+                                     src="/image/profile.png" class="rounded-pill img-author-msg">
+                                <img style="width: 50px;height: 50px" th:unless="${not #strings.isEmpty(msg.senderImgUrl)}" src="/image/profile.png"
+                                     class="rounded-pill img-author-msg" id="">
+                            </div>
+                            <div th:text="${msg.senderName}" class="ms-3" id="main_content">
+                                소시개2팀
+                            </div>
+                        </div>
+                        <!-- 작성자가 아닐때 -->
+                        <div th:if="${userId} != ${msg.authorId}" class="d-flex">
+                            <div>
+                                <img style="width: 50px;height: 50px" th:if="${not #strings.isEmpty(msg.authorImgUrl)}" th:src="@{${msg.authorImgUrl}}"
+                                     src="/image/profile.png" class="rounded-pill img-author-msg">
+                                <img style="width: 50px;height: 50px" th:unless="${not #strings.isEmpty(msg.authorImgUrl)}" src="/image/profile.png"
+                                     class="rounded-pill" id="img-author-msg">
+                            </div>
+                            <div th:text="${msg.authorName}" class="ms-3 main_content">
+                                소시개팀
+                            </div>
+                        </div>
+
+                        <!-- 받는 메세지 -->
+                        <div class="ms-5">
+                            <div th:text="${msg.content}" class="msg-bubble main_content">안녕하세요~</div>
+                            <div th:text="${#temporals.format(msg.sendDate, 'yyyy/MM/dd HH:mm')}"
+                                 class="ms-1 small_content">2023/06/01 23:36
+                            </div>
+                        </div>
+                    </div>
+                </th:block>
+
+                <!-- 보내는 쪽 -->
+                <div th:if="${userId} == ${msg.senderId}" class="mt-1 me-3" align="right">
+                    <!-- sender message -->
+                    <div class="">
+                        <span th:if="${msg.isRead} == false">1</span>
+                        <div th:text="${msg.content}" class="msg-bubble-right main_content">안녕하세요~</div>
+                        <div th:text="${#temporals.format(msg.sendDate, 'MM/dd HH:mm')}"
+                             class="ms-1 small_content">2023/05/25 23:36
+                        </div>
+                    </div>
+                </div>
+            </th:block>
+
+        </div>
+
+        <!-- 답장  -->
+        <div th:if="${postInfo.progress} == false" class="mb-3 mt-3 d-flex send">
+            <textarea autofocus type="text" onkeypress="enterkey()" id="msg_content" class="form-control"
+                      aria-label="With textarea" placeholder="메세지를 입력해주세요."></textarea>
+            <button type="button" class="btn" id="btn_reply">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                     class="bi bi-send-fill" viewBox="0 0 16 16">
+                    <path d="M15.964.686a.5.5 0 0 0-.65-.65L.767 5.855H.766l-.452.18a.5.5 0 0 0-.082.887l.41.26.001.002 4.995 3.178 3.178 4.995.002.002.26.41a.5.5 0 0 0 .886-.083l6-15Zm-1.833 1.89L6.637 10.07l-.215-.338a.5.5 0 0 0-.154-.154l-.338-.215 7.494-7.494 1.178-.471-.47 1.178Z"/>
+                </svg>
+            </button>
+        </div>
+
+        <div th:unless="${postInfo.progress} == false" class="mb-3 mt-3 d-flex send">
+            <input disabled type="text" id="content" class="form-control" aria-label="With textarea"
+                   placeholder="나눔이 완료된 상품입니다!">
+            <button type="button" class="btn" id="btn_reply_none">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                     class="bi bi-send-fill" viewBox="0 0 16 16">
+                    <path d="M15.964.686a.5.5 0 0 0-.65-.65L.767 5.855H.766l-.452.18a.5.5 0 0 0-.082.887l.41.26.001.002 4.995 3.178 3.178 4.995.002.002.26.41a.5.5 0 0 0 .886-.083l6-15Zm-1.833 1.89L6.637 10.07l-.215-.338a.5.5 0 0 0-.154-.154l-.338-.215 7.494-7.494 1.178-.471-.47 1.178Z"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+</div>
+</body>
