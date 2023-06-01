@@ -128,9 +128,8 @@ public class SharePostController {
 
     // 수정 form 얻기
     @GetMapping("/{postId}/edit")
-    public ModelAndView getUpdateForm(HttpServletRequest req, @PathVariable Long postId) {
+    public ModelAndView getUpdateForm(HttpServletRequest req, @SessionAttribute(name = "email", required = false) String email, @PathVariable Long postId) {
 
-        String email = checkLogin(req);
         if (email == null) {
             ModelAndView mav = new ModelAndView("content/user/user_login");
             mav.addObject("loginRequest", new UserDto.LoginRequest());
@@ -147,14 +146,13 @@ public class SharePostController {
     }
 
     // 수정하기
-    @PutMapping("/{postId}")
-    public String updatePost(HttpServletRequest req, @Validated @ModelAttribute("updateReq") SharePostDto.Request post, Errors error, @PathVariable Long postId) {
+    @PostMapping("/{postId}")
+    public ModelAndView updatePost(HttpServletRequest req, @Validated @ModelAttribute("updateReq") SharePostDto.Request post, Errors error, @PathVariable Long postId) {
         String email = checkLogin(req);
-        if (email == null) return "content/user/user_login";
-
+        if (email == null) return new ModelAndView("content/user/user_login");
         User loginUser = userService.getLoginUserByEmail(email);
         if (error.hasErrors())
-            return "content/sharePost/sharePost_update";
+            return new ModelAndView("content/sharePost/sharePost_update");
 
         if (!post.getFile().getOriginalFilename().equals("")) {
             ImageDto.Request imgDto = new ImageDto.Request(post.getFile());
@@ -163,20 +161,22 @@ public class SharePostController {
         }
         post.setAuthorId(loginUser.getUserId());
         sharePostService.modifyPost(postId, post);
-        return "redirect:/share-posts/" + postId;
+        return new ModelAndView("redirect:/share-posts/" + postId);
     }
 
     // 나눔 상태변경
-    @PutMapping("/{postIdx}/progress")
-    public RedirectView updateProgress(@PathVariable Long postIdx) {
-        boolean prog = sharePostService.getPost(postIdx).isProgress();
-        sharePostService.modifyProgress(postIdx, prog);
-        return new RedirectView("/share-posts/" + postIdx);
+    @PostMapping("/{postId}/progress")
+    public RedirectView updateProgress(@PathVariable Long postId) {
+        System.out.println(postId);
+        boolean prog = sharePostService.getPost(postId).isProgress();
+        sharePostService.modifyProgress(postId, prog);
+        return new RedirectView("/share-posts/" + postId);
     }
 
     // 나눔 게시글 삭제
-    @DeleteMapping("/{postId}")
+    @PostMapping("/{postId}/delete")
     public RedirectView deletePost(@PathVariable Long postId) {
+        System.out.println("DELETE");
         sharePostService.removePost(postId);
         return new RedirectView("/share-posts");
     }

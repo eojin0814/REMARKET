@@ -100,7 +100,7 @@ public class UserController {
 
     @PostMapping("/login")
     public ModelAndView login(@ModelAttribute UserDto.LoginRequest loginRequest, BindingResult bindingResult,
-                              HttpServletRequest httpServletRequest) {
+                              HttpServletRequest request, Model model) {
         User user = userService.login(loginRequest);
         // 로그인 아이디나 비밀번호가 틀린 경우 global error return
         if(user == null) {
@@ -112,11 +112,11 @@ public class UserController {
 
         // 로그인 성공 => 세션 생성
         // 세션을 생성하기 전에 기존의 세션 파기
-        httpServletRequest.getSession().invalidate();
-        HttpSession session = httpServletRequest.getSession(true);  // Session이 없으면 생성
-        // 세션에 userId를 넣어줌
+        // 로그인 성공
+        HttpSession session = request.getSession(true);
+        //세션에 로그인 회원정보 보관
         session.setAttribute("email", user.getEmail());
-        session.setMaxInactiveInterval(1800);
+        session.setMaxInactiveInterval(60*60*2); // 2시간
         sessionList.put(session.getId(), session);
         return new ModelAndView("redirect:/");
     }
@@ -124,6 +124,7 @@ public class UserController {
     @GetMapping("/logout")
     public ModelAndView logout(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
+        System.out.println(session.getAttribute("email"));
         if(session != null) {
             sessionList.remove(session.getId());
             session.invalidate();

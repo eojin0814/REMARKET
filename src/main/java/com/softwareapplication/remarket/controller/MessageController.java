@@ -29,33 +29,38 @@ public class MessageController {
     //해당 쪽지방으로 가기
     @GetMapping("/{postId}/room/{roomId}")
     public ModelAndView getRoom(HttpServletRequest req, @PathVariable Long postId, @PathVariable Long roomId) {
-        HttpSession session = req.getSession(false);
-        String email = (String) session.getAttribute("email");
-        if (email != null) {
-            User loginUser = userService.getLoginUserByEmail(email);
-            ModelAndView mav = new ModelAndView("content/message/messageInfo");
-            mav.addObject("postInfo", sharePostService.getPost(postId));
-            mav.addObject("userId", loginUser.getUserId());
-            mav.addObject("roomId", roomId);
+        String email = checkLogin(req);
+        if (email == null) {
+            ModelAndView mav = new ModelAndView("content/user/user_login");
+            mav.addObject("loginRequest", new UserDto.LoginRequest());
             return mav;
         }
-        return new ModelAndView("content/user/user_login");
+        User loginUser = userService.getLoginUserByEmail(email);
+        ModelAndView mav = new ModelAndView("content/message/messageInfo");
+        mav.addObject("postInfo", sharePostService.getPost(postId));
+        mav.addObject("userId", loginUser.getUserId());
+        mav.addObject("roomId", roomId);
+        return mav;
     }
 
     //쪽지함리스트로 가기
     @GetMapping("")
     public ModelAndView getRoomList(HttpServletRequest req) {
-        HttpSession session = req.getSession(false);
-        String email = (String) session.getAttribute("email");
-        if (email != null) {
-            User loginUser = userService.getLoginUserByEmail(email);
-            ModelAndView mav = new ModelAndView("content/message/messageList");
-            List<MessageDto.Info> roomList = messageService.getAllRoom(loginUser.getUserId());
-            mav.addObject("roomList", roomList);
-            mav.addObject("userId", loginUser.getUserId());
+        String email = checkLogin(req);
+        if (email == null) {
+            ModelAndView mav = new ModelAndView("content/user/user_login");
+            mav.addObject("loginRequest", new UserDto.LoginRequest());
             return mav;
         }
-        return new ModelAndView("content/user/user_login");
+        System.out.println("EMAIL");
+        System.out.println(email);
+        User loginUser = userService.getLoginUserByEmail(email);
+        ModelAndView mav = new ModelAndView("content/message/messageList");
+        System.out.println(loginUser.getUserId());
+        List<MessageDto.Info> roomList = messageService.getAllRoom(loginUser.getUserId());
+        mav.addObject("roomList", roomList);
+        mav.addObject("userId", loginUser.getUserId());
+        return mav;
     }
 
     //쪽지 상세 조회
@@ -70,7 +75,7 @@ public class MessageController {
         List<MessageDto.MessageResponse> msgList = messageService.getAllMessage(roomId);
         model.addAttribute("msgList", msgList);
         model.addAttribute("userId", loginUser.getUserId());
-        return "content/message/messageInfo :: #msg-container";
+        return "content/message/messageInfo::#msg-container";
     }
 
     @PostMapping("/{postId}/room")
@@ -92,14 +97,13 @@ public class MessageController {
 
     @PostMapping("/{roomId}")
     public int sendMessage(HttpServletRequest req, @PathVariable Long roomId, @RequestBody MessageDto.Request msgReq) {
-        HttpSession session = req.getSession(false);
-        String email = (String) session.getAttribute("email");
-        if (email != null) {
-            User loginUser = userService.getLoginUserByEmail(email);
-            messageService.sendMessage(msgReq, loginUser.getUserId(), roomId);
-            return 1;
-        }
-        return 0;
+        String email = checkLogin(req);
+        User loginUser = userService.getLoginUserByEmail(email);
+        System.out.println(loginUser.getUserId());
+        System.out.println("MESSAGE");
+        System.out.println(msgReq.getContent());
+        messageService.sendMessage(msgReq, loginUser.getUserId(), roomId);
+        return 1;
     }
 
     // 세션 체크 해주는 함수
