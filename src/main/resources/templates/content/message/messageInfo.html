@@ -1,29 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout/default_form}">
 
-<th:block layout:fragment="head">
-    <title>쪽지</title>
-    <meta charset="utf-8">
-
-    <!-- css -->
-    <link th:href="@{/css/layout_content.css}" rel="stylesheet"/>
-    <link th:href="@{/css/message.css}" rel="stylesheet"/>
-
-    <!-- Bootstrap CSS -->
-    <link
-            href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
-            rel="stylesheet"
-            integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
-            crossorigin="anonymous">
-
-    <script
-            src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
-            crossorigin="anonymous"></script>
-</th:block>
 <script src="http://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script type="text/javascript" th:inline="javascript">
 
@@ -37,11 +13,11 @@
         }, 3000);
 
         $('#btn_reply').click(function () {
-            var insertData = $('#content').val();
+            var insertData = $('#msg_content').val();
             if (insertData.length > 255) {
                 alert("메세지는 255자를 넘길 수 없습니다!");
             } else {
-                if (insertData != null && insertData != "")
+                if (insertData !== "")
                     sendMessage(insertData);
                 else
                     alert("메세지를 입력하세요!");
@@ -89,7 +65,7 @@
     function enterkey() {
         if (window.event.keyCode === 13) {
             window.event.preventDefault();
-            var insertData = $('#content').val();
+            var insertData = $('#msg_content').val();
             if (insertData.length > 255) {
                 alert("메세지는 255자를 넘길 수 없습니다!");
             } else {
@@ -104,9 +80,9 @@
 </script>
 
 <body>
-<div layout:fragment="content" class="content">
+<div class="content">
     <div class="container w-75">
-        <a th:href="@{/messages}" href="#">
+        <a th:href="@{/messages}" >
             <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="grey" class="bi bi-arrow-left"
                  viewBox="0 0 16 16">
                 <path fill-rule="evenodd"
@@ -116,7 +92,7 @@
         <!-- post info -->
         <div class="row mx-auto mt-3">
             <div class="col-1" th:if="${not #strings.isEmpty(postInfo.imgUrl)}">
-                <img th:src="@{${postInfo.imgUrl}}" id="img-post" alt="...">
+                <img style="width: 100%;height: 100%" th:src="@{${postInfo.imgUrl}}" id="img-post" alt="...">
             </div>
             <div class="col-1" th:unless="${not #strings.isEmpty(postInfo.imgUrl)}">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="silver" class="bi bi-shop me-5" viewBox="0 0 16 16 "
@@ -126,9 +102,9 @@
             </div>
 
             <div class="col-10">
-                <div th:text=${postInfo.title} id="page_title"><b>두루마루 휴지 나눕합니다</b></div>
+                <div th:text="${postInfo.title}" id="page_title"><b>두루마루 휴지 나눕합니다</b></div>
                 <div th:text="${#temporals.format(postInfo.enrollDate, 'yyyy/MM/dd HH:mm')}" id="small_content">
-                    2022/05/19 23:36
+                    2023/06/19 23:36
                 </div>
             </div>
 
@@ -150,10 +126,10 @@
                         <!-- 작성자일때 -->
                         <div th:if="${userId} == ${msg.authorId}" class="d-flex">
                             <div>
-                                <img th:if="${not #strings.isEmpty(msg.senderImgUrl)}" th:src="@{${msg.senderImgUrl}}"
-                                     src="/image/profile.png" class="rounded-pill" id="img-author-msg">
-                                <img th:unless="${not #strings.isEmpty(msg.senderImgUrl)}" src="/image/profile.png"
-                                     class="rounded-pill" id="img-author-msg">
+                                <img style="width: 50px;height: 50px" th:if="${not #strings.isEmpty(msg.senderImgUrl)}" th:src="@{${msg.senderImgUrl}}"
+                                     src="/image/profile.png" class="rounded-pill img-author-msg">
+                                <img style="width: 50px;height: 50px" th:unless="${not #strings.isEmpty(msg.senderImgUrl)}" src="/image/profile.png"
+                                     class="rounded-pill img-author-msg" id="">
                             </div>
                             <div th:text="${msg.senderName}" class="ms-3" id="main_content">
                                 소시개2팀
@@ -162,21 +138,21 @@
                         <!-- 작성자가 아닐때 -->
                         <div th:if="${userId} != ${msg.authorId}" class="d-flex">
                             <div>
-                                <img th:if="${not #strings.isEmpty(msg.authorImgUrl)}" th:src="@{${msg.authorImgUrl}}"
-                                     src="/image/profile.png" class="rounded-pill" id="img-author-msg">
-                                <img th:unless="${not #strings.isEmpty(msg.authorImgUrl)}" src="/image/profile.png"
+                                <img style="width: 50px;height: 50px" th:if="${not #strings.isEmpty(msg.authorImgUrl)}" th:src="@{${msg.authorImgUrl}}"
+                                     src="/image/profile.png" class="rounded-pill img-author-msg">
+                                <img style="width: 50px;height: 50px" th:unless="${not #strings.isEmpty(msg.authorImgUrl)}" src="/image/profile.png"
                                      class="rounded-pill" id="img-author-msg">
                             </div>
-                            <div th:text="${msg.authorName}" class="ms-3" id="main_content">
+                            <div th:text="${msg.authorName}" class="ms-3 main_content">
                                 소시개팀
                             </div>
                         </div>
 
                         <!-- 받는 메세지 -->
                         <div class="ms-5">
-                            <div th:text=${msg.content} id="main_content" class="msg-bubble">안녕하세요~</div>
-                            <div th:text="${#temporals.format(msg.sendDate, 'yyyy/MM/dd HH:mm')}" id="small_content"
-                                 class="ms-1">2022/05/19 23:36
+                            <div th:text="${msg.content}" class="msg-bubble main_content">안녕하세요~</div>
+                            <div th:text="${#temporals.format(msg.sendDate, 'yyyy/MM/dd HH:mm')}"
+                                 class="ms-1 small_content">2023/06/01 23:36
                             </div>
                         </div>
                     </div>
@@ -187,9 +163,9 @@
                     <!-- sender message -->
                     <div class="">
                         <span th:if="${msg.isRead} == false">1</span>
-                        <div th:text=${msg.content} id="main_content" class="msg-bubble-right">안녕하세요~</div>
-                        <div th:text="${#temporals.format(msg.sendDate, 'MM/dd HH:mm')}" id="small_content"
-                             class="ms-1">2023/05/25 23:36
+                        <div th:text="${msg.content}" class="msg-bubble-right main_content">안녕하세요~</div>
+                        <div th:text="${#temporals.format(msg.sendDate, 'MM/dd HH:mm')}"
+                             class="ms-1 small_content">2023/05/25 23:36
                         </div>
                     </div>
                 </div>
@@ -199,7 +175,7 @@
 
         <!-- 답장  -->
         <div th:if="${postInfo.progress} == false" class="mb-3 mt-3 d-flex send">
-            <textarea autofocus type="text" onkeypress="enterkey()" id="content" class="form-control"
+            <textarea autofocus type="text" onkeypress="enterkey()" id="msg_content" class="form-control"
                       aria-label="With textarea" placeholder="메세지를 입력해주세요."></textarea>
             <button type="button" class="btn" id="btn_reply">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -211,7 +187,7 @@
 
         <div th:unless="${postInfo.progress} == false" class="mb-3 mt-3 d-flex send">
             <input disabled type="text" id="content" class="form-control" aria-label="With textarea"
-                   placeholder="나눔이 완료된 상품입니다!"></textarea>
+                   placeholder="나눔이 완료된 상품입니다!">
             <button type="button" class="btn" id="btn_reply_none">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                      class="bi bi-send-fill" viewBox="0 0 16 16">
@@ -222,4 +198,3 @@
     </div>
 </div>
 </body>
-</html>
