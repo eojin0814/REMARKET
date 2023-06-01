@@ -35,15 +35,15 @@
 	<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.12.4.min.js"></script>
 </th:block>
 <body>
-<div layout:fragment="content" class="content">
-	<div class="container w-75">
+<div layout:fragment="content">
+	<div class="container align-content-center">
 		<div class="row pt-5">
-			<div class="col bg-white text-center" id="page_title">
+			<div class="col bg-white text-center page_title">
 				<b>나눔 포스트 상세조회</b>
 			</div>
 		</div>
 		<!-- 수정하기 / 삭제하기 modal -->
-		<div th:if="${authorId} == ${postInfo.getAuthorId()}">
+		<div th:if="${postInfo.authorId} == ${postInfo.getAuthorId()}">
 			<div class="row pt-5">
 				<div class="d-flex justify-content-end">
 					<button type="button" class="btn btn-sm border border-secondary me-3"
@@ -56,7 +56,7 @@
 						<div class="modal-dialog">
 							<div class="modal-content">
 								<div class="modal-body justify-content-md-center ps-5 pe-5">
-									<div id="page_title" class="text-center"><b>게시물 수정</b></div>
+									<div class="text-center page_title"><b>게시물 수정</b></div>
 									<div class="pt-4 pd-5 text-center">게시물을 정말 수정하시겠습니까?</div>
 								</div>
 
@@ -88,7 +88,7 @@
 
 								<div class="d-flex mx-auto pt-5 mb-3 text-center">
 									<button type="button" class="btn btn-secondary me-1" data-bs-dismiss="modal">취소</button>
-									<form th:id="deletePostForm" th:method="DELETE" th:action="@{/share-posts/{postId}(postId=${postInfo.postId})}">
+									<form th:id="deletePostForm" th:method="post" th:action="@{/share-posts/{postId}/delete(postId=${postInfo.postId})}">
 										<button id="btn-modalConfirm" type="submit" class="btn btn-secondary">삭제</button>
 									</form>
 								</div>
@@ -99,25 +99,25 @@
 			</div>
 		</div>
 		<!-- post image view -->
-		<div th:if = "${not #strings.isEmpty(postInfo.imgUrl)}"  class="row pt-3" id="div-img">
-			<img th:src="@{${postInfo.imgUrl}}" alt="...">
+		<div th:if = "${not #strings.isEmpty(postInfo.imgUrl)}"  class="div-img row pt-3">
+			<img style="height: 70%; width: 70%" th:src="@{${postInfo.imgUrl}}" alt="...">
 		</div>
 
-		<div class="row pt-5 mx-auto" id="div-author">
+		<div class="row pt-5 mx-auto div-author">
 			<div class="row">
 				<div class="col-1">
-					<img th:if="${not #strings.isEmpty(postInfo.authorImgUrl)}" th:src="@{${postInfo.authorImgUrl}}" src="/image/profile.png" id="img-author"
-						 class="rounded-pill mx-auto" alt="">
-					<img th:unless="${not #strings.isEmpty(postInfo.authorImgUrl)}" src="/image/profile.png" id="img-author"
-						 class="rounded-pill mx-auto" alt="">
+					<img th:if="${not #strings.isEmpty(postInfo.authorImgUrl)}" th:src="@{${postInfo.authorImgUrl}}" src="/image/profile.png"
+						 class="img-author rounded-pill mx-auto" style="height: 50px;width: 50px" alt="">
+					<img th:unless="${not #strings.isEmpty(postInfo.authorImgUrl)}" src="/image/profile.png"
+						 class="img-author rounded-pill mx-auto" alt="">
 				</div>
-
+				<br>
 				<div class="col-10 mt-2 ps-5">
 					<div class="d-flex">
-						<div th:text="${postInfo.authorName}" id="main_content" class=""><b></b></div>
-						<div class="ms-1 ps-2 badge rounded-pill bg-light text-dark" id="small_content" th:if="${userId} == ${postInfo.authorId}">작성자</div>
+						<div th:text="${postInfo.authorName}" class="main_content"><b></b></div>
+						<div class="ms-1 ps-2 badge rounded-pill bg-light text-dark small_content"  th:if="${userId} == ${postInfo.authorId}">작성자</div>
 					</div>
-					<div th:text="${postInfo.address}" id="small_content"></div>
+					<div th:text="${postInfo.address}" class="small_content"></div>
 				</div>
 
 				<div th:if="${postInfo.progress} == false" class="col-1">
@@ -132,13 +132,13 @@
 						<div class="modal-dialog">
 							<div class="modal-content">
 								<div class="modal-body justify-content-md-center ps-5 pe-5">
-									<div id="page_title" class="text-center"><b>게시물 수정</b></div>
+									<div class="text-center page_title"><b>게시물 수정</b></div>
 									<div class="pt-4 pd-5 text-center">나눔 상태를 정말 완료로 수정하시겠습니까?</div>
 								</div>
 
 								<div class="d-flex mx-auto pt-5 mb-3 text-center">
 									<button type="button" class="btn btn-secondary me-1" data-bs-dismiss="modal">취소</button>
-									<form th:id="inProgress" th:action="@{/share-posts/{postId}/progress(postId=${postId})}" th:method="PUT">
+									<form th:id="inProgress" th:action="@{/share-posts/{postId}/progress(postId=${postId})}" th:method="put">
 										<button type="submit" class="btn btn-secondary" id="btn-isProg">확인</button>
 									</form>
 								</div>
@@ -159,13 +159,13 @@
 						<div class="modal-dialog">
 							<div class="modal-content">
 								<div class="modal-body justify-content-md-center ps-5 pe-5">
-									<div id="page_title" class="text-center"><b>게시물 수정</b></div>
+									<div class="text-center page_title"><b>게시물 수정</b></div>
 									<div class="pt-4 pd-5 text-center">나눔 상태를 진행중으로 수정하시겠습니까?</div>
 								</div>
 
 								<div class="d-flex mx-auto pt-5 mb-3 text-center">
 									<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-									<form th:id="notInProgress" th:action="@{/share-posts/{postId}/progress(postId=${postId})}" th:method="PUT">
+									<form th:id="notInProgress" th:action="@{/share-posts/{postId}/progress(postId=${postId})}" th:method="put">
 										<button type="submit" class="btn btn-secondary" id="btn-isDone">확인</button>
 									</form>
 								</div>
@@ -180,25 +180,25 @@
 		<hr>
 		<!-- post content -->
 		<div class="post-container">
-			<div th:text=${postInfo.title} id="middle_title">
+			<div th:text="${postInfo.title}" class="middle_title">
 				<b>케이크 나눔합니다</b>
 			</div>
-			<div th:text=${postInfo.descr} class="pt-3" id="main_content">상세설명</div>
+			<div th:text="${postInfo.descr}" class="pt-3 main_content">상세설명</div>
 		</div>
 
 		<!-- post enroll date & message cnt -->
 		<div class="row">
-			<div class="d-flex justify-content-end pt-2">
-				<div th:text="${#temporals.format(postInfo.enrollDate, 'yyyy/MM/dd HH:mm')}" id="small_content" style="color: silver;">2022/05/08
+			<div class="d-flex justify-content-end">
+				<div th:text="${#temporals.format(postInfo.enrollDate, 'yyyy/MM/dd HH:mm')}" class="small_content" style="color: silver;">2022/05/08
 					17:47</div>
-				<div class="d-flex ms-auto pt-1 text-secondary">
-					<div class="icon me-1">
+				<div class="d-flex ms-auto text-secondary">
+					<div class="icon">
 						<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-envelope" viewBox="0 0 16 16">
 							<path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4Zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1H2Zm13 2.383-4.708 2.825L15 11.105V5.383Zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741ZM1 11.105l4.708-2.897L1 5.383v5.722Z"/>
 						</svg>
 					</div>
 
-					<div th:text=${postInfo.msgCount} class="msg-cnt">19</div>
+					<div th:text="${postInfo.msgCount}" class="msg-cnt">19</div>
 				</div>
 			</div>
 		</div>
@@ -210,7 +210,6 @@
 			</form>
 
 		</div>
-
 
 		<!-- session Id가 작성자이면서 나눔이 진행중일때 -->
 		<div th:if="(${postInfo.progress} == false) and (${postInfo.authorId} == ${userId})" class="d-grid gap-2 mt-3">

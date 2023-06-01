@@ -18,24 +18,23 @@ button:hover, #btn-sendMsg:hover, #btn-confirm:hover, #btn-isProg:hover{
 	color : grey;
 	background-color : white;
 }
-#div-img {
+.div-img {
 	width: 50%;
 	margin: auto;
 }
-
-#img-author, #img-post {
-	width: 72px;
-	height: 72px;
+.img-author, .img-post {
+	width: 30px;
+	height: 30px;
 }
 
 #small_content {
 	color: grey;
 }
 
-
 #btn-modalConfirm {
 	background-color: #91A77F;
 }
+
 a{
 	text-decoration : none !important;
 }
