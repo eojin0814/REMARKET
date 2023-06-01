@@ -39,55 +39,16 @@
     <div class="container w-75">
         <div class="row pt-5">
             <div class="col bg-white text-center" id="page_title">
-                <b>나눔 인기매물</b>
+                <b>무료나눔 게시글</b>
             </div>
         </div>
-
-        <!-- 옵션 선택 드롭다운 -->
-        <div class="d-flex justify-content-end mt-5">
-            <form class="d-flex me-3" th:action="@{/share-posts/search/{option}(option='title')}">
-                <select id="search-option" th:name="type">
-                    <option th:value="key">키워드</option>
-                    <option th:value="address">주소</option>
-                </select>
-
-                <!--검색 창 -->
-                <input class="form-control" type="text" name="keyword"  placeholder="Search"
-                       aria-label="Search" id="search-option">
-                <button class="btn btn-sm " id="btn-search-option" type="submit">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"
-                         width="15px">
-                        <path
-                                d="M500.3 443.7l-119.7-119.7c27.22-40.41 40.65-90.9 33.46-144.7C401.8 87.79 326.8 13.32 235.2 1.723C99.01-15.51-15.51 99.01 1.724 235.2c11.6 91.64 86.08 166.7 177.6 178.9c53.8 7.189 104.3-6.236 144.7-33.46l119.7 119.7c15.62 15.62 40.95 15.62 56.57 0C515.9 484.7 515.9 459.3 500.3 443.7zM79.1 208c0-70.58 57.42-128 128-128s128 57.42 128 128c0 70.58-57.42 128-128 128S79.1 278.6 79.1 208z" /></svg>
-                </button>
-            </form>
-        </div>
-
-        <th:block th:unless="${#strings.equals(type, 'none')}" ></th:block>
-        <br>
-        <hr>
-
-        <div th:if="${not #strings.equals(type, 'none')}" class="row pt-5">
-            <p id="main_content" style="font-size:20px;" class="text-center" >
-                <b th:utext="|'${keyword}'을/를 검색한 결과입니다|">전체 게시물</b>
-            </p>
-        </div>
-
-        <div th:unless="${not #strings.equals(type, 'none')}" class="row pt-5">
-            <p id="main_content">
-                <b>전체 게시물</b>
-            </p>
-        </div>
-
-
-        <!--  all-post  -->
-        <th:block th:include="@{/content/sharePost/sharePost_allPostList}"></th:block>
+        <th:block th:include="~{/content/sharePost/sharePost_allPostList}"></th:block>
 
         <div th:if="${!allPostList.isEmpty()}">
             <ul class="pagination justify-content-center share">
                 <li class="page-item" th:classappend="${!allPostList.hasPrevious} ? 'disabled'">
                     <a class="page-link"
-                       th:href="@{|?keyword=${keyword}&page=${allPostList.number-1}&type=${type}|}">
+                       th:href="@{|?page=${allPostList.number-1}&type=${type}|}">
                         <span>이전</span>
                     </a>
                 </li>
@@ -95,10 +56,10 @@
                     th:if="${page >= allPostList.number-5 and page <= allPostList.number+5}"
                     th:classappend="${page == allPostList.number} ? 'active'"
                     class="page-item">
-                    <a th:text="${page}" class="page-link" th:href="@{|?keyword=${keyword}&page=${page}&type=${type}|}"></a>
+                    <a th:text="${page}" class="page-link" th:href="@{|?page=${page}&type=${type}|}"></a>
                 </li>
                 <li class="page-item" th:classappend="${!allPostList.hasNext} ? 'disabled'">
-                    <a class="page-link" th:href="@{|?keyword=${keyword}&page=${allPostList.number+1}&type=${type}|}">
+                    <a class="page-link" th:href="@{|?page=${allPostList.number+1}&type=${type}|}">
                         <span>다음</span>
                     </a>
                 </li>
