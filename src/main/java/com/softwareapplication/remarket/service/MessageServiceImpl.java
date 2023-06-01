@@ -34,8 +34,7 @@ public class MessageServiceImpl<T> implements MessageService {
 		User author = userRepository.findById(post.getAuthor().getUserId()).orElseThrow();
 		User sender = userRepository.findById(senderId).orElseThrow();
 		MessageRoom room = MessageRoom.builder().author(author).post(post).sender(sender).build();
-		Long roomId = messageRoomRepository.saveAndFlush(room).getRoomId();
-		return roomId;
+		return messageRoomRepository.saveAndFlush(room).getRoomId();
 	}
 
 	//쪽지함 정보 조회
@@ -60,6 +59,7 @@ public class MessageServiceImpl<T> implements MessageService {
 	@Transactional(readOnly = true)
     public List<MessageDto.MessageResponse> getAllMessage(Long roomId) {
 		List<MessageInfo> messageList = messageInfoRepository.findAllByRoomId(roomId);
+		System.out.println(messageList);
         return messageList.stream().map(MessageDto.MessageResponse::new).collect(Collectors.toList());
     }
 
@@ -69,18 +69,17 @@ public class MessageServiceImpl<T> implements MessageService {
 	public List<MessageDto.Info> getAllRoom(Long userId) {
 
 		User author = userRepository.findById(userId).orElseThrow();
-		System.out.println(author);
 		User sender = userRepository.findById(userId).orElseThrow();
-		System.out.println(sender);
 
 		List<MessageRoom> list = messageRoomRepository.findByAuthorOrSenderOrderByCreatedDateDesc(author, sender);
-		System.out.println("messageRoom List : " + list.size());
-
 		List<MessageDto.Info> roomList = new ArrayList<MessageDto.Info>();
 
 		for(MessageRoom room : list) {
-			MessageInfo m = messageInfoRepository.findTop1ByRoomOrderByCreatedDateDesc(room);
-			System.out.println(m);
+			System.out.println(room.getRoomId());
+
+			MessageInfo m = messageInfoRepository.findFirstByRoomOrderByCreatedDateDesc(room);
+			// 만든 채팅방이 없는 경우 null
+			if(m == null) continue;
 			boolean isRead;
 			if(Objects.equals(m.getSender().getUserId(), userId)) {
 				isRead = true;
@@ -117,8 +116,8 @@ public class MessageServiceImpl<T> implements MessageService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public List<SharePostDto.MyPageInfo> getAllMessageBySender(Long userIdx) {
-		User sender = userRepository.findById(userIdx).orElseThrow();
+	public List<SharePostDto.MyPageInfo> getAllMessageBySender(Long userId) {
+		User sender = userRepository.findById(userId).orElseThrow();
 		List<MessageRoom> roomList = messageRoomRepository.findAllMessageBySender(sender);
 
 		List<SharePostDto.MyPageInfo> postList = roomList.stream().map(msg -> new SharePostDto.MyPageInfo(
@@ -136,8 +135,8 @@ public class MessageServiceImpl<T> implements MessageService {
 	//쪽지 읽음 처리
 	@Override
 	@Transactional
-	public void updateIsRead(Long senderIdx, Long roomIdx) {
-		messageInfoRepository.updateIsRead(senderIdx, roomIdx);
+	public void updateIsRead(Long senderId, Long roomId) {
+		messageInfoRepository.updateIsRead(senderId, roomId);
 	}
 
 }

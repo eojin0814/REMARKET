@@ -20,10 +20,10 @@ public interface MessageInfoRepository extends JpaRepository<MessageInfo, Long> 
 	@Modifying(clearAutomatically = true)
 	@Query(value = "UPDATE MessageInfo m "
 			+ "SET m.is_read='Y' "
-			+ "WHERE m.sender_id != :sender_id AND m.room_idx = :room_idx", nativeQuery = true)
+			+ "WHERE m.sender_id != :sender_id AND m.room_id = :room_id", nativeQuery = true)
 	public void updateIsRead(@Param("sender_id")Long senderId
 			, @Param("room_id")Long roomId);
 	
 	
-	public MessageInfo findTop1ByRoomOrderByCreatedDateDesc(MessageRoom room);
+	public MessageInfo findFirstByRoomOrderByCreatedDateDesc(MessageRoom room);
 }

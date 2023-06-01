@@ -28,5 +28,5 @@ public interface MessageService {
 	public void sendMessage(MessageDto.Request req, Long senderIdx, Long roomIdx);
 	
 	//쪽지 읽음 처리
-	public void updateIsRead(Long senderIdx, Long roomIdx);
+	public void updateIsRead(Long senderId, Long roomId);
 }
