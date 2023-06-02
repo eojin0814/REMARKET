@@ -1,17 +1,17 @@
 @charset "UTF-8";
 
-#page_title {
+.page_title {
 	font-size : 32px;
 }
 
-#middle_title {
+.middle_title {
 	font-size : 26px;
 }
 
-#main_content {
+.main_content {
 	font-size : 16px;
 }
 
-#small_content {
+.small_content {
 	font-size : 14px;
 }
