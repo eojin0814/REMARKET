@@ -5517,7 +5517,7 @@ textarea.form-control-lg {
   --bs-tooltip-max-width: 200px;
   --bs-tooltip-padding-x: 0.5rem;
   --bs-tooltip-padding-y: 0.25rem;
-  --bs-tooltip-margin: ;
+
   --bs-tooltip-font-size: 0.875rem;
   --bs-tooltip-color: #fff;
   --bs-tooltip-bg: #000;
@@ -5528,7 +5528,7 @@ textarea.form-control-lg {
   z-index: var(--bs-tooltip-zindex);
   display: block;
   padding: var(--bs-tooltip-arrow-height);
-  margin: var(--bs-tooltip-margin);
+
   font-family: var(--bs-font-sans-serif);
   font-style: normal;
   font-weight: 400;
@@ -5756,7 +5756,7 @@ textarea.form-control-lg {
   padding: var(--bs-popover-header-padding-y) var(--bs-popover-header-padding-x);
   margin-bottom: 0;
   font-size: var(--bs-popover-header-font-size);
-  color: var(--bs-popover-header-color);
+
   background-color: var(--bs-popover-header-bg);
   border-bottom: var(--bs-popover-border-width) solid var(--bs-popover-border-color);
   border-top-left-radius: var(--bs-popover-inner-border-radius);
@@ -6059,7 +6059,7 @@ textarea.form-control-lg {
     display: flex;
     flex-direction: column;
     max-width: 100%;
-    color: var(--bs-offcanvas-color);
+
     visibility: hidden;
     background-color: var(--bs-offcanvas-bg);
     background-clip: padding-box;
@@ -6147,7 +6147,7 @@ textarea.form-control-lg {
     display: flex;
     flex-direction: column;
     max-width: 100%;
-    color: var(--bs-offcanvas-color);
+
     visibility: hidden;
     background-color: var(--bs-offcanvas-bg);
     background-clip: padding-box;
@@ -6235,7 +6235,7 @@ textarea.form-control-lg {
     display: flex;
     flex-direction: column;
     max-width: 100%;
-    color: var(--bs-offcanvas-color);
+
     visibility: hidden;
     background-color: var(--bs-offcanvas-bg);
     background-clip: padding-box;
@@ -6323,7 +6323,7 @@ textarea.form-control-lg {
     display: flex;
     flex-direction: column;
     max-width: 100%;
-    color: var(--bs-offcanvas-color);
+
     visibility: hidden;
     background-color: var(--bs-offcanvas-bg);
     background-clip: padding-box;
@@ -6411,7 +6411,7 @@ textarea.form-control-lg {
     display: flex;
     flex-direction: column;
     max-width: 100%;
-    color: var(--bs-offcanvas-color);
+
     visibility: hidden;
     background-color: var(--bs-offcanvas-bg);
     background-clip: padding-box;
@@ -6498,7 +6498,7 @@ textarea.form-control-lg {
   display: flex;
   flex-direction: column;
   max-width: 100%;
-  color: var(--bs-offcanvas-color);
+
   visibility: hidden;
   background-color: var(--bs-offcanvas-bg);
   background-clip: padding-box;
@@ -6623,7 +6623,7 @@ textarea.form-control-lg {
   }
 }
 .placeholder-wave {
-  -webkit-mask-image: linear-gradient(130deg, #000 55%, rgba(0, 0, 0, 0.8) 75%, #000 95%);
+ <!-- -webkit-mask-image: linear-gradient(130deg, #000 55%, rgba(0, 0, 0, 0.8) 75%, #000 95%); -->
   mask-image: linear-gradient(130deg, #000 55%, rgba(0, 0, 0, 0.8) 75%, #000 95%);
   -webkit-mask-size: 200% 100%;
   mask-size: 200% 100%;
