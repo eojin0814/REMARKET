@@ -3,8 +3,8 @@ package com.softwareapplication.remarket.service;
 import com.softwareapplication.remarket.domain.GroupPost;
 import com.softwareapplication.remarket.dto.GroupPostDto;
 import com.softwareapplication.remarket.repository.GroupPostRepository;
-import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;

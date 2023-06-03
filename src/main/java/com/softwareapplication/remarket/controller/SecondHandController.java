@@ -3,7 +3,7 @@ package com.softwareapplication.remarket.controller;
 import com.softwareapplication.remarket.domain.SecondHand;
 import com.softwareapplication.remarket.dto.SecondHandDto;
 import com.softwareapplication.remarket.service.SecondHandService;
-import jakarta.servlet.http.HttpServletResponse;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
