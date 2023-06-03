@@ -20,10 +20,9 @@ public class PaymentService {
 
     private final PaymentRepository paymentRepository;
     private final UserRepository userRepository;
-
     private final SecondHandRepository secondHandRepository;
     @Transactional
-    public Long save(String email, OrderDto orderdto,Long secondHandId) {
+    public Long save(String email, OrderDto orderdto, Long secondHandId) {
         User user = userRepository.findUserByEmail(email);
         orderdto.setUserId(user);
         SecondHand secondHand=secondHandRepository.findById(secondHandId).orElseThrow(()->new IllegalArgumentException("해당 게시글이 없습니다. id:"+secondHandId));
