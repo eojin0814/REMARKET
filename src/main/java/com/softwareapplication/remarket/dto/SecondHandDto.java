@@ -1,5 +1,6 @@
 package com.softwareapplication.remarket.dto;
 
+import com.softwareapplication.remarket.domain.Image;
 import com.softwareapplication.remarket.domain.SecondHand;
 import com.softwareapplication.remarket.domain.User;
 import jakarta.persistence.*;
@@ -17,7 +18,7 @@ public class SecondHandDto {
     private Long secondHandId;
     private String content;
     private Date createdDate;
-    private String image;
+    private Image image;
     private Long price;
     private String title;
 
