@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<link th:href="@{/css/layout_content.css}" rel="stylesheet"/>
+<link th:href="@{/css/sharePost.css}" rel="stylesheet"/>
+<link th:href="@{/css/message.css}" rel="stylesheet"/>
+
+<body>
+<div class="content">
+    <div class="container w-75">
+        <div class="row pt-5">
+            <div class="col bg-white text-center" id="page_title">
+                <b>나눔 쪽지 목록 </b>
+            </div>
+        </div>
+        <hr>
+
+        <!-- 쪽지함 리스트  -->
+        <div th:if="${#lists.size(roomList) == 0}" class="pt-1 w-75 text-center mx-auto">
+            <br>
+            <div class="mx-auto">
+                주고 받은 쪽지가 없습니다. <br> 나눔 상품에 쪽지를 보내보세요!
+            </div>
+            <br>
+            <div class="d-grid gap-2 mt-3">
+                <a class="btn btn-outline-success rounded-pill"
+                   role="button" id="btn-sendMsg" th:href="@{/share-posts}">나눔 게시물로 가기</a>
+            </div>
+        </div>
+        <th:block th:each="room : ${roomList}">
+
+            <!--message list -->
+            <div>
+                <!-- receiver profile -->
+                <div class="col-lg-1">
+                    <!-- 작성자일때 -->
+                    <th:block th:if="${userId} == ${room.authorId}">
+                        <img th:if="${not #strings.isEmpty(room.senderImgUrl)}" th:src="@{${room.senderImgUrl}}"
+                             src="/image/profile.png" class="card-img-top rounded-pill img-author">
+                        <img th:unless="${not #strings.isEmpty(room.senderImgUrl)}" src="/image/profile.png"
+                             class="card-img-top rounded-pill img-author">
+                    </th:block>
+
+                    <!-- 작성자 아닐때 -->
+                    <th:block th:if="${userId} != ${room.authorId}">
+                        <img th:if="${not #strings.isEmpty(room.authorImgUrl)}" th:src="@{${room.authorImgUrl}}"
+                             src="/image/profile.png" class="card-img-top rounded-pill img-author">
+                        <img th:unless="${not #strings.isEmpty(room.authorImgUrl)}" src="/image/profile.png"
+                             class="card-img-top rounded-pill img-author">
+                    </th:block>
+                </div>
+
+                <div th:if="${userId} == ${room.authorId}" class="col-lg-8 text-left ps-5">
+                    <!-- 작성자일때 -->
+                    <div class="d-flex">
+                        <div th:text="${room.senderName}" class="font-weight-bolder main_content">
+                            <b>소시개</b>
+                        </div>
+                        <div th:text="${#temporals.format(room.sendTime, 'yyyy/MM/dd HH:mm')}" class="ms-3 mt-1"
+                             id="small_content">2023/05/25 16:04
+                        </div>
+                    </div>
+                    <div th:text="${room.content}" class="mt-3 main_content">안녕하세요</div>
+                </div>
+
+                <div th:unless="${userId} == ${room.authorId}" class="col-lg-8 text-left ps-5 mt-2">
+                    <!-- 작성자가 아닐때 -->
+                    <div class="d-flex">
+                        <div th:if="${userId} != ${room.authorId}" th:text="${room.authorName}"
+                             class="font-weight-bolder main_content">
+                            <b>소시개</b>
+                        </div>
+                        <span class="ms-2 ps-2 badge rounded-pill text-light author small_content">작성자</span>
+                        <div th:text="${#temporals.format(room.sendTime, 'yyyy/MM/dd HH:mm')}" class="ms-3 small_content"
+                             >2023/05/18 16:04
+                        </div>
+                    </div>
+                    <div th:text="${room.content}" class="mt-3 main_content">안녕하세요!</div>
+                </div>
+
+                <!-- post img & alarm -->
+                <div class="col-lg-1 pt-4">
+                    <div th:if="${room.isRead} == false">
+                        <!-- 읽지 않은 새 메세지 알림 아이콘 -->
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#91A77F"
+                             class="bi bi-asterisk" viewBox="0 0 16 16">
+                            <path d="M8 0a1 1 0 0 1 1 1v5.268l4.562-2.634a1 1 0 1 1 1 1.732L10 8l4.562 2.634a1 1 0 1 1-1 1.732L9 9.732V15a1 1 0 1 1-2 0V9.732l-4.562 2.634a1 1 0 1 1-1-1.732L6 8 1.438 5.366a1 1 0 0 1 1-1.732L7 6.268V1a1 1 0 0 1 1-1z"/>
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="col-lg-2">
+                    <a th:href="@{/messages/{postId}/room/{roomId}(postId=${room.postId}, roomId=${room.roomId})}"
+                       class="stretched-link">
+                        <img th:if="${not #strings.isEmpty(room.postImgUrl)}" th:src="@{${room.postImgUrl}}"
+                             alt="..." class="rounded-3 img-post"></a>
+                    <div th:unless="${not #strings.isEmpty(room.postImgUrl)}" class="bg-light img-post">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" fill="silver"
+                             class="ms-1 pt-3 pb-2" viewBox="0 0 16 16">
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            <hr class="w-75 mx-auto">
+        </th:block>
+    </div>
+</div>
+</body>

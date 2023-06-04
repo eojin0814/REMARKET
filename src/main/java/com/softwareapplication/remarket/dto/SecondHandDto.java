@@ -1,29 +1,28 @@
 package com.softwareapplication.remarket.dto;
 
+import com.softwareapplication.remarket.domain.Image;
 import com.softwareapplication.remarket.domain.SecondHand;
 import com.softwareapplication.remarket.domain.User;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.Date;
 
 @Getter
+@Setter
 @NoArgsConstructor
 public class SecondHandDto {
     private Long secondHandId;
+    private String content;
+    private Date createdDate;
+    private Image image;
+    private Long price;
     private String title;
 
-    private Long price;
-
-    private String image;
-
-    private Date createdDate;
-
-    private String content;
-
-    private User user;
+    private Long userId;
 
 //    @Builder
 //    public SecondHandDto(Long secondHandId, String title, Long price, String image, Date createdDate, String content, User user){
@@ -36,7 +35,7 @@ public class SecondHandDto {
 //        this.user=user;
 //    }
 
-    public SecondHand toEntity(){
+    public SecondHand toEntity(User user){
         return SecondHand.builder()
                 .secondHandId(secondHandId)
                 .title(title)

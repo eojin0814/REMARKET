@@ -2,16 +2,20 @@ package com.softwareapplication.remarket.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-@Setter
 @Entity
 @Table(name="SecondHand")
+@EntityListeners(AuditingEntityListener.class)
 public class SecondHand {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -24,20 +28,24 @@ public class SecondHand {
     @Column
     private Long price;
 
-    @Column
-    private String image;
-
+    @CreatedDate
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdDate;
-
+    @LastModifiedDate
+    @Column
+    private LocalDateTime updatedDate;
     @Column
     private String content;
+
+    @OneToOne
+    @JoinColumn(name="img_id")
+    private Image  image; //이미지 첨부
 
     @ManyToOne
     @JoinColumn(name = "user_Id")
     private User user;
 
-    public void update(String title, String image, String content){
+    public void update(String title, Image image, String content){
         this.title=title;
         this.image=image;
         this.content=content;

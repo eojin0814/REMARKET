@@ -1,0 +1,62 @@
+@charset "UTF-8";
+
+button{
+	border-radius: 8px;
+	border-color: grey;
+}
+
+button:hover, #btn-sendMsg:hover, #btn-confirm:hover, #btn-isProg:hover{
+	color: white;
+	background-color: #91A77F;
+}
+
+#btn-isDone, #btn-enableSendMsg{
+	color : white;
+	background-color : #91A77F;
+}
+#btn-isDone:hover{
+	color : grey;
+	background-color : white;
+}
+.div-img {
+	width: 50%;
+	margin: auto;
+}
+.img-author, .img-post {
+	width: 30px;
+	height: 30px;
+}
+
+#small_content {
+	color: grey;
+}
+
+#btn-modalConfirm {
+	background-color: #91A77F;
+}
+
+a{
+	text-decoration : none !important;
+}
+
+#icon:hover{
+    transform: scale(1.1, 1.1);
+    transition-duration: 0.5s;
+    background-color:initial;
+  }
+#icon{
+    transition-duration: 1s;
+  }
+
+#div-thumbnail{
+	width : 30%;
+}
+	
+#div-thumbnail img{
+	max-width: 100%;
+    height: auto;
+}
+.error{
+	color : red;
+}
+
