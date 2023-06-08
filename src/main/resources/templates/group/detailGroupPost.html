@@ -99,9 +99,13 @@
         <a th:href="@{/group/update(id=${groupPostDto.id})}" class="btn btn-primary" role="button">글 수정하기</a>
         <a th:href="@{/group/delete(id=${groupPostDto.id})}" class="btn btn-danger" role="button">글 삭제하기</a>
       </th:block>
-      <th:block th:unless = "${postUser.userId} == ${loginUser.userId}">
+      <th:block th:if = "${postUser.userId} != ${loginUser.userId} and ${groupApplyDto} == null">
         <a th:href="@{/groupApply/createApply(groupId=${groupPostDto.id})}" class="btn btn-primary" role="button">신청하기</a>
       </th:block>
+      <th:block th:if = "${postUser.userId} != ${loginUser.userId} and ${groupApplyDto} != null ">
+        <a th:href="@{/groupApply/detailApply(id=${groupApplyDto.id})}" class="btn btn-primary" role="button">신청 내역 보기</a>
+      </th:block>
+
     </td>
   </tr>
 
