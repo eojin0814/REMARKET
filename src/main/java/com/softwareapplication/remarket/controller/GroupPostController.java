@@ -1,8 +1,10 @@
 package com.softwareapplication.remarket.controller;
 
 import com.softwareapplication.remarket.domain.User;
+import com.softwareapplication.remarket.dto.GroupApplyDto;
 import com.softwareapplication.remarket.dto.GroupPostDto;
 import com.softwareapplication.remarket.dto.UserDto;
+import com.softwareapplication.remarket.service.GroupApplyService;
 import com.softwareapplication.remarket.service.GroupPostService;
 import com.softwareapplication.remarket.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -26,6 +28,7 @@ public class GroupPostController {
 
     private final GroupPostService groupPostService;
     private final UserService userService;
+    private final GroupApplyService groupApplyService;
     @GetMapping("/groupList")
     public ModelAndView groupList(@SessionAttribute(name = "email", required = false) String email) {
         User loginUser = userService.getLoginUserByEmail(email);
@@ -40,11 +43,8 @@ public class GroupPostController {
     }
 
     @GetMapping("/create")
-    public String createPost(HttpServletRequest httpServletRequest, Model model, GroupPostDto groupPostDto){
-        HttpSession session = httpServletRequest.getSession();
-        String email = (String)session.getAttribute("email");
+    public String createPost(@SessionAttribute(name = "email", required = false)String email, Model model, GroupPostDto groupPostDto){
         User loginUser = userService.getLoginUserByEmail(email);
-
         groupPostDto.setUserId(loginUser.getUserId());
         model.addAttribute("groupPostDto", groupPostDto);
 
@@ -64,17 +64,17 @@ public class GroupPostController {
     }
 
     @GetMapping("/detail")
-    public ModelAndView detailPost(@RequestParam("id")Long id, HttpServletRequest httpServletRequest){
+    public ModelAndView detailPost(@SessionAttribute(name = "email", required = false)String email, @RequestParam("id")Long id){
         GroupPostDto groupPostDto = groupPostService.findPost(id);
         UserDto.Info postUser = userService.getUserByUserId(groupPostDto.getUserId());
-        HttpSession session = httpServletRequest.getSession();
-        String email = (String)session.getAttribute("email");
         User loginUser = userService.getLoginUserByEmail(email);
+        GroupApplyDto groupApplyDto = groupApplyService.findUserApply(id, loginUser.getUserId());
 
         ModelAndView mav = new ModelAndView("group/detailGroupPost");
         mav.addObject("groupPostDto", groupPostDto);
         mav.addObject("postUser", postUser);
         mav.addObject("loginUser", loginUser);
+        mav.addObject("groupApplyDto", groupApplyDto);
 
         if(loginUser != null) {
             mav.addObject("email", loginUser.getEmail());

@@ -4,7 +4,7 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/default_form}">
 <th:block layout:fragment="head">
-    <title>공동구매 게시글 수정</title>
+    <title>공동구매 신청 폼 작성</title>
     <meta charset="utf-8">
 
     <!-- css -->
@@ -35,36 +35,24 @@
 </th:block>
 <head>
     <script th:inline="javascript">
-        function update(){
+        function create(){
             var form = document.getElementById("form");
-            var title = document.getElementById("title");
-            var product = document.getElementById("product");
-            var numPeople = document.getElementById("numPeople");
-            var price = document.getElementById("price");
-            var dueDate = document.getElementById("dueDate");
-            if(title.value.trim() == "") {
-                alert("제목을 입력하시오.");
-                title.focus();
+            var address = document.getElementById("address");
+            var count = document.getElementById("count");
+            var phone = document.getElementById("phone");
+            if(address.value.trim() == "") {
+                alert("주소를 입력하시오.");
+                address.focus();
                 return false;
             }
-            else if(product.value.trim()== ""){
-                alert("공동구매 물품명을 입력하시오.");
-                product.focus();
+            else if(count.value.trim()==0){
+                alert("신청 개수를 입력하시오.");
+                count.focus();
                 return false;
             }
-            else if(numPeople.value.trim()== 0){
-                alert("목표 인원수를 입력하시오.");
-                numPeople.focus();
-                return false;
-            }
-            else if(price.value.trim()== 0){
-                alert("물품 1개당 가격을 입력하시오.");
-                price.focus();
-                return false;
-            }
-            else if(dueDate.value.trim()== ""){
-                alert("희망 종료 예정일을 입력하시오.");
-                dueDate.focus();
+            else if(phone.value.trim()== 0){
+                alert("전화번호를 입력하시오.");
+                phone.focus();
                 return false;
             }
 
@@ -73,59 +61,64 @@
 
     </script>
     <meta charset="UTF-8">
-    <title>공동구매 게시글 수정</title>
+    <title>공동구매 신청 폼 작성</title>
 </head>
 <body>
 <div layout:fragment="content" class="content">
-    <h1 style = "text-align: center">공동구매 게시글 수정</h1>
+    <h1 style = "text-align: center">공동구매 신청 폼 작성</h1>
     <div class="container w-75">
-        <form id = "form" th:action = "@{/group/update}" th:object = "${groupPostDto}" th:method="post">
-            <input type="hidden" id = "id" th:field="*{id}">
+        <table border = "1">
+            <tr>
+                <th>물품명</th>
+                <th>물품 1개당 가격</th>
+                <th>기타사항</th>
+            </tr>
+            <tr>
+                <td th:text="${groupPostDto.product}"></td>
+                <td th:text="${groupPostDto.price}"></td>
+                <td th:text="${groupPostDto.content}"></td>
+            </tr>
+        </table>
+    </div>
+    <div class="container w-75">
+        <form id = "form" th:action = "@{/groupApply/createApply}" th:object = "${groupApplyDto}" th:method="post">
+            <input type="hidden" id = "groupId" th:field="*{groupId}">
             <input type="hidden" id = "userId" th:field="*{userId}">
-            <input type ="hidden" id = "updatedAt" th:field = "*{updated}">
+
             <div class="form-group">
-                <label for="title">제목</label>
-                <input type = "text" id = "title" th:field="*{title}" class="form-control">
+                <label for="name">성명</label>
+                <input type = "text" id = "name" th:field="*{name}" class="form-control">
                 <span class = "help-block">반드시 입력하세요</span>
+                <span class='text-danger' th:errors="*{name}"></span>
             </div>
             <div class="form-group">
-                <label for="product">공동구매 물품명</label>
-                <input type = "text" id = "product" th:field="*{product}" class="form-control">
+                <label for="address">주소</label>
+                <input type = "text" id = "address" th:field="*{address}" class="form-control">
                 <span class = "help-block">반드시 입력하세요</span>
+                <span class='text-danger' th:errors="*{address}"></span>
             </div>
             <div class="form-group">
-                <label for="numPeople">목표 인원수</label>
+                <label for="count">신청 개수</label>
                 <div style = "width: 300px">
-                    <input type = "number" id = "numPeople" th:field="*{numPeople}" class="form-control">
+                    <input type = "number" id = "count" th:field="*{count}" class="form-control">
                 </div>
                 <span class = "help-block">반드시 입력하세요</span>
+                <span class='text-danger' th:errors="*{count}"></span>
             </div>
             <div class="form-group">
-                <label for="price"> 물품 1개당 가격</label>
-                <input type = "number" id = "price" th:field="*{price}" class="form-control">
+                <label for="phone">전화 번호</label>
+                <input type = "text" id = "phone" th:field="*{phone}" class="form-control">
                 <span class = "help-block">반드시 입력하세요</span>
-            </div>
-            <div class="form-group">
-                <label for="content">기타사항</label>
-                <input type = "text" id = "content" th:field="*{content}" class="form-control">
-            </div>
-            <div class="form-group">
-                <label for="dueDate">희망 종료 예정일</label>
-                <input type="datetime-local" id = "dueDate" th:field="*{dueDate}" class="form-control">
-                <span class = "help-block">반드시 입력하세요</span>
-            </div>
-            <div class="form-group">
-                <label for = "image">이미지 첨부</label><br>
-                <input type="file" id = "image" th:field="*{image}" >
+                <span class='text-danger' th:errors="*{phone}"></span>
             </div>
             <br><br>
             <div class="d-flex justify-content-center">
                 <div class ="row">
                     <div class = "col">
-                        <button class="btn btn-primary" type="button" th:onclick="update()">수정하기</button>
+                        <button class="btn btn-primary" type="button" th:onclick="create()">신청하기</button>
                     </div>
                     <div>
-                        <a th:href="@{/group/detail(id=${groupPostDto.id})}" class="btn btn-danger" role="button">취소하기</a>
+                        <a th:href="@{/group/detail(id=${groupApplyDto.groupId})}" class="btn btn-danger" role="button">취소하기</a>
                     </div>
                 </div>
             </div>

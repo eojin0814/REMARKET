@@ -1,6 +1,5 @@
 package com.softwareapplication.remarket.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.softwareapplication.remarket.domain.GroupPost;
 import com.softwareapplication.remarket.domain.Image;
 import jakarta.validation.constraints.*;
@@ -37,11 +36,11 @@ public class GroupPostDto {
     private String content;
 
     @NotNull
-    @Positive(message = "인원수를 다시 입력해주세요.")
+    @Positive
     private int numPeople;
 
     @NotNull
-    @Positive(message = "금액을 다시 입력해주세요.")
+    @Positive
     private int price;
 
     private Image image;
