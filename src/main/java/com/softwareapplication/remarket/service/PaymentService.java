@@ -1,10 +1,9 @@
 package com.softwareapplication.remarket.service;
 
+import com.softwareapplication.remarket.domain.Order;
 import com.softwareapplication.remarket.domain.SecondHand;
 import com.softwareapplication.remarket.domain.User;
 import com.softwareapplication.remarket.dto.OrderDto;
-import com.softwareapplication.remarket.dto.PaymentDto;
-import com.softwareapplication.remarket.dto.SecondHandDto;
 import com.softwareapplication.remarket.repository.PaymentRepository;
 import com.softwareapplication.remarket.repository.SecondHandRepository;
 import com.softwareapplication.remarket.repository.UserRepository;
@@ -12,7 +11,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -29,4 +28,14 @@ public class PaymentService {
         orderdto.setSecondHandId(secondHand);
         return paymentRepository.save(orderdto.toEntity()).getOrderId();
     }
+    public List<Order> findByAll(String email) {
+
+        User user = userRepository.findUserByEmail(email);
+
+
+        return paymentRepository.findByUser(user);//user.getUserId());
+    }
+
+
+
 }

@@ -15,6 +15,7 @@ import java.util.List;
 @RestController
 @RequestMapping("secondHand")
 @RequiredArgsConstructor
+@SessionAttributes("userSession")
 public class SecondHandController {
 
     private final SecondHandService secondHandService;
