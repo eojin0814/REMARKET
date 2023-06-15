@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 @EnableScheduling
 public class SchedulerController {
 
-    @Scheduled(fixedDelay=10000)
+    @Scheduled(fixedDelay=600000)
     public void init() {
         System.out.println("동작여부 확인");
     }
