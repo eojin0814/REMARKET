@@ -7,6 +7,7 @@ import com.softwareapplication.remarket.dto.UserDto;
 import com.softwareapplication.remarket.service.GroupApplyService;
 import com.softwareapplication.remarket.service.GroupPostService;
 import com.softwareapplication.remarket.service.UserService;
+
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -17,6 +18,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import jakarta.persistence.*;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
