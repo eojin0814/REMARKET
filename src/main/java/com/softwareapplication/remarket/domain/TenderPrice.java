@@ -11,54 +11,36 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 import java.util.Date;
-import java.util.List;
 
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Entity
-@Table(name="Auction")
+@Table(name="TenderPrice")
 @EntityListeners(AuditingEntityListener.class)
-public class Auction {
+public class TenderPrice {
 
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
-    @Column(name = "auction_Id")
-    private Long auctionId;
+    @Column(name = "tender_price_id")
+    private Long tenderPriceId;
 
     @CreatedDate
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdDate;
 
-    @LastModifiedDate
-    @Column
-    private LocalDateTime updatedDate;
 
-    @Column(name = "title")
-    private String title;
+    @Column(name = "application_auction_price")
+    private Long applicationauctionPrice;
 
-    @Column(name = "auction_price")
-    private Long auctionPrice;
-
-    @Column(name = "due_date")
-    private Date dueDate;
-
-    @Column(name = "content")
-    private String content;
-
-    @Column(name = "bid_price")
-    private String bidPrice;
-
-    @Column(name = "status")
-    private String status;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany
-    @JoinColumn(name = "tender_pirce_list")
-    private List<TenderPrice> tenderPriceList;
+    @ManyToOne
+    @JoinColumn(name = "auction_id")
+    private Auction auction;
 
 }
