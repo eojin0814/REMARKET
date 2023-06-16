@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -24,7 +25,7 @@ import java.util.List;
 
 @Component
 @EnableScheduling
-@RestController
+@Controller
 @RequestMapping("auction")
 @RequiredArgsConstructor
 @SessionAttributes("userSession")
@@ -67,6 +68,6 @@ public class SchedulerController {
         if(loginUser != null) {
             model.addAttribute("email", loginUser.getEmail());
         }
-        return "Auction/auctionForm";
+        return "auction/auctionForm";
     }
 }
