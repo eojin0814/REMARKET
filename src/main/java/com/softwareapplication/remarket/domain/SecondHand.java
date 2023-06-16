@@ -32,7 +32,7 @@ public class SecondHand {
 
     @CreatedDate
     @Temporal(TemporalType.TIMESTAMP)
-    private Date createdDate;
+    private LocalDateTime createdDate;
     @LastModifiedDate
     @Column
     private LocalDateTime updatedDate;

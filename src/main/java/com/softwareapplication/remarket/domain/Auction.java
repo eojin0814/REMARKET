@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -29,7 +30,7 @@ public class Auction {
 
     @CreatedDate
     @Temporal(TemporalType.TIMESTAMP)
-    private Date createdDate;
+    private LocalDateTime createdDate;
 
     @LastModifiedDate
     @Column
@@ -39,10 +40,11 @@ public class Auction {
     private String title;
 
     @Column(name = "auction_price")
-    private Long auctionPrice;
+    private int auctionPrice;
 
     @Column(name = "due_date")
-    private Date dueDate;
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
+    private LocalDateTime dueDate;
 
     @Column(name = "content")
     private String content;
@@ -52,6 +54,10 @@ public class Auction {
 
     @Column(name = "status")
     private String status;
+
+    @OneToOne
+    @JoinColumn(name="img_id")
+    private Image  image;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
