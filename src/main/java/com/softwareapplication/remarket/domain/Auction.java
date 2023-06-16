@@ -53,6 +53,10 @@ public class Auction {
     @Column(name = "status")
     private String status;
 
+    @OneToOne
+    @JoinColumn(name="img_id")
+    private Image  image;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;

@@ -2,6 +2,8 @@ package com.softwareapplication.remarket.controller;
 
 import com.softwareapplication.remarket.domain.SecondHand;
 import com.softwareapplication.remarket.domain.TenderPrice;
+import com.softwareapplication.remarket.dto.AuctionDto;
+import com.softwareapplication.remarket.dto.SecondHandDto;
 import com.softwareapplication.remarket.service.SchedulerService;
 import com.softwareapplication.remarket.service.SecondHandService;
 import lombok.RequiredArgsConstructor;
@@ -21,13 +23,16 @@ import java.util.List;
 @RequiredArgsConstructor
 @SessionAttributes("userSession")
 public class SchedulerController {
+    //마감기간 지나면 종료되도록하는 메소드
+    //경매 생성
+    //경매 낙찰될 경우 변경
 
     private final SchedulerService schedulerService;
 
 
     @Scheduled(fixedDelay=6000000)
     public void init() {
-        
+
     }
     @GetMapping("/list/{auctionId}")
     public ModelAndView findAuctiontenderList (@PathVariable("auctionId") Long auctionId){
@@ -35,5 +40,13 @@ public class SchedulerController {
         ModelAndView mav = new ModelAndView("tenderPrice");
         mav.addObject("tenderPrice", tenderPrice);
         return mav;
+    }
+
+    @PostMapping("/post")
+    public Long post(@RequestPart("auctionDto") AuctionDto auctionDto)throws Exception{
+        //System.out.println(secondHandDto.getTitle());
+
+        return schedulerService.save(auctionDto);
+        //new ModelAndView("redirect: /secondHand"); //수정 될 가능성 ..
     }
 }
