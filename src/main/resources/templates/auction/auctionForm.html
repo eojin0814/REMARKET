@@ -38,8 +38,8 @@
         function create(){
             var form = document.getElementById("form");
             var title = document.getElementById("title");
-            var content = document.getElementById("product");
-            var bidPrice = document.getElementById("price");
+            var content = document.getElementById("content");
+            var bidPrice = document.getElementById("bidPrice");
             var dueDate = document.getElementById("dueDate");
             if(title.value.trim() == "") {
                 alert("제목을 입력하시오.");
@@ -51,7 +51,7 @@
                 content.focus();
                 return false;
             }
-            else if(price.value.trim()== 0){
+            else if(bidPrice.value.trim()== 0){
                 alert("제시가를 입력하시오.");
                 bidPrice.focus();
                 return false;
@@ -75,8 +75,8 @@
     <div class="container w-75">
         <form id = "form" th:action = "@{/auction/create}" th:object = "${auctionDto}" th:method="post">
             <input type="hidden" id = "userId" th:field="*{userId}">
-            <input type="hidden" id = "createdAt" th:field="*{createdDate}">
-            <input type="hidden" id = "updatedAt" th:field="*{updatedDate}">
+            <input type="hidden" id = "createdDate" th:field="*{createdDate}">
+            <input type="hidden" id = "updatedDate" th:field="*{updatedDate}">
 
             <div class="form-group">
                 <label for="title">제목</label>
@@ -85,8 +85,8 @@
                 <span class='text-danger' th:errors="*{title}"></span>
             </div>
             <div class="form-group">
-                <label for="product">물품에 대한 정보 </label>
-                <input type = "text" id = "product" th:field="*{content}" class="form-control">
+                <label for="content">물품에 대한 정보 </label>
+                <input type = "text" id = "content" th:field="*{content}" class="form-control">
                 <span class = "help-block">반드시 입력하세요</span>
                 <span class='text-danger' th:errors="*{content}"></span>
             </div>

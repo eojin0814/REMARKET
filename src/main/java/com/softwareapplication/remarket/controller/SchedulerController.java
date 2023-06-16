@@ -11,6 +11,7 @@ import com.softwareapplication.remarket.service.SecondHandService;
 import com.softwareapplication.remarket.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -48,14 +49,6 @@ public class SchedulerController {
         mav.addObject("tenderPrice", tenderPrice);
         return mav;
     }
-
-    @PostMapping("/post")
-    public Long post(@RequestPart("auctionDto") AuctionDto auctionDto)throws Exception{
-        //System.out.println(secondHandDto.getTitle());
-
-        return schedulerService.save(auctionDto);
-        //new ModelAndView("redirect: /secondHand"); //수정 될 가능성 ..
-    }
     @GetMapping("/create")
     public String createPost(HttpServletRequest httpServletRequest, Model model, AuctionDto auctionDto){
         HttpSession session = httpServletRequest.getSession();
@@ -69,5 +62,13 @@ public class SchedulerController {
             model.addAttribute("email", loginUser.getEmail());
         }
         return "auction/auctionForm";
+    }
+    @ResponseBody
+    @PostMapping("/create")
+    public Long savepost(@Valid AuctionDto auctionDto)throws Exception{
+        //System.out.println(secondHandDto.getTitle());
+
+        return schedulerService.save(auctionDto);
+        //new ModelAndView("redirect: /secondHand"); //수정 될 가능성 ..
     }
 }

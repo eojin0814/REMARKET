@@ -2,11 +2,13 @@ package com.softwareapplication.remarket.dto;
 
 import com.softwareapplication.remarket.domain.*;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.FutureOrPresent;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.format.annotation.DateTimeFormat;
 
 
 import java.time.LocalDateTime;
@@ -21,7 +23,7 @@ public class AuctionDto {
     private Long auctionId;
 
     @CreatedDate
-    private Date createdDate;
+    private LocalDateTime createdDate;
 
     @LastModifiedDate
     private LocalDateTime updatedDate;
@@ -29,9 +31,10 @@ public class AuctionDto {
     private String title;
 
 
-    private Long auctionPrice; //제시가
-
-    private Date dueDate;
+    private int auctionPrice;//제시가
+    @FutureOrPresent
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
+    private LocalDateTime dueDate;
 
 
     private String content;

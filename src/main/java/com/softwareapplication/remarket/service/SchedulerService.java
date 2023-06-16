@@ -29,7 +29,7 @@ public class SchedulerService {
                 .orElseThrow(() -> new IllegalArgumentException("해당 유저가 존재하지 않습니다. id=" + auctionDto.getUserId()));
 
 
-        return schedulerRepository.save(auctionDto.toEntity(user)).getAuctionPrice();
+        return schedulerRepository.save(auctionDto.toEntity(user)).getAuctionId();
     }
     public List<TenderPrice> findByAuctionList(Long auctionId){
         return schedulerRepository.findAuctionsByAuctionId(auctionId);
