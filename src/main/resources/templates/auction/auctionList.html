@@ -4,7 +4,7 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/default_form}">
 <th:block layout:fragment="head">
-    <title>중고상품 보기</title>
+    <title>경매 게시판</title>
     <meta charset="utf-8">
 
     <!-- css -->
@@ -35,48 +35,27 @@
 </th:block>
 <head>
     <meta charset="UTF-8">
-    <title>공동구매 게시글 보기</title>
+    <title>경매 게시판</title>
 </head>
 <body>
 <div layout:fragment="content" class="content">
-    <br><br>
-    <table style = "margin-left:auto; margin-right: auto;">
-        <tr>
-            <td>
-                <th:block th:if="${secondHand.image == null}" >
-                    <img src="/image/curby.png" width="500px" height="300px">
-                </th:block>
-                <br>
-            </td>
-            <td>&nbsp;&nbsp;</td>
-            <td>
-                <table class ="table table-borderless">
-                    <thead>
-                    <tr><h3 th:text="${secondHand.title}"></h3></tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td>중고가</td>
-                        <td th:text = "${secondHand.price}">원</td>
-                    </tr>
-                    <tr>
-                        <td>상품설명</td>
-                        <th:block th:if="${secondHand.content == null}" >
-                            <td>...</td>
-                        </th:block>
-                        <th:block th:unless="${secondHand.content == null}" >
-                            <td th:text = "${secondHand.content}"></td>
-                        </th:block>
-                    </tr>
-
-
-                    </tbody>
-                </table>
-                <a th:href="@{/Payment/create/{secondHandId}(secondHandId = ${secondHand.secondHandId})}" class="btn btn-primary" role="button">결제하기</a>
-            </td>
-        </tr>
-
-    </table>
+    <h1 style="margin-left: 20px">경매 게시판</h1>
+    <div style="margin-left: 20px">
+        <a th:href="@{/auction/create}" class="btn btn-primary" role="button">작성하기</a>
+    </div><br>
+    <th:block th:each ="auction:${auction}">
+        <div style=" display:inline-block; margin-left: 20px">
+            <div class = "card" style = "width: 18rem;">
+                <th:block th:if="${auction.image == null}" >
+                    <img src="/image/curby.png" class="card-img-top" >
+                </th:block><br>
+                <div class ="card-body">
+                    제목:<a th:href="@{/auction/detail(id=${auction.auctionId})}"><h3 th:text ="${auction.title}"></h3></a>
+                </div>
+            </div>
+        </div>
+    </th:block>
+    <br>
 
 </div>
 </body>

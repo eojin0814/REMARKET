@@ -1,11 +1,13 @@
 package com.softwareapplication.remarket.controller;
 
+import com.softwareapplication.remarket.domain.Auction;
 import com.softwareapplication.remarket.domain.SecondHand;
 import com.softwareapplication.remarket.domain.TenderPrice;
 import com.softwareapplication.remarket.domain.User;
 import com.softwareapplication.remarket.dto.AuctionDto;
 import com.softwareapplication.remarket.dto.GroupPostDto;
 import com.softwareapplication.remarket.dto.SecondHandDto;
+import com.softwareapplication.remarket.dto.UserDto;
 import com.softwareapplication.remarket.service.SchedulerService;
 import com.softwareapplication.remarket.service.SecondHandService;
 import com.softwareapplication.remarket.service.UserService;
@@ -43,10 +45,17 @@ public class SchedulerController {
 
     }
     @GetMapping("/list/{auctionId}")
-    public ModelAndView findAuctiontenderList (@PathVariable("auctionId") Long auctionId){
+    public ModelAndView findAuctionTenderList (@PathVariable("auctionId") Long auctionId){
         List<TenderPrice> tenderPrice = schedulerService.findByAuctionList(auctionId);
         ModelAndView mav = new ModelAndView("tenderPrice");
         mav.addObject("tenderPrice", tenderPrice);
+        return mav;
+    }
+    @GetMapping("/list/auction")
+    public ModelAndView findAuctionList (){
+        List<Auction> auction = schedulerService.findByList();
+        ModelAndView mav = new ModelAndView("auction/auctionList");
+        mav.addObject("auction", auction);
         return mav;
     }
     @GetMapping("/create")
@@ -70,5 +79,24 @@ public class SchedulerController {
 
         return schedulerService.save(auctionDto);
         //new ModelAndView("redirect: /secondHand"); //수정 될 가능성 ..
+    }
+    @GetMapping("/detail")
+    public ModelAndView detailPost(@RequestParam("id")Long id, HttpServletRequest httpServletRequest){
+        Auction auction = schedulerService.findById(id);
+        UserDto.Info user = userService.getUserByUserId(auction.getUser().getUserId());
+        HttpSession session = httpServletRequest.getSession();
+        String email = (String)session.getAttribute("email");
+        User loginUser = userService.getLoginUserByEmail(email);
+
+        ModelAndView mav = new ModelAndView("auction/auctionDetail");
+        mav.addObject("auction", auction);
+        mav.addObject("user", user);
+        mav.addObject("loginUser", loginUser);
+
+        if(loginUser != null) {
+            mav.addObject("email", loginUser.getEmail());
+        }
+
+        return mav;
     }
 }

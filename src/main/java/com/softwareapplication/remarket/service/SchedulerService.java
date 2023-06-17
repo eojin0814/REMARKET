@@ -1,11 +1,10 @@
 package com.softwareapplication.remarket.service;
 
+import com.softwareapplication.remarket.domain.Auction;
 import com.softwareapplication.remarket.domain.TenderPrice;
 import com.softwareapplication.remarket.domain.User;
 import com.softwareapplication.remarket.dto.AuctionDto;
-import com.softwareapplication.remarket.dto.SecondHandDto;
 import com.softwareapplication.remarket.repository.SchedulerRepository;
-import com.softwareapplication.remarket.repository.SecondHandRepository;
 import com.softwareapplication.remarket.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -33,6 +33,14 @@ public class SchedulerService {
     }
     public List<TenderPrice> findByAuctionList(Long auctionId){
         return schedulerRepository.findAuctionsByAuctionId(auctionId);
+
+    }
+    public List<Auction> findByList(){
+        return schedulerRepository.findAll();
+
+    }
+    public Auction findById(Long id){
+        return schedulerRepository.findById(id).orElseThrow(()->new IllegalArgumentException("해당 게시글이 없습니다. id:"+id));
 
     }
 }
