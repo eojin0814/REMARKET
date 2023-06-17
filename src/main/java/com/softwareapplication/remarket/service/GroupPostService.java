@@ -25,7 +25,8 @@ public class GroupPostService {
     @Transactional
     public GroupPostDto findPost(Long id){
         GroupPost groupPost = groupPostRepository.findGroupPostById(id);
-        return groupPost.toDto();
+        GroupPostDto groupPostDto = new GroupPostDto(groupPost);
+        return groupPostDto;
     }
 
     @Transactional
@@ -43,19 +44,7 @@ public class GroupPostService {
         List<GroupPost> groupPostList = groupPostRepository.findAll();
         List<GroupPostDto> groupPostDtoList = new ArrayList<>();
         for(GroupPost groupPost : groupPostList){
-            GroupPostDto groupPostDto = GroupPostDto.builder()
-                    .id(groupPost.getId())
-                    .created(groupPost.getCreated())
-                    .updated(groupPost.getUpdated())
-                    .title(groupPost.getTitle())
-                    .dueDate(groupPost.getDueDate())
-                    .product(groupPost.getProduct())
-                    .content(groupPost.getContent())
-                    .numPeople(groupPost.getNumPeople())
-                    .price(groupPost.getPrice())
-                    .image(groupPost.getImage())
-                    .userId(groupPost.getUserId())
-                    .build();
+            GroupPostDto groupPostDto = new GroupPostDto(groupPost);
             groupPostDtoList.add(groupPostDto);
         }
         return groupPostDtoList;

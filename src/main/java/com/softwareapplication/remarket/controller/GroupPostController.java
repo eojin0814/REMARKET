@@ -2,6 +2,7 @@ package com.softwareapplication.remarket.controller;
 
 import com.softwareapplication.remarket.domain.User;
 import com.softwareapplication.remarket.dto.GroupApplyDto;
+import com.softwareapplication.remarket.dto.GroupCommentDto;
 import com.softwareapplication.remarket.dto.GroupPostDto;
 import com.softwareapplication.remarket.dto.UserDto;
 import com.softwareapplication.remarket.service.GroupApplyService;
@@ -69,12 +70,16 @@ public class GroupPostController {
         UserDto.Info postUser = userService.getUserByUserId(groupPostDto.getUserId());
         User loginUser = userService.getLoginUserByEmail(email);
         GroupApplyDto groupApplyDto = groupApplyService.findUserApply(id, loginUser.getUserId());
+        List<GroupCommentDto.ResponseDto> groupComments = groupPostDto.getGroupComments();
 
         ModelAndView mav = new ModelAndView("group/detailGroupPost");
         mav.addObject("groupPostDto", groupPostDto);
         mav.addObject("postUser", postUser);
         mav.addObject("loginUser", loginUser);
         mav.addObject("groupApplyDto", groupApplyDto);
+        if(groupComments != null && !groupComments.isEmpty()){
+            mav.addObject("groupComments", groupComments);
+        }
 
         if(loginUser != null) {
             mav.addObject("email", loginUser.getEmail());
