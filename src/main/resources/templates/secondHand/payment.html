@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
 
 <head>
   <meta charset="UTF-8">
@@ -37,33 +38,65 @@
       box-shadow: 0 8px 20px 0 rgba(0, 0, 0, 0.15)
     }
   </style>
+  <script th:inline="javascript">
+    function create(){
+      var form = document.getElementById("form");
+      var cardType = document.getElementById("cardType");
+      var expiryDate = document.getElementById("expiryDate");
+      var cardNum = document.getElementById("cardNum");
+      var cardPwd = document.getElementById("cardPwd");
+      var address = document.getElementById("address");
+      if(cardType.value.trim() == "") {
+        cardType.focus();
+        return false;
+      }
+      else if(expiryDate.value.trim()== ""){
+        expiryDate.focus();
+        return false;
+      }
+      else if(cardNum.value.trim()== ""){
+        cardNum.focus();
+        return false;
+      }
+      else if(cardPwd.value.trim()== ""){
+        cardPwd.focus();
+        return false;
+      }
+      else if(address.value.trim()== ""){
+        address.focus();
+        return false;
+      }
+
+      form.submit();
+    }
+
+  </script>
 </head>
 
 <body>
+
 <div class="container">
   <div class="input-form-backgroud row">
     <div class="input-form col-md-12 mx-auto">
       <h4 class="mb-3">결제창</h4>
-      <form class="validation-form" novalidate>
+      <form class="validation-form" novalidate id = "form" th:action = "@{/Payment/create/{secondHandId}(secondHandId = ${secondHandId})}" th:object = "${orderDto}" th:method="post">
+        <input type="hidden" id = "userId" th:field="*{userId}">
         <div class="row">
           <div class="col-md-6 mb-3">
-            <label for="root">CardType</label>
-            <select class="custom-select d-block w-100" id="root">
-              <option value=""></option>
-              <option>하나은행</option>
-              <option>우리은행</option>
-              <option>카카오뱅크</option>
-              <option>국민은행</option>
-              <option>기업은행</option>
-              <option>부산은행</option>
+            <label for="cardType">CardType</label>
+            <select class="custom-select d-block w-100" type = "text" id="cardType"  >
+              <option th:each="val : ${BankCodes}" th:value="${val?.code}"
+                      th:utext="${val?.displayName}">
+              </option>
+
             </select>
             <div class="invalid-feedback">
               카드타입을 입력해주세요.
             </div>
           </div>
           <div class="col-md-6 mb-3">
-            <label for="nickname">ExpiryDate</label>
-            <input type="text" class="form-control" id="nickname" placeholder="00/00" value="" required>
+            <label for="expiryDate">ExpiryDate</label>
+            <input type="text" class="form-control" id = "expiryDate" th:field="*{payment.expiryDate}" placeholder="00/00" value="" required>
             <div class="invalid-feedback">
               카드 기한을 입력해주세요.
             </div>
@@ -71,24 +104,24 @@
         </div>
 
         <div class="mb-3">
-          <label for="email">CardNum</label>
-          <input type="email" class="form-control" id="email" placeholder="**** **** **** ****" required>
+          <label for="cardNum">CardNum</label>
+          <input type="text" class="form-control" id = "cardNum" th:field="*{payment.cardNum}" placeholder="**** **** **** ****" required>
           <div class="invalid-feedback">
             카드번호를 입력해주세요.
           </div>
         </div>
 
         <div class="mb-3">
-          <label for="address">CardPwd</label>
-          <input type="text" class="form-control" id="address" placeholder="******" required>
+          <label for="cardPwd">CardPwd</label>
+          <input type="text" class="form-control" id = "cardPwd" th:field="*{payment.cardPwd}" placeholder="******" required>
           <div class="invalid-feedback">
             카드 비밀번호를 입력해주세요.
           </div>
         </div>
 
         <div class="mb-3">
-          <label for="address2">주소<span class="text-muted"></span></label>
-          <input type="text" class="form-control" id="address2" placeholder="서울특별시 성북구 화랑로 22.">
+          <label for="address">주소<span class="text-muted"></span></label>
+          <input type="text" class="form-control" id="address" th:field="*{address}" placeholder="서울특별시 성북구 화랑로 22.">
         </div>
 
         <hr class="mb-4">
@@ -97,27 +130,12 @@
           <label class="custom-control-label" for="aggrement">개인정보 수집 및 이용에 동의합니다.</label>
         </div>
         <div class="mb-4"></div>
-        <button class="btn btn-primary btn-lg btn-block" type="submit">가입 완료</button>
+        <button class="btn btn-primary btn-lg btn-block" type="submit" th:onclick="create()">가입 완료</button>
       </form>
     </div>
   </div>
 </div>
-<script>
-  window.addEventListener('load', () => {
-    const forms = document.getElementsByClassName('validation-form');
 
-    Array.prototype.filter.call(forms, (form) => {
-      form.addEventListener('submit', function (event) {
-        if (form.checkValidity() === false) {
-          event.preventDefault();
-          event.stopPropagation();
-        }
-
-        form.classList.add('was-validated');
-      }, false);
-    });
-  }, false);
-</script>
 </body>
 
 </html>

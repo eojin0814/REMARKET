@@ -16,6 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.List;
 
@@ -43,10 +44,10 @@ public class SecondHandController {
     }
     @ResponseBody
     @PostMapping("/create")
-    public Long savepost(@Valid SecondHandDto secondHandDto)throws Exception{
+    public RedirectView savepost(@Valid SecondHandDto secondHandDto)throws Exception{
         //System.out.println(secondHandDto.getTitle());
-
-        return secondHandService.save(secondHandDto);
+        secondHandService.save(secondHandDto);
+        return new RedirectView("/secondHand/post/list");
         //new ModelAndView("redirect: /secondHand"); //수정 될 가능성 ..
     }
 

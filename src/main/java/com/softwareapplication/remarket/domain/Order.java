@@ -32,8 +32,8 @@ public class Order {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
-    @ManyToOne
-    @JoinColumn(name = "payment_id")
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "payment_id" )
     private Payment payment;
 
     @Column(name = "address", length = 50)

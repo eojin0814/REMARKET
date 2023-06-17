@@ -72,10 +72,7 @@
 
                     </tbody>
                 </table>
-                <button class="btn btn-outline-dark flex-shrink-0" type="button">
-                    <i class="bi-cart-fill me-1"></i>
-                    결제하기
-                </button>
+                <a th:href="@{/Payment/create/{secondHandId}(secondHandId = ${secondHand.secondHandId})}" class="btn btn-primary" role="button">결제하기</a>
             </td>
         </tr>
 
