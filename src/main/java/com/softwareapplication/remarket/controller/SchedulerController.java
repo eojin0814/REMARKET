@@ -4,10 +4,7 @@ import com.softwareapplication.remarket.domain.Auction;
 import com.softwareapplication.remarket.domain.SecondHand;
 import com.softwareapplication.remarket.domain.TenderPrice;
 import com.softwareapplication.remarket.domain.User;
-import com.softwareapplication.remarket.dto.AuctionDto;
-import com.softwareapplication.remarket.dto.GroupPostDto;
-import com.softwareapplication.remarket.dto.SecondHandDto;
-import com.softwareapplication.remarket.dto.UserDto;
+import com.softwareapplication.remarket.dto.*;
 import com.softwareapplication.remarket.service.SchedulerService;
 import com.softwareapplication.remarket.service.SecondHandService;
 import com.softwareapplication.remarket.service.UserService;
@@ -98,5 +95,29 @@ public class SchedulerController {
         }
 
         return mav;
+    }
+
+    @GetMapping("/create/tender/{auctionId}")
+    public String createtender(@PathVariable("auctionId") Long auctionId,HttpServletRequest httpServletRequest, Model model, TenderPriceDto tenderPrice){
+        HttpSession session = httpServletRequest.getSession();
+        String email = (String)session.getAttribute("email");
+        User loginUser = userService.getLoginUserByEmail(email);
+
+        tenderPrice.setUserId(loginUser.getUserId());
+        tenderPrice.setAuctionId(auctionId);
+        model.addAttribute("auctionDto", tenderPrice);
+
+        if(loginUser != null) {
+            model.addAttribute("email", loginUser.getEmail());
+        }
+        return "auction/tenderAuction";
+    }
+    @ResponseBody
+    @PostMapping("/create/tender/{auctionId}")
+    public Long savetender(@Valid AuctionDto auctionDto)throws Exception{
+        //System.out.println(secondHandDto.getTitle());
+
+        return schedulerService.save(auctionDto);
+        //new ModelAndView("redirect: /secondHand"); //수정 될 가능성 ..
     }
 }

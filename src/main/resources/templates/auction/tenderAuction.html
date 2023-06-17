@@ -41,29 +41,10 @@
   <script th:inline="javascript">
     function create(){
       var form = document.getElementById("form");
-      var cardType = document.getElementById("cardType");
-      var expiryDate = document.getElementById("expiryDate");
-      var cardNum = document.getElementById("cardNum");
-      var cardPwd = document.getElementById("cardPwd");
-      var address = document.getElementById("address");
-      if(cardType.value.trim() == "") {
-        cardType.focus();
-        return false;
-      }
-      else if(expiryDate.value.trim()== ""){
-        expiryDate.focus();
-        return false;
-      }
-      else if(cardNum.value.trim()== ""){
-        cardNum.focus();
-        return false;
-      }
-      else if(cardPwd.value.trim()== ""){
-        cardPwd.focus();
-        return false;
-      }
-      else if(address.value.trim()== ""){
-        address.focus();
+      var applicationPrice = document.getElementById("applicationPrice");
+
+      if(applicationPrice.value.trim() == "") {
+        applicationPrice.focus();
         return false;
       }
 
@@ -79,55 +60,22 @@
   <div class="input-form-backgroud row">
     <div class="input-form col-md-12 mx-auto">
       <h4 class="mb-3">경매 제시가</h4>
-      <form class="validation-form" novalidate id = "form" th:action = "@{/Payment/create/{secondHandId}(secondHandId = ${secondHandId})}" th:object = "${orderDto}" th:method="post">
+      <form class="validation-form" novalidate id = "form" th:action = "@{/auction/create/tender/{auctionId}(auctionId = ${auctionId})}" th:object = "${auctionDto}" th:method="post">
         <input type="hidden" id = "userId" th:field="*{userId}">
         <div class="row">
           <div class="col-md-6 mb-3">
-            <label for="cardType">CardType</label>
-            <select class="custom-select d-block w-100" type = "text" id="cardType"  >
-              <option th:each="val : ${BankCodes}" th:value="${val?.code}"
-                      th:utext="${val?.displayName}">
-              </option>
-
-            </select>
+            <label for="applicationPrice">제시가</label>
+            <input type="number" class="form-control" id = "applicationPrice" th:field="*{applicationPrice}" placeholder="1000" value="" required>
             <div class="invalid-feedback">
-              카드타입을 입력해주세요.
+              제시가를 입력하시요
             </div>
           </div>
-          <div class="col-md-6 mb-3">
-            <label for="expiryDate">ExpiryDate</label>
-            <input type="text" class="form-control" id = "expiryDate" th:field="*{payment.expiryDate}" placeholder="00/00" value="" required>
-            <div class="invalid-feedback">
-              카드 기한을 입력해주세요.
-            </div>
-          </div>
-        </div>
-
-        <div class="mb-3">
-          <label for="cardNum">CardNum</label>
-          <input type="text" class="form-control" id = "cardNum" th:field="*{payment.cardNum}" placeholder="**** **** **** ****" required>
-          <div class="invalid-feedback">
-            카드번호를 입력해주세요.
-          </div>
-        </div>
-
-        <div class="mb-3">
-          <label for="cardPwd">CardPwd</label>
-          <input type="text" class="form-control" id = "cardPwd" th:field="*{payment.cardPwd}" placeholder="******" required>
-          <div class="invalid-feedback">
-            카드 비밀번호를 입력해주세요.
-          </div>
-        </div>
-
-        <div class="mb-3">
-          <label for="address">주소<span class="text-muted"></span></label>
-          <input type="text" class="form-control" id="address" th:field="*{address}" placeholder="서울특별시 성북구 화랑로 22.">
         </div>
 
         <hr class="mb-4">
         <div class="custom-control custom-checkbox">
           <input type="checkbox" class="custom-control-input" id="aggrement" required>
-          <label class="custom-control-label" for="aggrement">개인정보 수집 및 이용에 동의합니다.</label>
+          <label class="custom-control-label" for="aggrement">취소 할 수 없으며 제시한 금액으로 구입하게 됩니다.</label>
         </div>
         <div class="mb-4"></div>
         <button class="btn btn-primary btn-lg btn-block" type="submit" th:onclick="create()">가입 완료</button>
