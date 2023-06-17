@@ -10,6 +10,8 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 @NoArgsConstructor
@@ -37,6 +39,8 @@ public class CommunityDto {
     private String imgUrl;
     private MultipartFile file;
 
+    private List<CommunityCommentDto.ResponseDto> communityComments;
+
     private User user;
 
 
@@ -54,18 +58,21 @@ public class CommunityDto {
     }
 
     @Builder
-    public CommunityDto (Long id, String title, LocalDateTime created, LocalDateTime updated, String contentCommunity, Image image, User user){
-        this.id = id;
-        this.title = title;
-        this.created = created;
-        this.updated = updated;
-        this.contentCommunity = contentCommunity;
-        this.image = image;
+    public CommunityDto (Community community){
+        this.id = community.getId();
+        this.title = community.getTitle();
+        this.created = community.getCreated();
+        this.updated = community.getUpdated();
+        this.contentCommunity = community.getContentCommunity();
+        this.image = community.getImage();
         try {
             this.imgUrl = getUploadDirPath(image.getUrl());
         }catch (Exception e ) {
             this.imgUrl = "";
         }
-        this.user = user;
+        if(community.getCommunityComments() != null) {
+            this.communityComments = community.getCommunityComments().stream().map(c -> new CommunityCommentDto.ResponseDto(c)).collect(Collectors.toList());
+        }
+        this.user = community.getUser();
     }
 }
