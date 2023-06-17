@@ -79,24 +79,7 @@
     </table>
     <br><br>
 
-    <div width="200px" height="100px">
-        <table style = "margin-left:auto; margin-right: auto; border:1px solid black;">
-            <tr style = "border:1px solid black;">
-                <th:block th:each ="auction:${auction}">
-                    <div style=" display:inline-block; margin-left: 20px">
-                        <div class = "card" style = "width: 18rem;">
-                            <th:block th:if="${auction.image == null}" >
-                                <img src="/image/curby.png" class="card-img-top" >
-                            </th:block><br>
-                            <div class ="card-body">
-                                제목:<a th:href="@{/auction/detail(id=${auction.auctionId})}"><h3 th:text ="${auction.title}"></h3></a>
-                            </div>
-                        </div>
-                    </div>
-                </th:block>
-            </tr>
-        </table>
-    </div>
+
 
 </div>
 </body>

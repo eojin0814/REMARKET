@@ -37,15 +37,26 @@ public class SchedulerController {
     private final SchedulerService schedulerService;
 
     private final UserService userService;
+
+
     @Scheduled(fixedDelay=6000000)
     public void init() {
 
     }
     @GetMapping("/list/{auctionId}")
     public ModelAndView findAuctionTenderList (@PathVariable("auctionId") Long auctionId){
-        List<TenderPrice> tenderPrice = schedulerService.findByAuctionList(auctionId);
-        ModelAndView mav = new ModelAndView("tenderPrice");
-        mav.addObject("tenderPrice", tenderPrice);
+        List<TenderPrice> tenderList = schedulerService.findByAuctionList(auctionId);
+        ModelAndView mav = new ModelAndView("auction/auctionDetail");
+
+        mav.addObject("tenderList", schedulerService.findByAuctionList(auctionId));
+        return mav;
+    }
+    @GetMapping("/tender/detail")
+    public ModelAndView findTender (@RequestParam("id") Long tenderId){
+        TenderPrice tender = schedulerService.findByTenderId(tenderId);
+        ModelAndView mav = new ModelAndView("auction/auctionDetail");
+
+        mav.addObject("tender", tender);
         return mav;
     }
     @GetMapping("/list/auction")
@@ -98,15 +109,16 @@ public class SchedulerController {
     }
 
     @GetMapping("/create/tender/{auctionId}")
-    public String createtender(@PathVariable("auctionId") Long auctionId,HttpServletRequest httpServletRequest, Model model, TenderPriceDto tenderPrice){
+    public String save(@PathVariable("auctionId") Long auctionId,HttpServletRequest httpServletRequest, Model model, TenderPriceDto tenderPrice){
         HttpSession session = httpServletRequest.getSession();
         String email = (String)session.getAttribute("email");
         User loginUser = userService.getLoginUserByEmail(email);
 
         tenderPrice.setUserId(loginUser.getUserId());
         tenderPrice.setAuctionId(auctionId);
-        model.addAttribute("auctionDto", tenderPrice);
-
+        model.addAttribute("tenderPrice", tenderPrice);
+        model.addAttribute("userId", loginUser.getUserId());
+        model.addAttribute("auctionId", auctionId);
         if(loginUser != null) {
             model.addAttribute("email", loginUser.getEmail());
         }
@@ -114,10 +126,10 @@ public class SchedulerController {
     }
     @ResponseBody
     @PostMapping("/create/tender/{auctionId}")
-    public Long savetender(@Valid AuctionDto auctionDto)throws Exception{
+    public Long saves( @Valid TenderPriceDto tenderPrice)throws Exception{
         //System.out.println(secondHandDto.getTitle());
 
-        return schedulerService.save(auctionDto);
+        return schedulerService.saveTender(tenderPrice);
         //new ModelAndView("redirect: /secondHand"); //수정 될 가능성 ..
     }
 }

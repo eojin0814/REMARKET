@@ -1,6 +1,8 @@
 package com.softwareapplication.remarket.dto;
 
 import com.softwareapplication.remarket.domain.Auction;
+import com.softwareapplication.remarket.domain.SecondHand;
+import com.softwareapplication.remarket.domain.TenderPrice;
 import com.softwareapplication.remarket.domain.User;
 import jakarta.persistence.*;
 import lombok.*;
@@ -23,5 +25,14 @@ public class TenderPriceDto {
     private Long userId;
 
     private Long auctionId;
+
+    public TenderPrice toEntity(User loginUser ,Auction auction){
+        return TenderPrice.builder()
+                .tenderPriceId(tenderPriceId)
+                .applicationPrice(applicationPrice)
+                .user(loginUser)
+                .auction(auction)
+                .build();
+    }
 
 }

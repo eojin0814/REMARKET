@@ -60,8 +60,9 @@
   <div class="input-form-backgroud row">
     <div class="input-form col-md-12 mx-auto">
       <h4 class="mb-3">경매 제시가</h4>
-      <form class="validation-form" novalidate id = "form" th:action = "@{/auction/create/tender/{auctionId}(auctionId = ${auctionId})}" th:object = "${auctionDto}" th:method="post">
+      <form class="validation-form" novalidate id = "form" th:action = "@{/auction/create/tender/{auctionId}(auctionId = ${auctionId})}" th:object = "${tenderPrice}" th:method="post">
         <input type="hidden" id = "userId" th:field="*{userId}">
+        <input type="hidden" id = "auctionId" th:field="*{auctionId}">
         <div class="row">
           <div class="col-md-6 mb-3">
             <label for="applicationPrice">제시가</label>
