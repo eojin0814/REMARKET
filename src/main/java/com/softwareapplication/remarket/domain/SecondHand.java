@@ -1,10 +1,12 @@
 package com.softwareapplication.remarket.domain;
 
+
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
 
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -30,7 +32,7 @@ public class SecondHand {
 
     @CreatedDate
     @Temporal(TemporalType.TIMESTAMP)
-    private Date createdDate;
+    private LocalDateTime createdDate;
     @LastModifiedDate
     @Column
     private LocalDateTime updatedDate;
@@ -42,7 +44,7 @@ public class SecondHand {
     private Image  image; //이미지 첨부
 
     @ManyToOne
-    @JoinColumn(name = "user_Id")
+    @JoinColumn(name = "user_id")
     private User user;
 
     public void update(String title, Image image, String content){

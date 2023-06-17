@@ -1,10 +1,18 @@
 package com.softwareapplication.remarket.controller;
 
 import com.softwareapplication.remarket.domain.SecondHand;
+import com.softwareapplication.remarket.domain.User;
+import com.softwareapplication.remarket.dto.AuctionDto;
 import com.softwareapplication.remarket.dto.SecondHandDto;
 import com.softwareapplication.remarket.service.SecondHandService;
-import jakarta.servlet.http.HttpServletResponse;
+
+import com.softwareapplication.remarket.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -12,16 +20,32 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 
-@RestController
+@Controller
 @RequestMapping("secondHand")
 @RequiredArgsConstructor
+@SessionAttributes("userSession")
 public class SecondHandController {
 
     private final SecondHandService secondHandService;
+    private final UserService userService;
+    @GetMapping("/create")
+    public String createPost(HttpServletRequest httpServletRequest, Model model, SecondHandDto secondHandDto){
+        HttpSession session = httpServletRequest.getSession();
+        String email = (String)session.getAttribute("email");
+        User loginUser = userService.getLoginUserByEmail(email);
 
-    @PostMapping("/post")
-    public Long post(@RequestPart("secondHandDto") SecondHandDto secondHandDto)throws Exception{
-        System.out.println(secondHandDto.getTitle());
+        secondHandDto.setUserId(loginUser.getUserId());
+        model.addAttribute("secondHandDto", secondHandDto);
+
+        if(loginUser != null) {
+            model.addAttribute("email", loginUser.getEmail());
+        }
+        return "secondHand/secondHandForm";
+    }
+    @ResponseBody
+    @PostMapping("/create")
+    public Long savepost(@Valid SecondHandDto secondHandDto)throws Exception{
+        //System.out.println(secondHandDto.getTitle());
 
         return secondHandService.save(secondHandDto);
         //new ModelAndView("redirect: /secondHand"); //수정 될 가능성 ..

@@ -8,7 +8,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.annotation.CreatedDate;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Getter
@@ -17,7 +19,8 @@ import java.util.Date;
 public class SecondHandDto {
     private Long secondHandId;
     private String content;
-    private Date createdDate;
+    @CreatedDate
+    private LocalDateTime createdDate;
     private Image image;
     private Long price;
     private String title;
