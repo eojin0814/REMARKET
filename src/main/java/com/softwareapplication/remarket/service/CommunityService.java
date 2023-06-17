@@ -29,7 +29,8 @@ public class CommunityService {
     @Transactional
     public CommunityDto findCommunity(Long id){
         Community community = communityRepository.findCommunityById(id);
-        return community.toDto();
+        CommunityDto communityDto = new CommunityDto(community);
+        return communityDto;
     }
     @Transactional
     public Long updateCommunity(CommunityDto communityDto){
@@ -46,15 +47,7 @@ public class CommunityService {
         List<Community> communityList = communityRepository.findAll();
         List<CommunityDto> communityDtoList = new ArrayList<>();
         for(Community community : communityList){
-            CommunityDto communityDto = CommunityDto.builder()
-                    .id(community.getId())
-                    .title(community.getTitle())
-                    .created(community.getCreated())
-                    .updated(community.getUpdated())
-                    .contentCommunity(community.getContentCommunity())
-                    .image(community.getImage())
-                    .user(community.getUser())
-                    .build();
+            CommunityDto communityDto = new CommunityDto(community);
             communityDtoList.add(communityDto);
         }
         return communityDtoList;

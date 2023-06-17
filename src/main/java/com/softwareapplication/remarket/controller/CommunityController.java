@@ -2,6 +2,7 @@ package com.softwareapplication.remarket.controller;
 
 import com.softwareapplication.remarket.domain.Image;
 import com.softwareapplication.remarket.domain.User;
+import com.softwareapplication.remarket.dto.CommunityCommentDto;
 import com.softwareapplication.remarket.dto.CommunityDto;
 import com.softwareapplication.remarket.dto.ImageDto;
 import com.softwareapplication.remarket.service.CommunityService;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -94,12 +96,16 @@ public class CommunityController {
         CommunityDto communityDto = communityService.findCommunity(id);
         User postUser = communityDto.getUser();
         User loginUser = userService.getLoginUserByEmail(email);
+        List<CommunityCommentDto.ResponseDto> communityComments = communityDto.getCommunityComments();
 
         ModelAndView mav = new ModelAndView("community/detailCommunity");
         mav.addObject("communityDto", communityDto);
         mav.addObject("postUser", postUser);
         mav.addObject("loginUser", loginUser);
 
+        if(communityComments != null && !communityComments.isEmpty()){
+            mav.addObject("communityComments", communityComments);
+        }
         if(loginUser != null) {
             mav.addObject("email", loginUser.getEmail());
         }

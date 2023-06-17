@@ -1,6 +1,5 @@
 package com.softwareapplication.remarket.domain;
 
-import com.softwareapplication.remarket.dto.CommunityDto;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
@@ -9,6 +8,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Builder
 @Getter
@@ -44,20 +44,11 @@ public class Community {
     @JoinColumn(name="image_id")
     private Image image; //이미지 첨부
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "community", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("id asc") // 댓글 정렬
+    private List<CommunityComment> communityComments;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
-
-    public CommunityDto toDto(){
-        CommunityDto build = CommunityDto.builder()
-                .id(id)
-                .title(title)
-                .created(created)
-                .updated(updated)
-                .contentCommunity(contentCommunity)
-                .image(image)
-                .user(user)
-                .build();
-        return build;
-    }
 }
