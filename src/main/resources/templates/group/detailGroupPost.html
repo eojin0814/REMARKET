@@ -117,7 +117,7 @@
           if (d_check === true) {
             $.ajax({
               type: "GET",
-              url: '/groupComment/deleteComment/' + commentId + '/' + groupPostId,
+              url: '/groupComment/deleteComment/' + commentId + '/' + groupPostId
             }).done(function () {
               alert('댓글이 삭제되었습니다.');
               window.location.reload();
@@ -141,7 +141,7 @@
           if (d_check === true) {
             $.ajax({
               type: "GET",
-              url: '/groupComment/deleteComment/'+commentId+'/'+groupPostId,
+              url: '/groupComment/deleteComment/'+commentId+'/'+groupPostId
             }).done(function () {
               alert('대댓글이 삭제되었습니다.');
               window.location.reload();
@@ -230,75 +230,75 @@
 <body>
 <div layout:fragment="content" class="content">
   <br><br>
-<table style = "margin-left:auto; margin-right: auto;">
-  <tr>
-    <td>
-      <th:block th:if="${groupPostDto.image == null}" >
-        <img src="/image/curby.png" width="500px" height="300px">
-      </th:block>
-      <br>
-      <th:block>
-        생성시간: <h6 th:text = "${#temporals.format(groupPostDto.created,'yyyy-dd-MM HH:mm')}"></h6>
-      </th:block>
-      <th:block>
-        수정시간: <h6 th:text = "${#temporals.format(groupPostDto.updated,'yyyy-dd-MM HH:mm')}"></h6>
-      </th:block>
-    </td>
-    <td>&nbsp;&nbsp;</td>
-    <td>
-      <table class ="table table-borderless">
-        <thead>
-          <tr th:text = "${postUser.name}"></tr>
+  <table style = "margin-left:auto; margin-right: auto;">
+    <tr>
+      <td>
+        <th:block th:if="${groupPostDto.image == null}" >
+          <img src="/image/curby.png" width="500px" height="300px">
+        </th:block>
+        <br>
+        <th:block>
+          생성시간: <h6 th:text = "${#temporals.format(groupPostDto.created,'yyyy-dd-MM HH:mm')}"></h6>
+        </th:block>
+        <th:block>
+          수정시간: <h6 th:text = "${#temporals.format(groupPostDto.updated,'yyyy-dd-MM HH:mm')}"></h6>
+        </th:block>
+      </td>
+      <td>&nbsp;&nbsp;</td>
+      <td>
+        <table class ="table table-borderless">
+          <thead>
+            <tr th:text = "${postUser.name}"></tr>
 
-          <tr><h3 th:text="${groupPostDto.title}"></h3></tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>물품명</td>
-            <td th:text = "${groupPostDto.product}"></td>
-          </tr>
-          <tr>
-            <td>물품 1개당 가격</td>
-            <td th:text = "${groupPostDto.price}">원</td>
-          </tr>
-          <tr>
-            <td>기타사항</td>
-            <th:block th:if="${groupPostDto.content == null}" >
-              <td>...</td>
-            </th:block>
-            <th:block th:unless="${groupPostDto.content == null}" >
-              <td th:text = "${groupPostDto.content}"></td>
-            </th:block>
-          </tr>
-          <tr>
-            <td>목표 인원수</td>
-            <td th:text = "${groupPostDto.numPeople}">명</td>
-          </tr>
-          <tr>
-            <td>희망 종료 예정일</td>
-            <td th:text = "${#temporals.format(groupPostDto.dueDate,'yyyy-dd-MM HH:mm')}"></td>
-          </tr>
-          <tr>
-            <td>현재 모집율</td>
-            <td>이 부분 후에 추가 작업</td>
-          </tr>
-        </tbody>
-      </table>
-      <th:block th:if = "${postUser.userId} == ${loginUser.userId}">
-        <a th:href="@{/groupApply/groupList(groupId=${groupPostDto.id})}" class="btn btn-info" role="button">신청 목록보기</a>
-        <a th:href="@{/group/update(id=${groupPostDto.id})}" class="btn btn-primary" role="button">글 수정하기</a>
-        <a th:href="@{/group/delete(id=${groupPostDto.id})}" class="btn btn-danger" role="button">글 삭제하기</a>
-      </th:block>
-      <th:block th:if = "${postUser.userId} != ${loginUser.userId} and ${groupApplyDto} == null">
-        <a th:href="@{/groupApply/createApply(groupId=${groupPostDto.id})}" class="btn btn-primary" role="button">신청하기</a>
-      </th:block>
-      <th:block th:if = "${postUser.userId} != ${loginUser.userId} and ${groupApplyDto} != null ">
-        <a th:href="@{/groupApply/detailApply(id=${groupApplyDto.id})}" class="btn btn-primary" role="button">신청 내역 보기</a>
-      </th:block>
+            <tr><h3 th:text="${groupPostDto.title}"></h3></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>물품명</td>
+              <td th:text = "${groupPostDto.product}"></td>
+            </tr>
+            <tr>
+              <td>물품 1개당 가격</td>
+              <td th:text = "${groupPostDto.price}">원</td>
+            </tr>
+            <tr>
+              <td>기타사항</td>
+              <th:block th:if="${groupPostDto.content == null}" >
+                <td>...</td>
+              </th:block>
+              <th:block th:unless="${groupPostDto.content == null}" >
+                <td th:text = "${groupPostDto.content}"></td>
+              </th:block>
+            </tr>
+            <tr>
+              <td>목표 인원수</td>
+              <td th:text = "${groupPostDto.numPeople}">명</td>
+            </tr>
+            <tr>
+              <td>희망 종료 예정일</td>
+              <td th:text = "${#temporals.format(groupPostDto.dueDate,'yyyy-dd-MM HH:mm')}"></td>
+            </tr>
+            <tr>
+              <td>현재 모집율</td>
+              <td>이 부분 후에 추가 작업</td>
+            </tr>
+          </tbody>
+        </table>
+        <th:block th:if = "${postUser.userId} == ${loginUser.userId}">
+          <a th:href="@{/groupApply/groupList(groupId=${groupPostDto.id})}" class="btn btn-info" role="button">신청 목록보기</a>
+          <a th:href="@{/group/update(id=${groupPostDto.id})}" class="btn btn-primary" role="button">글 수정하기</a>
+          <a th:href="@{/group/delete(id=${groupPostDto.id})}" class="btn btn-danger" role="button">글 삭제하기</a>
+        </th:block>
+        <th:block th:if = "${postUser.userId} != ${loginUser.userId} and ${groupApplyDto} == null">
+          <a th:href="@{/groupApply/createApply(groupId=${groupPostDto.id})}" class="btn btn-primary" role="button">신청하기</a>
+        </th:block>
+        <th:block th:if = "${postUser.userId} != ${loginUser.userId} and ${groupApplyDto} != null ">
+          <a th:href="@{/groupApply/detailApply(id=${groupApplyDto.id})}" class="btn btn-primary" role="button">신청 내역 보기</a>
+        </th:block>
 
-    </td>
-  </tr>
-</table>
+      </td>
+    </tr>
+  </table>
 
   <div class="card mb-2 mt-5">
 
@@ -385,7 +385,7 @@
       </form>
 
       <div th:id = "reComment+${groupComment.getId()}" class="collapse">
-          <ul class="list-group" th:each="children, childrenStat : ${groupComment.getChildren()}">
+          <ul class="list-group" th:each="children : ${groupComment.getChildren()}">
             <li class="list-group-item d-flex justify-content-between">
               <img src="/image/reply.png" alt="답글" style="display:inline" width="50px" height="50px" >
               <div class="d-flex">
@@ -422,18 +422,8 @@
 
           </ul>
       </div>
-
-
-
-
-
     </ul>
   </div>
-
-
-
-</div>
-
 </div>
 </body>
 </html>
