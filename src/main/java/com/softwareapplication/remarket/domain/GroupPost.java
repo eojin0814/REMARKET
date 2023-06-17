@@ -1,6 +1,5 @@
 package com.softwareapplication.remarket.domain;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.softwareapplication.remarket.dto.GroupPostDto;
 import jakarta.persistence.*;
 import lombok.*;
@@ -11,14 +10,13 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
-import java.util.Date;
+import java.util.List;
 
 
 @Builder
 @Getter @Setter
 @DynamicInsert
 @Entity
-@Table(name = "GroupPost")
 @NoArgsConstructor
 @AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
@@ -58,25 +56,12 @@ public class GroupPost{
     @JoinColumn(name="img_id")
     private Image  image; //이미지 첨부
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "groupPost", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("id asc") // 댓글 정렬
+    private List<GroupComment> groupComments;
+
     @Column(name = "user_id", nullable = false) //fk 공동구매 작성자(user_id)
     private Long userId;
-
-    public GroupPostDto toDto(){
-        GroupPostDto build = GroupPostDto.builder()
-                .id(id)
-                .created(created)
-                .updated(updated)
-                .title(title)
-                .dueDate(dueDate)
-                .product(product)
-                .content(content)
-                .numPeople(numPeople)
-                .price(price)
-                .image(image)
-                .userId(userId)
-                .build();
-        return build;
-    }
 
 
 }

@@ -9,6 +9,8 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 @NoArgsConstructor
@@ -45,6 +47,8 @@ public class GroupPostDto {
 
     private Image image;
 
+    private List<GroupCommentDto.ResponseDto> groupComments;
+
     @NotNull
     private Long userId;
 
@@ -65,19 +69,21 @@ public class GroupPostDto {
         return build;
     }
 
-    @Builder
-    public GroupPostDto(Long id, LocalDateTime created, LocalDateTime updated, String title, LocalDateTime dueDate, String product, String content, int numPeople, int price, Image image, Long userId){
-        this.id = id;
-        this.created = created;
-        this.updated = updated;
-        this.title = title;
-        this.dueDate = dueDate;
-        this.product = product;
-        this.content = content;
-        this.numPeople = numPeople;
-        this.price = price;
-        this.image = image;
-        this.userId = userId;
+    public GroupPostDto(GroupPost groupPost){
+        this.id = groupPost.getId();
+        this.created = groupPost.getCreated();
+        this.updated = groupPost.getUpdated();
+        this.title = groupPost.getTitle();
+        this.dueDate = groupPost.getDueDate();
+        this.product = groupPost.getProduct();
+        this.content = groupPost.getContent();
+        this.numPeople = groupPost.getNumPeople();
+        this.price = groupPost.getPrice();
+        this.image = groupPost.getImage();
+        if(groupPost.getGroupComments() != null) {
+            this.groupComments = groupPost.getGroupComments().stream().map(c -> new GroupCommentDto.ResponseDto(c)).collect(Collectors.toList());
+        }
+        this.userId = groupPost.getUserId();
     }
 
 }
