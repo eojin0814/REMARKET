@@ -53,7 +53,7 @@
             <tbody>
                 <th:block th:each ="groupApply, groupApplyState:${gApplyList}">
                     <tr>
-                        <a th:href="@{/static}"><td th:text = "${groupApplyState.count}"></td></a>
+                        <a th:href="@{/groupApply/detailApply(id=${groupApply.getId()})}"><td th:text = "${groupApplyState.count}"></td></a>
                         <td th:text = "${groupApply.getName()}"></td>
                         <td th:text ="${groupApply.getCount()}"></td>
                         <td th:text = "${groupApply.getPhone()}"></td>

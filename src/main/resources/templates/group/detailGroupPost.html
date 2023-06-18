@@ -233,15 +233,18 @@
   <table style = "margin-left:auto; margin-right: auto;">
     <tr>
       <td>
-        <th:block th:if="${groupPostDto.image == null}" >
+        <th:block th:if = "${not #strings.isEmpty(groupPostDto.imgUrl)}"  class="div-img row pt-3">
+          <img style="height: 65%; width: 65%" th:src="@{${groupPostDto.imgUrl}}" alt="...">
+        </th:block>
+        <th:block th:unless="${not #strings.isEmpty(groupPostDto.imgUrl)}" >
           <img src="/image/curby.png" width="500px" height="300px">
         </th:block>
         <br>
         <th:block>
-          생성시간: <h6 th:text = "${#temporals.format(groupPostDto.created,'yyyy-dd-MM HH:mm')}"></h6>
+          생성시간: <h6 th:text = "${#temporals.format(groupPostDto.created,'yyyy-MM-dd HH:mm')}"></h6>
         </th:block>
         <th:block>
-          수정시간: <h6 th:text = "${#temporals.format(groupPostDto.updated,'yyyy-dd-MM HH:mm')}"></h6>
+          수정시간: <h6 th:text = "${#temporals.format(groupPostDto.updated,'yyyy-MM-dd HH:mm')}"></h6>
         </th:block>
       </td>
       <td>&nbsp;&nbsp;</td>
@@ -276,21 +279,24 @@
             </tr>
             <tr>
               <td>희망 종료 예정일</td>
-              <td th:text = "${#temporals.format(groupPostDto.dueDate,'yyyy-dd-MM HH:mm')}"></td>
+              <td th:text = "${#temporals.format(groupPostDto.dueDate,'yyyy-MM-dd HH:mm')}"></td>
             </tr>
             <tr>
               <td>현재 모집율</td>
-              <td>이 부분 후에 추가 작업</td>
+              <td th:text="${percent}"></td>
             </tr>
           </tbody>
         </table>
         <th:block th:if = "${postUser.userId} == ${loginUser.userId}">
-          <a th:href="@{/groupApply/groupList(groupId=${groupPostDto.id})}" class="btn btn-info" role="button">신청 목록보기</a>
-          <a th:href="@{/group/update(id=${groupPostDto.id})}" class="btn btn-primary" role="button">글 수정하기</a>
-          <a th:href="@{/group/delete(id=${groupPostDto.id})}" class="btn btn-danger" role="button">글 삭제하기</a>
+          <a th:href="@{/groupApply/groupList(groupPostId=${groupPostDto.id})}" class="btn btn-info" role="button">신청 목록보기</a>
+          <a th:href="@{/group/updateGroup(id=${groupPostDto.id})}" class="btn btn-primary" role="button">글 수정하기</a>
+          <a th:href="@{/group/deleteGroup(id=${groupPostDto.id})}" class="btn btn-danger" role="button">글 삭제하기</a>
         </th:block>
-        <th:block th:if = "${postUser.userId} != ${loginUser.userId} and ${groupApplyDto} == null">
-          <a th:href="@{/groupApply/createApply(groupId=${groupPostDto.id})}" class="btn btn-primary" role="button">신청하기</a>
+        <th:block th:if = "${postUser.userId} != ${loginUser.userId} and ${groupApplyDto} == null and ${#strings.equals(groupPostDto.status, '신청 중')}">
+          <a th:href="@{/groupApply/createApply(groupPostId=${groupPostDto.id})}" class="btn btn-primary" role="button">신청하기</a>
+        </th:block>
+        <th:block th:if = "${postUser.userId} != ${loginUser.userId} and ${groupApplyDto} == null and ${#strings.equals(groupPostDto.status, '마감')}">
+          <p class="text-danger">마감된 공동구매입니다.</p>
         </th:block>
         <th:block th:if = "${postUser.userId} != ${loginUser.userId} and ${groupApplyDto} != null ">
           <a th:href="@{/groupApply/detailApply(id=${groupApplyDto.id})}" class="btn btn-primary" role="button">신청 내역 보기</a>
