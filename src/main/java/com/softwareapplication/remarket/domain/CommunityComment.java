@@ -27,6 +27,7 @@ public class CommunityComment {
     @JoinColumn(name = "parent_id")
     private CommunityComment parent;
 
+    @Builder.Default
     @OneToMany(mappedBy = "parent", orphanRemoval = true)
     private List<CommunityComment> children = new ArrayList<>();
 

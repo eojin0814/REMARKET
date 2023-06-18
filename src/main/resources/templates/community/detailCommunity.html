@@ -234,17 +234,17 @@
         <tr>
             <td>
                 <th:block th:if = "${not #strings.isEmpty(communityDto.imgUrl)}"  class="div-img row pt-3">
-                    <img style="height: 50%; width: 50%" th:src="@{${communityDto.imgUrl}}" alt="...">
+                    <img style="height: 65%; width: 65%" th:src="@{${communityDto.imgUrl}}" alt="...">
                 </th:block>
                 <th:block th:unless="${not #strings.isEmpty(communityDto.imgUrl)}" >
                     <img src="/image/curby.png" width="500px" height="300px">
                 </th:block>
                 <br>
                 <th:block>
-                    생성시간: <h6 th:text = "${#temporals.format(communityDto.created,'yyyy-dd-MM HH:mm')}"></h6>
+                    생성시간: <h6 th:text = "${#temporals.format(communityDto.created,'yyyy-MM-dd HH:mm')}"></h6>
                 </th:block>
                 <th:block>
-                    수정시간: <h6 th:text = "${#temporals.format(communityDto.updated,'yyyy-dd-MM HH:mm')}"></h6>
+                    수정시간: <h6 th:text = "${#temporals.format(communityDto.updated,'yyyy-MM-dd HH:mm')}"></h6>
                 </th:block>
             </td>
             <td>&nbsp;&nbsp;</td>

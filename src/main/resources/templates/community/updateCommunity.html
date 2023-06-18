@@ -61,7 +61,7 @@
 <div layout:fragment="content" class="content">
     <h1 style = "text-align: center">커뮤니티 게시글 수정</h1>
     <div class="container w-75">
-        <form id = "form" th:action = "@{/community/createCommunity}" th:object = "${communityDto}" th:method="post">
+        <form id = "form" th:action = "@{/community/updateCommunity}" th:object = "${communityDto}" th:method="PUT" enctype="multipart/form-data" accept-charset="UTF-8">
             <input type="hidden" id = "id" th:field="*{id}">
             <input type="hidden" id = "user" th:field="*{user}">
             <input type="hidden" id = "createdAt" th:field="*{created}">
@@ -80,11 +80,11 @@
                 <span class='text-danger' th:errors="*{contentCommunity}"></span>
             </div>
             <div class="form-group">
-                <label for = "file">이미지 첨부</label><br>
-                <input class="form-control" type="file" id="file" th:field="*{file}" accept="image/*">
+                <label for = "imgfile">이미지 첨부</label><br>
+                <input class="form-control" type="file" id="imgfile" th:field="*{file}" accept="image/*">
 
                 <div class="col-11 ms-5" id="div-thumbnail">
-                    <img id="img-thumbnail">
+                    <img th:src="@{${communityDto.imgUrl}}" id="img-thumbnail">
                 </div>
             </div>
 

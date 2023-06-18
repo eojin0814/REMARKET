@@ -47,12 +47,12 @@
         <div style=" display:inline-block; margin-left: 20px">
             <div class = "card" style = "width: 18rem;">
                 <img th:if = "${not #strings.isEmpty(community.imgUrl)}" th:src="@{${community.imgUrl}}" class="card-img-top"
-                     id="postList-img" alt="...">
+                     id="communityList-img" alt="...">
 
                 <img th:unless = "${not #strings.isEmpty(community.imgUrl)}" src="/image/curby.png" class="card-img-top" style="width: 100%; padding-bottom: 4px;">
 
                 <div class ="card-body">
-                    제목:<a th:href="@{/community/detailCommunity(id=${community.id})}"><h3 th:text ="${community.title}"></h3></a>
+                    제목:<a th:href="@{/community/detailCommunity(id=${community.id})}"><h4 th:text ="${community.title}"></h4></a>
                 </div>
             </div>
         </div>
