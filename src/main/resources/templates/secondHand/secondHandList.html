@@ -35,11 +35,11 @@
 </th:block>
 <head>
     <meta charset="UTF-8">
-    <title>중고상품 구매게시판</title>
+    <title>중고구매 게시판</title>
 </head>
 <body>
 <div layout:fragment="content" class="content">
-    <h1 style="margin-left: 20px">중고상품 구매 게시판</h1>
+    <h1 style="margin-left: 20px">중고구매 게시판</h1>
     <div style="margin-left: 20px">
         <a th:href="@{/secondHand/create}" class="btn btn-primary" role="button">작성하기</a>
     </div><br>
@@ -50,7 +50,7 @@
                     <img src="/image/curby.png" class="card-img-top" >
                 </th:block><br>
                 <div class ="card-body">
-                    제목:<a th:href="@{/secondHand/post/list(id=${secondHand.id})}"><h3 th:text ="${secondHand.title}"></h3></a>
+                    제목:<a th:href="@{/secondHand/detail(id=${secondHand.secondHandId})}"><h3 th:text ="${secondHand.title}"></h3></a>
                 </div>
             </div>
         </div>

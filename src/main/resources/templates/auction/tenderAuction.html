@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>회원가입 화면 샘플 - Bootstrap</title>
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+  <style>
+    body {
+      min-height: 100vh;
+
+      background: -webkit-gradient(linear, left bottom, right top, from(#92b5db), to(#1d466c));
+      background: -webkit-linear-gradient(bottom left, #92b5db 0%, #1d466c 100%);
+      background: -moz-linear-gradient(bottom left, #92b5db 0%, #1d466c 100%);
+      background: -o-linear-gradient(bottom left, #92b5db 0%, #1d466c 100%);
+      background: linear-gradient(to top right, #92b5db 0%, #1d466c 100%);
+    }
+
+    .input-form {
+      max-width: 680px;
+
+      margin-top: 80px;
+      padding: 32px;
+
+      background: #fff;
+      -webkit-border-radius: 10px;
+      -moz-border-radius: 10px;
+      border-radius: 10px;
+      -webkit-box-shadow: 0 8px 20px 0 rgba(0, 0, 0, 0.15);
+      -moz-box-shadow: 0 8px 20px 0 rgba(0, 0, 0, 0.15);
+      box-shadow: 0 8px 20px 0 rgba(0, 0, 0, 0.15)
+    }
+  </style>
+  <script th:inline="javascript">
+    function create(){
+      var form = document.getElementById("form");
+      var applicationPrice = document.getElementById("applicationPrice");
+
+      if(applicationPrice.value.trim() == "") {
+        applicationPrice.focus();
+        return false;
+      }
+
+      form.submit();
+    }
+
+  </script>
+</head>
+
+<body>
+
+<div class="container">
+  <div class="input-form-backgroud row">
+    <div class="input-form col-md-12 mx-auto">
+      <h4 class="mb-3">경매 제시가</h4>
+      <form class="validation-form" novalidate id = "form" th:action = "@{/auction/create/tender/{auctionId}(auctionId = ${auctionId})}" th:object = "${tenderPrice}" th:method="post">
+        <input type="hidden" id = "userId" th:field="*{userId}">
+        <input type="hidden" id = "auctionId" th:field="*{auctionId}">
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label for="applicationPrice">제시가</label>
+            <input type="number" class="form-control" id = "applicationPrice" th:field="*{applicationPrice}" placeholder="1000" value="" required>
+            <div class="invalid-feedback">
+              제시가를 입력하시요
+            </div>
+          </div>
+        </div>
+
+        <hr class="mb-4">
+        <div class="custom-control custom-checkbox">
+          <input type="checkbox" class="custom-control-input" id="aggrement" required>
+          <label class="custom-control-label" for="aggrement">취소 할 수 없으며 제시한 금액으로 구입하게 됩니다.</label>
+        </div>
+        <div class="mb-4"></div>
+        <button class="btn btn-primary btn-lg btn-block" type="submit" th:onclick="create()">구매 완료</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+</body>
+
+</html>
