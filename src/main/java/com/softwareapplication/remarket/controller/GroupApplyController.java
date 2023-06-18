@@ -3,9 +3,12 @@ package com.softwareapplication.remarket.controller;
 import com.softwareapplication.remarket.domain.User;
 import com.softwareapplication.remarket.dto.GroupApplyDto;
 import com.softwareapplication.remarket.dto.GroupPostDto;
+import com.softwareapplication.remarket.dto.UserDto;
 import com.softwareapplication.remarket.service.GroupApplyService;
 import com.softwareapplication.remarket.service.GroupPostService;
 import com.softwareapplication.remarket.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -24,84 +27,117 @@ public class GroupApplyController {
     private final UserService userService;
 
     @GetMapping("/groupList")
-    public ModelAndView groupApplyList(@SessionAttribute(name = "email", required = false) String email, @RequestParam("groupId")Long groupId) {
-        User loginUser = userService.getLoginUserByEmail(email);
+    public ModelAndView groupApplyList(HttpServletRequest req, @RequestParam("groupPostId")Long groupPostId) {
+        String email = checkLogin(req);
+        if (email == null) {
+            ModelAndView mav = new ModelAndView("content/user/user_login");
+            mav.addObject("loginRequest", new UserDto.LoginRequest());
+            return mav;
+        }
 
+        User loginUser = userService.getLoginUserByEmail(email);
         ModelAndView mav = new ModelAndView("groupApply/groupApplyList");
-        mav.addObject("gApplyList", groupApplyService.getGroupApplyListByGroupId(groupId));
+        mav.addObject("gApplyList", groupApplyService.getGroupApplyListByGroupId(groupPostId));
 
         if(loginUser != null) {
-            mav.addObject("email", loginUser.getEmail());
+            mav.addObject("email", email);
         }
         return mav;
     }
 
     @GetMapping("/createApply")
-    public String createApply(@SessionAttribute(name = "email", required = false)String email, Model model, GroupApplyDto groupApplyDto, @RequestParam("groupId")Long groupId){
+    public String createApply(HttpServletRequest req, Model model, GroupApplyDto groupApplyDto, @RequestParam("groupPostId")Long groupPostId){
+        String email = checkLogin(req);
+        if (email == null) {
+            model.addAttribute("loginRequest", new UserDto.LoginRequest());
+            return "content/user/user_login";
+        }
+
         User loginUser = userService.getLoginUserByEmail(email);
-        GroupPostDto groupPostDto = groupPostService.findPost(groupId);
-        groupApplyDto.setGroupId(groupId);
-        groupApplyDto.setUserId(loginUser.getUserId());
+        GroupPostDto groupPostDto = groupPostService.findPost(groupPostId);
+        groupApplyDto.setGroupPostId(groupPostId);
+        groupApplyDto.setUser(loginUser);
         groupApplyDto.setName(loginUser.getName());
 
         model.addAttribute("groupPostDto", groupPostDto);
         model.addAttribute("groupApplyDto", groupApplyDto);
 
         if(loginUser != null) {
-            model.addAttribute("email", loginUser.getEmail());
+            model.addAttribute("email", email);
         }
         return "groupApply/createGroupApply";
     }
 
     @PostMapping("/createApply")
-    public String saveApply(@SessionAttribute(name = "email", required = false) String email, RedirectAttributes redirectAttributes, @Valid GroupApplyDto groupApplyDto, BindingResult result, Model model){
-        Long groupId = groupApplyDto.getGroupId();
-        if(result.hasErrors()){
-            User loginUser = userService.getLoginUserByEmail(email);
+    public String saveApply(HttpServletRequest req, RedirectAttributes redirectAttributes, @Valid GroupApplyDto groupApplyDto, BindingResult result, Model model){
+        String email = checkLogin(req);
+        Long groupId = groupApplyDto.getGroupPostId();
 
+        if(result.hasErrors()){
+            if (email == null) {
+                model.addAttribute("loginRequest", new UserDto.LoginRequest());
+                return "content/user/user_login";
+            }
+
+            User loginUser = userService.getLoginUserByEmail(email);
             GroupPostDto groupPostDto = groupPostService.findPost(groupId);
 
             model.addAttribute("groupPostDto", groupPostDto);
             model.addAttribute("groupApplyDto", groupApplyDto);
 
             if(loginUser != null) {
-                model.addAttribute("email", loginUser.getEmail());
+                model.addAttribute("email", email);
             }
             return "/groupApply/createGroupApply";
         }
 
         redirectAttributes.addAttribute("id", groupId);
         groupApplyService.saveApply(groupApplyDto);
-        return "redirect:/group/detail";
+        return "redirect:/group/detailGroup";
     }
 
     @GetMapping("/detailApply")
-    public ModelAndView detailApply(@SessionAttribute(name = "email", required = false) String email, @RequestParam("id")Long id){
-        GroupApplyDto groupApplyDto = groupApplyService.findApply(id);
+    public ModelAndView detailApply(HttpServletRequest req, @RequestParam("id")Long id){
+        String email = checkLogin(req);
+        if (email == null) {
+            ModelAndView mav = new ModelAndView("content/user/user_login");
+            mav.addObject("loginRequest", new UserDto.LoginRequest());
+            return mav;
+        }
+
         User loginUser = userService.getLoginUserByEmail(email);
+        GroupApplyDto groupApplyDto = groupApplyService.findApply(id);
 
         ModelAndView mav = new ModelAndView("groupApply/detailGroupApply");
         mav.addObject("groupApplyDto", groupApplyDto);
 
         if(loginUser != null) {
-            mav.addObject("email", loginUser.getEmail());
+            mav.addObject("email", email);
         }
 
         return mav;
     }
 
     @GetMapping("/updateApply")
-    public ModelAndView updateApply(@SessionAttribute(name = "email", required = false) String email, @RequestParam("id")Long id){
-        ModelAndView mav = new ModelAndView("/groupApply/updateGroupApply");
+    public ModelAndView updateApply(HttpServletRequest req, @RequestParam("id")Long id){
+        String email = checkLogin(req);
+        if (email == null) {
+            ModelAndView mav = new ModelAndView("content/user/user_login");
+            mav.addObject("loginRequest", new UserDto.LoginRequest());
+            return mav;
+        }
+
         User loginUser = userService.getLoginUserByEmail(email);
+        ModelAndView mav = new ModelAndView("/groupApply/updateGroupApply");
 
         GroupApplyDto groupApplyDto = groupApplyService.findApply(id);
-        GroupPostDto groupPostDto = groupPostService.findPost(groupApplyDto.getGroupId());
+        GroupPostDto groupPostDto = groupPostService.findPost(groupApplyDto.getGroupPostId());
 
-        mav.addObject("groupPostDto", groupPostDto);
         mav.addObject("groupApplyDto", groupApplyDto);
+        mav.addObject("groupPostDto", groupPostDto);
+
         if(loginUser != null) {
-            mav.addObject("email", loginUser.getEmail());
+            mav.addObject("email", email);
         }
         return mav;
     }
@@ -111,17 +147,25 @@ public class GroupApplyController {
         if(result.hasErrors()){
             return "groupApply/updateGroupApply";
         }
-        Long groupId = groupApplyDto.getGroupId();
+        Long groupId = groupApplyDto.getGroupPostId();
         groupApplyService.updateApply(groupApplyDto);
         redirectAttributes.addAttribute("id", groupId);
-        return "redirect:/group/detail";
+        return "redirect:/group/detailGroup";
     }
 
     @GetMapping("/deleteApply")
-    public String deleteApply(RedirectAttributes redirectAttributes, @RequestParam("groupApplyId")Long groupApplyId, @RequestParam("groupId")Long groupId){
+    public String deleteApply(RedirectAttributes redirectAttributes, @RequestParam("groupApplyId")Long groupApplyId, @RequestParam("groupPostId")Long groupPostId){
         groupApplyService.deleteApply(groupApplyId);
-        redirectAttributes.addAttribute("id", groupId);
-        return "redirect:/group/detail";//id groupId로 줘야 함
+        redirectAttributes.addAttribute("id", groupPostId);
+        return "redirect:/group/detailGroup";//id groupId로 줘야 함
+    }
+
+    private String checkLogin(HttpServletRequest req) {
+        HttpSession session = req.getSession(false);
+        if(session == null) return null;
+        String email = (String) session.getAttribute("email");
+        if(email == null) return null;
+        return email;
     }
 
 }

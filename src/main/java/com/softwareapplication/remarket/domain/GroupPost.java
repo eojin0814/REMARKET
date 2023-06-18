@@ -1,6 +1,5 @@
 package com.softwareapplication.remarket.domain;
 
-import com.softwareapplication.remarket.dto.GroupPostDto;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
@@ -60,8 +59,30 @@ public class GroupPost{
     @OrderBy("id asc") // 댓글 정렬
     private List<GroupComment> groupComments;
 
-    @Column(name = "user_id", nullable = false) //fk 공동구매 작성자(user_id)
-    private Long userId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
+    private String status;
 
+    @PrePersist
+    public void prePersist() {
+        this.status = this.status == null ? "신청 중" : this.status;
+    }
+    public void updateGroupPost(LocalDateTime updated, String title, LocalDateTime dueDate, String product, String content, int numPeople, int price){
+        this.updated = updated;
+        this.title = title;
+        this.dueDate = dueDate;
+        this.product = product;
+        this.content = content;
+        this.numPeople = numPeople;
+        this.price = price;
+    }
+    public void updatePostImg(Image image) {
+        this.image = image;
+    }
+
+    public void updatePostStatus(String status){
+        this.status = status;
+    }
 }

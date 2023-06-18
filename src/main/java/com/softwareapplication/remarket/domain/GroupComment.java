@@ -28,6 +28,7 @@ public class GroupComment {
     @JoinColumn(name = "parent_id")
     private GroupComment parent;
 
+    @Builder.Default
     @OneToMany(mappedBy = "parent", orphanRemoval = true)
     private List<GroupComment> children = new ArrayList<>();
 

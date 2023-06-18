@@ -79,8 +79,8 @@
   <div layout:fragment="content" class="content">
     <h1 style = "text-align: center">공동구매 게시글 작성</h1>
     <div class="container w-75">
-      <form id = "form" th:action = "@{/group/create}" th:object = "${groupPostDto}" th:method="post">
-          <input type="hidden" id = "userId" th:field="*{userId}">
+      <form id = "form" th:action = "@{/group/createGroup}" th:object = "${groupPostDto}" th:method="post" enctype="multipart/form-data" accept-charset="UTF-8">
+          <input type="hidden" id = "user" th:field="*{user}">
           <input type="hidden" id = "createdAt" th:field="*{created}">
           <input type="hidden" id = "updatedAt" th:field="*{updated}">
 
@@ -122,10 +122,14 @@
               <span class='text-danger' th:errors="*{dueDate}"></span>
           </div>
           <div class="form-group">
-            <label for = "image">이미지 첨부</label><br>
-              <input type="file" id = "image" th:field="*{image}" >
-              <span class='text-danger' th:errors="*{image}"></span>
+              <label for = "imgfile">이미지 첨부</label><br>
+              <input class="form-control" type="file" id="imgfile" th:field="*{file}" accept="image/*">
+
+              <div class="col-11 ms-5" id="div-thumbnail">
+                  <img id="img-thumbnail">
+              </div>
           </div>
+
           <br><br>
           <div class="d-flex justify-content-center">
             <div class ="row">

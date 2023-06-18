@@ -2,11 +2,13 @@ package com.softwareapplication.remarket.dto;
 
 import com.softwareapplication.remarket.domain.GroupPost;
 import com.softwareapplication.remarket.domain.Image;
+import com.softwareapplication.remarket.domain.User;
 import jakarta.validation.constraints.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -17,6 +19,10 @@ import java.util.stream.Collectors;
 @Setter
 @Getter
 public class GroupPostDto {
+    public static String getUploadDirPath(String imageUrl) {
+        return "/upload/" + imageUrl;
+    }
+
     private Long id;
 
     @CreatedDate
@@ -46,12 +52,14 @@ public class GroupPostDto {
     private int price;
 
     private Image image;
+    private String imgUrl;
+    private MultipartFile file;
 
     private List<GroupCommentDto.ResponseDto> groupComments;
 
-    @NotNull
-    private Long userId;
+    private User user;
 
+    private String status;
     public GroupPost toEntity(){
         GroupPost build = GroupPost.builder()
                 .id(id)
@@ -64,7 +72,8 @@ public class GroupPostDto {
                 .numPeople(numPeople)
                 .price(price)
                 .image(image)
-                .userId(userId)
+                .user(user)
+                .status(status)
                 .build();
         return build;
     }
@@ -80,10 +89,15 @@ public class GroupPostDto {
         this.numPeople = groupPost.getNumPeople();
         this.price = groupPost.getPrice();
         this.image = groupPost.getImage();
+        try {
+            this.imgUrl = getUploadDirPath(image.getUrl());
+        }catch (Exception e ) {
+            this.imgUrl = "";
+        }
         if(groupPost.getGroupComments() != null) {
             this.groupComments = groupPost.getGroupComments().stream().map(c -> new GroupCommentDto.ResponseDto(c)).collect(Collectors.toList());
         }
-        this.userId = groupPost.getUserId();
+        this.user = groupPost.getUser();
+        this.status = groupPost.getStatus();
     }
-
 }
