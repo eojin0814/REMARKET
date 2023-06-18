@@ -33,7 +33,7 @@ public class CommunityCommentController {
     }
 
     @PostMapping("/{communityId}/updateComment")
-    public String updateComment(@SessionAttribute(name = "email", required = false) String email, @PathVariable Long communityId, @Valid @RequestBody CommunityCommentDto.RequestDto reqDto, BindingResult result, RedirectAttributes redirectAttributes){
+    public String updateComment(@PathVariable Long communityId, @Valid @RequestBody CommunityCommentDto.RequestDto reqDto, BindingResult result, RedirectAttributes redirectAttributes){
         redirectAttributes.addAttribute("id", communityId);
         if(result.hasErrors()){
             return "redirect:/community/detailCommunity";

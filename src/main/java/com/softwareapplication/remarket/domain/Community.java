@@ -51,4 +51,15 @@ public class Community {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+
+    public void updateCommunity(String title, LocalDateTime updated, String contentCommunity){
+        this.title = title;
+        this.updated = updated;
+        this.contentCommunity = contentCommunity;
+    }
+
+    public void updatePostImg(Image image) {
+        this.image = image;
+    }
+
 }

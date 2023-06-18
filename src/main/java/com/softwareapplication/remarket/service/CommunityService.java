@@ -1,11 +1,8 @@
 package com.softwareapplication.remarket.service;
 
 import com.softwareapplication.remarket.domain.Community;
-import com.softwareapplication.remarket.domain.User;
 import com.softwareapplication.remarket.dto.CommunityDto;
 import com.softwareapplication.remarket.repository.CommunityRepository;
-import com.softwareapplication.remarket.repository.GroupPostRepository;
-import com.softwareapplication.remarket.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +12,6 @@ import java.util.List;
 @Service
 public class CommunityService {
     private CommunityRepository communityRepository;
-    private UserRepository userRepository;
 
     public CommunityService(CommunityRepository communityRepository){
         this.communityRepository = communityRepository;
@@ -33,8 +29,11 @@ public class CommunityService {
         return communityDto;
     }
     @Transactional
-    public Long updateCommunity(CommunityDto communityDto){
-        return communityRepository.save(communityDto.toEntity()).getId();
+    public void updateCommunity(CommunityDto communityDto){
+        Community community = communityRepository.findCommunityById(communityDto.getId());
+        if(!communityDto.getFile().getOriginalFilename().equals(""))
+            community.updatePostImg(communityDto.getImage());
+        community.updateCommunity(communityDto.getTitle(), communityDto.getUpdated(), communityDto.getContentCommunity());
     }
 
     @Transactional

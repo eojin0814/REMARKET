@@ -5,9 +5,13 @@ import com.softwareapplication.remarket.domain.User;
 import com.softwareapplication.remarket.dto.CommunityCommentDto;
 import com.softwareapplication.remarket.dto.CommunityDto;
 import com.softwareapplication.remarket.dto.ImageDto;
+import com.softwareapplication.remarket.dto.UserDto;
 import com.softwareapplication.remarket.service.CommunityService;
 import com.softwareapplication.remarket.service.ImageService;
 import com.softwareapplication.remarket.service.UserService;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -15,11 +19,9 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 @Controller
 @RequestMapping("community")
@@ -30,26 +32,38 @@ public class CommunityController {
     private final ImageService imageService;
 
     @GetMapping("/communityList")
-    public ModelAndView communityList(@SessionAttribute(name = "email", required = false) String email) {
-        User loginUser = userService.getLoginUserByEmail(email);
+    public ModelAndView communityList(HttpServletRequest req) {
+        String email = checkLogin(req);
+        if (email == null) {
+            ModelAndView mav = new ModelAndView("content/user/user_login");
+            mav.addObject("loginRequest", new UserDto.LoginRequest());
+            return mav;
+        }
 
+        User loginUser = userService.getLoginUserByEmail(email);
         ModelAndView mav = new ModelAndView("community/communityList");
         mav.addObject("cList", communityService.getCommunityList());
 
         if(loginUser != null) {
-            mav.addObject("email", loginUser.getEmail());
+            mav.addObject("email", email);
         }
         return mav;
     }
 
     @GetMapping("/createCommunity")
-    public String createCommunity(@SessionAttribute(name = "email", required = false)String email, Model model, CommunityDto communityDto){
+    public String createCommunity(HttpServletRequest req, Model model, CommunityDto communityDto){
+        String email = checkLogin(req);
+        if (email == null) {
+            model.addAttribute("loginRequest", new UserDto.LoginRequest());
+            return "content/user/user_login";
+        }
+
         User loginUser = userService.getLoginUserByEmail(email);
         communityDto.setUser(loginUser);
         model.addAttribute("communityDto", communityDto);
 
         if(loginUser != null) {
-            model.addAttribute("email", loginUser.getEmail());
+            model.addAttribute("email", email);
         }
         return "community/createCommunity";
     }
@@ -57,26 +71,9 @@ public class CommunityController {
     @PostMapping("/createCommunity")
     public String saveCommunity(@Valid CommunityDto communityDto, BindingResult result){
         if(result.hasErrors()){
-            System.out.println("에러가 있음");
-            Map map = result.getModel();
-
-            Set keys = map.keySet();
-
-            Iterator it = keys.iterator();
-
-            while(it.hasNext()) {
-
-                Object key = it.next();
-
-                Object val = map.get(key);
-
-                System.out.println("에러내용 :: "+val);
-
-            }
             return "community/createCommunity";
         }
 
-        System.out.println("에러가 없음");
         if (communityDto.getFile().getOriginalFilename().equals("")) {
             System.out.println("image가 null값임");
             communityDto.setImage(null);
@@ -92,7 +89,14 @@ public class CommunityController {
     }
 
     @GetMapping("/detailCommunity")
-    public ModelAndView detailCommunity(@SessionAttribute(name = "email", required = false)String email, @RequestParam("id")Long id){
+    public ModelAndView detailCommunity(HttpServletRequest req, @RequestParam("id")Long id){
+        String email = checkLogin(req);
+        if (email == null) {
+            ModelAndView mav = new ModelAndView("content/user/user_login");
+            mav.addObject("loginRequest", new UserDto.LoginRequest());
+            return mav;
+        }
+
         CommunityDto communityDto = communityService.findCommunity(id);
         User postUser = communityDto.getUser();
         User loginUser = userService.getLoginUserByEmail(email);
@@ -107,31 +111,39 @@ public class CommunityController {
             mav.addObject("communityComments", communityComments);
         }
         if(loginUser != null) {
-            mav.addObject("email", loginUser.getEmail());
+            mav.addObject("email", email);
         }
 
         return mav;
     }
 
     @GetMapping("/updateCommunity")
-    public ModelAndView updateCommunity(@SessionAttribute(name = "email", required = false) String email, @RequestParam("id")Long id){
+    public ModelAndView updateCommunity(HttpServletRequest req, @RequestParam("id")Long id){
+        String email = checkLogin(req);
+        if (email == null) {
+            ModelAndView mav = new ModelAndView("content/user/user_login");
+            mav.addObject("loginRequest", new UserDto.LoginRequest());
+            return mav;
+        }
+
         ModelAndView mav = new ModelAndView("/community/updateCommunity");
         User loginUser = userService.getLoginUserByEmail(email);
-
         CommunityDto communityDto = communityService.findCommunity(id);
         mav.addObject("communityDto", communityDto);
+
         if(loginUser != null) {
-            mav.addObject("email", loginUser.getEmail());
+            mav.addObject("email", email);
         }
         return mav;
     }
 
     @PostMapping("/updateCommunity")
-    public String updateSaveCommunity(@Valid CommunityDto communityDto, BindingResult result){
+    public String updateSaveCommunity(RedirectAttributes redirectAttributes, @Valid CommunityDto communityDto, BindingResult result){
         if(result.hasErrors()){
             return "community/updateCommunity";
         }
 
+        Long communityId = communityDto.getId();
         if (communityDto.getFile().getOriginalFilename().equals("")) {
             communityDto.setImage(null);
         } else {
@@ -140,12 +152,21 @@ public class CommunityController {
             communityDto.setImage(img);
         }
         communityService.updateCommunity(communityDto);
-        return "redirect:/community/communityList";
+        redirectAttributes.addAttribute("id", communityId);
+        return "redirect:/community/detailCommunity";
     }
 
     @GetMapping("/deleteCommunity")
     public String deleteCommunity(@RequestParam("id")Long id){
         communityService.deleteCommunity(id);
         return "redirect:/community/communityList";
+    }
+
+    private String checkLogin(HttpServletRequest req) {
+        HttpSession session = req.getSession(false);
+        if(session == null) return null;
+        String email = (String) session.getAttribute("email");
+        if(email == null) return null;
+        return email;
     }
 }
