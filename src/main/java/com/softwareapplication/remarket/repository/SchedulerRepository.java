@@ -10,6 +10,6 @@ import java.util.Optional;
 
 @Repository
 public interface SchedulerRepository extends JpaRepository<Auction,Long> {
-    List<TenderPrice> findAuctionsByAuctionId(Long auctionId);
+
 
 }

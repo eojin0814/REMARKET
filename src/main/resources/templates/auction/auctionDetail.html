@@ -43,7 +43,7 @@
     <table style = "margin-left:auto; margin-right: auto;">
         <tr>
             <td>
-                <th:block th:if="${auction.image == null}" >
+                <th:block th:if="${aauction.image == null}" >
                     <img src="/image/curby.png" width="500px" height="300px">
                 </th:block>
                 <br>
@@ -52,27 +52,27 @@
             <td>
                 <table class ="table table-borderless">
                     <thead>
-                    <tr><h3 th:text="${auction.title}"></h3></tr>
+                    <tr><h3 th:text="${aauction.title}"></h3></tr>
                     </thead>
                     <tbody>
                     <tr>
                         <td>시작 제시가</td>
-                        <td th:text = "${auction.auctionPrice}">원</td>
+                        <td th:text = "${aauction.auctionPrice}">원</td>
                     </tr>
                     <tr>
                         <td>상품설명</td>
-                        <th:block th:if="${auction.content == null}" >
+                        <th:block th:if="${aauction.content == null}" >
                             <td>...</td>
                         </th:block>
-                        <th:block th:unless="${auction.content == null}" >
-                            <td th:text = "${auction.content}"></td>
+                        <th:block th:unless="${aauction.content == null}" >
+                            <td th:text = "${aauction.content}"></td>
                         </th:block>
                     </tr>
 
 
                     </tbody>
                 </table>
-                <a th:href="@{/auction/create/tender/{auctionId}(auctionId = ${auction.auctionId})}" class="btn btn-primary" role="button">금액 제시하기</a>
+                <a th:href="@{/auction/create/tender/{auctionId}(auctionId = ${aauction.auctionId})}" class="btn btn-primary" role="button">금액 제시하기</a>
             </td>
         </tr>
 
@@ -80,6 +80,21 @@
     <br><br>
 
 
+    <div width="200px" height="100px">
+        <table style = "margin-left:auto; margin-right: auto; border:1px solid black;">
+            <tr style = "border:1px solid black;">
+                <th>제시번호 </th>
+                <th>제시날짜(날짜 순)</th>
+                <th>제시가격  </th>
+            </tr>
+             <tr th:each="tenderL : ${tenderLList}">
+                 <td th:text = "${tenderL.tenderPriceId}" style = "border:1px solid black;"></td>
+                 <td th:text = "${tenderL.createdDate}" style = "border:1px solid black;"></td><br>
+                 <td th:text = "${tenderL.applicationPrice}" style = "border:1px solid black;"></td>
+             </tr>
+
+        </table>
+    </div>
 
 </div>
 </body>

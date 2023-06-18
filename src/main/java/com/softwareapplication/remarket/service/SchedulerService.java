@@ -45,7 +45,8 @@ public class SchedulerService {
     }
 
     public List<TenderPrice> findByAuctionList(Long auctionId) {
-        return schedulerRepository.findAuctionsByAuctionId(auctionId);
+        Auction auction = schedulerRepository.findById(auctionId) .orElseThrow(() -> new IllegalArgumentException("해당 유저가 존재하지 않습니다. "));
+        return tenderPriceRepository.findTenderPriceByauctionId(auctionId);
 
     }
 
@@ -60,6 +61,7 @@ public class SchedulerService {
     }
 
     public TenderPrice findByTenderId(Long id) {
+
         return tenderPriceRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id:" + id));
 
     }

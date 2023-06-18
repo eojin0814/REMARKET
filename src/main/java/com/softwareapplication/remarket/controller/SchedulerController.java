@@ -19,6 +19,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.Date;
 import java.util.List;
@@ -47,12 +48,14 @@ public class SchedulerController {
     public ModelAndView findAuctionTenderList (@PathVariable("auctionId") Long auctionId){
         List<TenderPrice> tenderList = schedulerService.findByAuctionList(auctionId);
         ModelAndView mav = new ModelAndView("auction/auctionDetail");
-
+        for(TenderPrice tenderPrice : tenderList ){
+            System.out.println(tenderPrice.getTenderPriceId());
+        }
         mav.addObject("tenderList", schedulerService.findByAuctionList(auctionId));
         return mav;
     }
-    @GetMapping("/tender/detail")
-    public ModelAndView findTender (@RequestParam("id") Long tenderId){
+    @GetMapping("/tender/detail/{tenderId}")
+    public ModelAndView findTender (@PathVariable("tenderId") Long tenderId){
         TenderPrice tender = schedulerService.findByTenderId(tenderId);
         ModelAndView mav = new ModelAndView("auction/auctionDetail");
 
@@ -63,6 +66,8 @@ public class SchedulerController {
     public ModelAndView findAuctionList (){
         List<Auction> auction = schedulerService.findByList();
         ModelAndView mav = new ModelAndView("auction/auctionList");
+
+
         mav.addObject("auction", auction);
         return mav;
     }
@@ -90,16 +95,17 @@ public class SchedulerController {
     }
     @GetMapping("/detail")
     public ModelAndView detailPost(@RequestParam("id")Long id, HttpServletRequest httpServletRequest){
-        Auction auction = schedulerService.findById(id);
-        UserDto.Info user = userService.getUserByUserId(auction.getUser().getUserId());
+        Auction aauction = schedulerService.findById(id);
+        UserDto.Info user = userService.getUserByUserId(aauction.getUser().getUserId());
         HttpSession session = httpServletRequest.getSession();
         String email = (String)session.getAttribute("email");
         User loginUser = userService.getLoginUserByEmail(email);
-
+        List<TenderPrice> tenderList = schedulerService.findByAuctionList(id);
         ModelAndView mav = new ModelAndView("auction/auctionDetail");
-        mav.addObject("auction", auction);
+        mav.addObject("aauction", aauction);
         mav.addObject("user", user);
         mav.addObject("loginUser", loginUser);
+        mav.addObject("tenderLList", tenderList);
 
         if(loginUser != null) {
             mav.addObject("email", loginUser.getEmail());
@@ -126,10 +132,10 @@ public class SchedulerController {
     }
     @ResponseBody
     @PostMapping("/create/tender/{auctionId}")
-    public Long saves( @Valid TenderPriceDto tenderPrice)throws Exception{
+    public RedirectView saves(@PathVariable("auctionId") Long auctionId, @Valid TenderPriceDto tenderPrice)throws Exception{
         //System.out.println(secondHandDto.getTitle());
 
-        return schedulerService.saveTender(tenderPrice);
-        //new ModelAndView("redirect: /secondHand"); //수정 될 가능성 ..
+         schedulerService.saveTender(tenderPrice);
+        return new RedirectView("/auction/detail?id="+auctionId);
     }
 }
