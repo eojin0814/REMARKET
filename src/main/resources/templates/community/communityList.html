@@ -4,7 +4,7 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/default_form}">
 <th:block layout:fragment="head">
-    <title>공동구매 게시판</title>
+    <title>커뮤니티 게시판</title>
     <meta charset="utf-8">
 
     <!-- css -->
@@ -35,30 +35,30 @@
 </th:block>
 <head>
     <meta charset="UTF-8">
-    <title>공동구매 게시판</title>
+    <title>커뮤니티 게시판</title>
 </head>
 <body>
-    <div layout:fragment="content" class="content">
-        <h1 style="margin-left: 20px">공동구매 게시판</h1>
-        <div style="margin-left: 20px">
-            <a th:href="@{/group/createGroup}" class="btn btn-primary" role="button">작성하기</a>
-        </div><br>
-        <th:block th:each ="groupPost:${gList}">
-            <div style=" display:inline-block; margin-left: 20px">
-                <div class = "card" style = "width: 18rem;">
-                    <img th:if = "${not #strings.isEmpty(groupPost.imgUrl)}" th:src="@{${groupPost.imgUrl}}" class="card-img-top"
-                         id="communityList-img" alt="...">
+<div layout:fragment="content" class="content">
+    <h1 style="margin-left: 20px">커뮤니티 게시판</h1>
+    <div style="margin-left: 20px">
+        <a th:href="@{/community/createCommunity}" class="btn btn-primary" role="button">작성하기</a>
+    </div><br>
+    <th:block th:each ="community:${cList}">
+        <div style=" display:inline-block; margin-left: 20px">
+            <div class = "card" style = "width: 18rem;">
+                <img th:if = "${not #strings.isEmpty(community.imgUrl)}" th:src="@{${community.imgUrl}}" class="card-img-top"
+                     id="postList-img" alt="...">
 
-                    <img th:unless = "${not #strings.isEmpty(groupPost.imgUrl)}" src="/image/curby.png" class="card-img-top" style="width: 100%; padding-bottom: 4px;">
+                <img th:unless = "${not #strings.isEmpty(community.imgUrl)}" src="/image/curby.png" class="card-img-top" style="width: 100%; padding-bottom: 4px;">
 
-                    <div class ="card-body">
-                        제목:<a th:href="@{/group/detailGroup(id=${groupPost.id})}"><h4 th:text ="${groupPost.title}"></h4></a>
-                    </div>
+                <div class ="card-body">
+                    제목:<a th:href="@{/community/detailCommunity(id=${community.id})}"><h3 th:text ="${community.title}"></h3></a>
                 </div>
             </div>
-        </th:block>
-        <br>
+        </div>
+    </th:block>
+    <br>
 
-    </div>
+</div>
 </body>
 </html>

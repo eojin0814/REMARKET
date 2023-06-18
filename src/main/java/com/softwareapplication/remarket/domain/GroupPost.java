@@ -1,7 +1,5 @@
 package com.softwareapplication.remarket.domain;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.softwareapplication.remarket.dto.GroupPostDto;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
@@ -11,14 +9,13 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
-import java.util.Date;
+import java.util.List;
 
 
 @Builder
 @Getter @Setter
 @DynamicInsert
 @Entity
-@Table(name = "GroupPost")
 @NoArgsConstructor
 @AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
@@ -58,25 +55,34 @@ public class GroupPost{
     @JoinColumn(name="img_id")
     private Image  image; //이미지 첨부
 
-    @Column(name = "user_id", nullable = false) //fk 공동구매 작성자(user_id)
-    private Long userId;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "groupPost", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("id asc") // 댓글 정렬
+    private List<GroupComment> groupComments;
 
-    public GroupPostDto toDto(){
-        GroupPostDto build = GroupPostDto.builder()
-                .id(id)
-                .created(created)
-                .updated(updated)
-                .title(title)
-                .dueDate(dueDate)
-                .product(product)
-                .content(content)
-                .numPeople(numPeople)
-                .price(price)
-                .image(image)
-                .userId(userId)
-                .build();
-        return build;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    private String status;
+
+    @PrePersist
+    public void prePersist() {
+        this.status = this.status == null ? "신청 중" : this.status;
+    }
+    public void updateGroupPost(LocalDateTime updated, String title, LocalDateTime dueDate, String product, String content, int numPeople, int price){
+        this.updated = updated;
+        this.title = title;
+        this.dueDate = dueDate;
+        this.product = product;
+        this.content = content;
+        this.numPeople = numPeople;
+        this.price = price;
+    }
+    public void updatePostImg(Image image) {
+        this.image = image;
     }
 
-
+    public void updatePostStatus(String status){
+        this.status = status;
+    }
 }

@@ -1,24 +1,28 @@
 package com.softwareapplication.remarket.controller;
 
+import com.softwareapplication.remarket.domain.Image;
 import com.softwareapplication.remarket.domain.User;
-import com.softwareapplication.remarket.dto.GroupPostDto;
-import com.softwareapplication.remarket.dto.UserDto;
+import com.softwareapplication.remarket.dto.*;
+import com.softwareapplication.remarket.service.GroupApplyService;
 import com.softwareapplication.remarket.service.GroupPostService;
+import com.softwareapplication.remarket.service.ImageService;
 import com.softwareapplication.remarket.service.UserService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import jakarta.persistence.*;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -28,89 +32,153 @@ public class GroupPostController {
 
     private final GroupPostService groupPostService;
     private final UserService userService;
-    @GetMapping("/groupList")
-    public ModelAndView groupList(@SessionAttribute(name = "email", required = false) String email) {
-        User loginUser = userService.getLoginUserByEmail(email);
+    private final GroupApplyService groupApplyService;
+    private final ImageService imageService;
 
+    @GetMapping("/groupList")
+    public ModelAndView groupList(HttpServletRequest req) {
+        String email = checkLogin(req);
+        if (email == null) {
+            ModelAndView mav = new ModelAndView("content/user/user_login");
+            mav.addObject("loginRequest", new UserDto.LoginRequest());
+            return mav;
+        }
+
+        User loginUser = userService.getLoginUserByEmail(email);
         ModelAndView mav = new ModelAndView("group/groupList");
         mav.addObject("gList", groupPostService.getGroupPostList());
 
         if(loginUser != null) {
-            mav.addObject("email", loginUser.getEmail());
+            mav.addObject("email", email);
         }
         return mav;
     }
 
-    @GetMapping("/create")
-    public String createPost(HttpServletRequest httpServletRequest, Model model, GroupPostDto groupPostDto){
-        HttpSession session = httpServletRequest.getSession();
-        String email = (String)session.getAttribute("email");
-        User loginUser = userService.getLoginUserByEmail(email);
+    @GetMapping("/createGroup")
+    public String createPost(HttpServletRequest req, Model model, GroupPostDto groupPostDto){
+        String email = checkLogin(req);
+        if (email == null) {
+            model.addAttribute("loginRequest", new UserDto.LoginRequest());
+            return "content/user/user_login";
+        }
 
-        groupPostDto.setUserId(loginUser.getUserId());
+        User loginUser = userService.getLoginUserByEmail(email);
+        groupPostDto.setUser(loginUser);
         model.addAttribute("groupPostDto", groupPostDto);
 
         if(loginUser != null) {
-            model.addAttribute("email", loginUser.getEmail());
+            model.addAttribute("email", email);
         }
         return "group/createGroupPost";
     }
 
-    @PostMapping("/create")
+    @PostMapping("/createGroup")
     public String savePost(@Valid GroupPostDto groupPostDto, BindingResult result){
         if(result.hasErrors()){
             return "group/createGroupPost";
         }
-        groupPostService.savePost(groupPostDto);
+        if (groupPostDto.getFile().getOriginalFilename().equals("")) {
+            System.out.println("image가 null값임");
+            groupPostDto.setImage(null);
+        } else {
+            System.out.println("image null 아님");
+            ImageDto.Request imgDto = new ImageDto.Request(groupPostDto.getFile());
+            Image img = imageService.uploadFile(imgDto.getImageFile());
+            groupPostDto.setImage(img);
+        }
+        Date dueDate = java.sql.Timestamp.valueOf(groupPostDto.getDueDate());
+        Long groupPostId = groupPostService.savePost(groupPostDto);
+        groupPostService.testScheduler(dueDate, groupPostDto, groupPostId);
         return "redirect:/group/groupList";
     }
 
-    @GetMapping("/detail")
-    public ModelAndView detailPost(@RequestParam("id")Long id, HttpServletRequest httpServletRequest){
-        GroupPostDto groupPostDto = groupPostService.findPost(id);
-        UserDto.Info postUser = userService.getUserByUserId(groupPostDto.getUserId());
-        HttpSession session = httpServletRequest.getSession();
-        String email = (String)session.getAttribute("email");
-        User loginUser = userService.getLoginUserByEmail(email);
+    @GetMapping("/detailGroup")
+    public ModelAndView detailPost(HttpServletRequest req, @RequestParam("id")Long id){
+        String email = checkLogin(req);
+        if (email == null) {
+            ModelAndView mav = new ModelAndView("content/user/user_login");
+            mav.addObject("loginRequest", new UserDto.LoginRequest());
+            return mav;
+        }
 
+        GroupPostDto groupPostDto = groupPostService.findPost(id);
+        User postUser = groupPostDto.getUser();
+        User loginUser = userService.getLoginUserByEmail(email);
+        double countList = (double)groupApplyService.countGroupApplyList(id);
+        int numPeople = groupPostDto.getNumPeople();
+        String percent = String.format("%.2f", (countList/(double)numPeople)*100.0)+"%";
+
+        GroupApplyDto groupApplyDto = groupApplyService.findUserApply(id, loginUser.getUserId());
+        List<GroupCommentDto.ResponseDto> groupComments = groupPostDto.getGroupComments();
         ModelAndView mav = new ModelAndView("group/detailGroupPost");
         mav.addObject("groupPostDto", groupPostDto);
         mav.addObject("postUser", postUser);
         mav.addObject("loginUser", loginUser);
+        mav.addObject("groupApplyDto", groupApplyDto);
+        mav.addObject("percent", percent);
+
+        if(groupComments != null && !groupComments.isEmpty()){
+            mav.addObject("groupComments", groupComments);
+        }
 
         if(loginUser != null) {
-            mav.addObject("email", loginUser.getEmail());
+            mav.addObject("email", email);
         }
 
         return mav;
     }
 
-    @GetMapping("/update")
-    public ModelAndView updatePost(@SessionAttribute(name = "email", required = false) String email, @RequestParam("id")Long id){
-        ModelAndView mav = new ModelAndView("/group/updateGroupPost");
+    @GetMapping("/updateGroup")
+    public ModelAndView updatePost(HttpServletRequest req, @RequestParam("id")Long id){
+        String email = checkLogin(req);
+        if (email == null) {
+            ModelAndView mav = new ModelAndView("content/user/user_login");
+            mav.addObject("loginRequest", new UserDto.LoginRequest());
+            return mav;
+        }
+
         User loginUser = userService.getLoginUserByEmail(email);
+        ModelAndView mav = new ModelAndView("/group/updateGroupPost");
 
         GroupPostDto groupPostDto = groupPostService.findPost(id);
         mav.addObject("groupPostDto", groupPostDto);
         if(loginUser != null) {
-            mav.addObject("email", loginUser.getEmail());
+            mav.addObject("email", email);
         }
         return mav;
     }
 
-    @PostMapping("/update")
-    public String updateSavePost(@Valid GroupPostDto groupPostDto, BindingResult result){
+    @PostMapping("/updateGroup")
+    public String updateSavePost(RedirectAttributes redirectAttributes, @Valid GroupPostDto groupPostDto, BindingResult result){
         if(result.hasErrors()){
             return "group/updateGroupPost";
         }
+
+        Long groupPostId = groupPostDto.getId();
+        if (groupPostDto.getFile().getOriginalFilename().equals("")) {
+            groupPostDto.setImage(null);
+        } else {
+            ImageDto.Request imgDto = new ImageDto.Request(groupPostDto.getFile());
+            Image img = imageService.uploadFile(imgDto.getImageFile());
+            groupPostDto.setImage(img);
+        }
+
         groupPostService.updatePost(groupPostDto);
-        return "redirect:/group/groupList";
+        redirectAttributes.addAttribute("id", groupPostId);
+        return "redirect:/group/detailGroup";
     }
 
-    @GetMapping("/delete")
+    @GetMapping("/deleteGroup")
     public String deletePost(@RequestParam("id")Long id){
         groupPostService.deletePost(id);
         return "redirect:/group/groupList";
+    }
+    private String checkLogin(HttpServletRequest req) {
+        HttpSession session = req.getSession(false);
+        if(session == null) return null;
+        String email = (String) session.getAttribute("email");
+        if(email == null) return null;
+        return email;
     }
 
 }

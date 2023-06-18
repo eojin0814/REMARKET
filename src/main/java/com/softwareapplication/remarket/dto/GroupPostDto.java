@@ -1,21 +1,28 @@
 package com.softwareapplication.remarket.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.softwareapplication.remarket.domain.GroupPost;
 import com.softwareapplication.remarket.domain.Image;
+import com.softwareapplication.remarket.domain.User;
 import jakarta.validation.constraints.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 @NoArgsConstructor
 @Setter
 @Getter
 public class GroupPostDto {
+    public static String getUploadDirPath(String imageUrl) {
+        return "/upload/" + imageUrl;
+    }
+
     private Long id;
 
     @CreatedDate
@@ -37,18 +44,22 @@ public class GroupPostDto {
     private String content;
 
     @NotNull
-    @Positive(message = "인원수를 다시 입력해주세요.")
+    @Positive
     private int numPeople;
 
     @NotNull
-    @Positive(message = "금액을 다시 입력해주세요.")
+    @Positive
     private int price;
 
     private Image image;
+    private String imgUrl;
+    private MultipartFile file;
 
-    @NotNull
-    private Long userId;
+    private List<GroupCommentDto.ResponseDto> groupComments;
 
+    private User user;
+
+    private String status;
     public GroupPost toEntity(){
         GroupPost build = GroupPost.builder()
                 .id(id)
@@ -61,24 +72,32 @@ public class GroupPostDto {
                 .numPeople(numPeople)
                 .price(price)
                 .image(image)
-                .userId(userId)
+                .user(user)
+                .status(status)
                 .build();
         return build;
     }
 
-    @Builder
-    public GroupPostDto(Long id, LocalDateTime created, LocalDateTime updated, String title, LocalDateTime dueDate, String product, String content, int numPeople, int price, Image image, Long userId){
-        this.id = id;
-        this.created = created;
-        this.updated = updated;
-        this.title = title;
-        this.dueDate = dueDate;
-        this.product = product;
-        this.content = content;
-        this.numPeople = numPeople;
-        this.price = price;
-        this.image = image;
-        this.userId = userId;
+    public GroupPostDto(GroupPost groupPost){
+        this.id = groupPost.getId();
+        this.created = groupPost.getCreated();
+        this.updated = groupPost.getUpdated();
+        this.title = groupPost.getTitle();
+        this.dueDate = groupPost.getDueDate();
+        this.product = groupPost.getProduct();
+        this.content = groupPost.getContent();
+        this.numPeople = groupPost.getNumPeople();
+        this.price = groupPost.getPrice();
+        this.image = groupPost.getImage();
+        try {
+            this.imgUrl = getUploadDirPath(image.getUrl());
+        }catch (Exception e ) {
+            this.imgUrl = "";
+        }
+        if(groupPost.getGroupComments() != null) {
+            this.groupComments = groupPost.getGroupComments().stream().map(c -> new GroupCommentDto.ResponseDto(c)).collect(Collectors.toList());
+        }
+        this.user = groupPost.getUser();
+        this.status = groupPost.getStatus();
     }
-
 }
