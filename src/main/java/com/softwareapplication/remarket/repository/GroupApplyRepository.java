@@ -8,7 +8,7 @@ import java.util.List;
 
 @Repository
 public interface GroupApplyRepository extends JpaRepository<GroupApply, Long> {
-    List<GroupApply> findAllByGroupId(Long groupId);
+    List<GroupApply> findAllByGroupPostId(Long groupPostId);
     GroupApply findGroupApplyById(Long id);
-    GroupApply findGroupApplyByGroupIdAndUserId(Long groupId, Long UserId);
+    GroupApply findGroupApplyByGroupPostIdAndUser_UserId(Long groupPostId, Long UserId);
 }

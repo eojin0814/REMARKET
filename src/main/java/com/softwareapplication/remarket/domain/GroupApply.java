@@ -1,7 +1,5 @@
 package com.softwareapplication.remarket.domain;
 
-import com.softwareapplication.remarket.dto.GroupApplyDto;
-import com.softwareapplication.remarket.dto.GroupPostDto;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
@@ -32,23 +30,19 @@ public class GroupApply {
     @Column(nullable = false)
     private String phone; //전화번호
 
-    @Column(name = "group_id", nullable = false)
-    private Long groupId; //공동구매 게시글 id
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "group_id")
+    private GroupPost groupPost; //공동구매 게시글 id
 
-    @Column(name = "user_id", nullable = false)
-    private Long userId; //구매자(신청자) id
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user; //구매자(신청자)
 
-    public GroupApplyDto toDto(){
-        GroupApplyDto build = GroupApplyDto.builder()
-                .id(id)
-                .name(name)
-                .address(address)
-                .count(count)
-                .phone(phone)
-                .groupId(groupId)
-                .userId(userId)
-                .build();
-        return build;
+    public void updateGroupApply(String name, String address, int count, String phone){
+        this.name = name;
+        this.address = address;
+        this.count = count;
+        this.phone = phone;
     }
 
 }
