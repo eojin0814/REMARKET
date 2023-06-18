@@ -31,8 +31,8 @@ public class TenderPrice {
     private Date createdDate;
 
 
-    @Column(name = "application_auction_price")
-    private Long applicationauctionPrice;
+    @Column(name = "application_price")
+    private Long applicationPrice;
 
 
     @ManyToOne

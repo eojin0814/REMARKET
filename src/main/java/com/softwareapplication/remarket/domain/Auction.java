@@ -63,8 +63,5 @@ public class Auction {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany
-    @JoinColumn(name = "tender_pirce_list")
-    private List<TenderPrice> tenderPriceList;
 
 }

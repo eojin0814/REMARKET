@@ -2,8 +2,9 @@ package com.softwareapplication.remarket.controller;
 
 import com.softwareapplication.remarket.domain.SecondHand;
 import com.softwareapplication.remarket.domain.User;
-import com.softwareapplication.remarket.dto.AuctionDto;
+import com.softwareapplication.remarket.dto.GroupPostDto;
 import com.softwareapplication.remarket.dto.SecondHandDto;
+import com.softwareapplication.remarket.dto.UserDto;
 import com.softwareapplication.remarket.service.SecondHandService;
 
 import com.softwareapplication.remarket.service.UserService;
@@ -13,10 +14,9 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.List;
 
@@ -44,17 +44,17 @@ public class SecondHandController {
     }
     @ResponseBody
     @PostMapping("/create")
-    public Long savepost(@Valid SecondHandDto secondHandDto)throws Exception{
+    public RedirectView savepost(@Valid SecondHandDto secondHandDto)throws Exception{
         //System.out.println(secondHandDto.getTitle());
-
-        return secondHandService.save(secondHandDto);
+        secondHandService.save(secondHandDto);
+        return new RedirectView("/secondHand/post/list");
         //new ModelAndView("redirect: /secondHand"); //수정 될 가능성 ..
     }
 
     @GetMapping("/post/list")
     public ModelAndView postList()throws Exception{
         List<SecondHand> secondHand = secondHandService.findByAll();
-        ModelAndView mav = new ModelAndView("secondHand");
+        ModelAndView mav = new ModelAndView("secondHand/secondHandList");
         mav.addObject("secondHand", secondHand);
         return mav;
     }
@@ -67,6 +67,25 @@ public class SecondHandController {
     @DeleteMapping("/post/delete/{postId}")
     public Long postkeyword(@PathVariable("postId") Long postId)throws Exception{
         return secondHandService.delete(postId);
+    }
+    @GetMapping("/detail")
+    public ModelAndView detailPost(@RequestParam("id")Long id, HttpServletRequest httpServletRequest){
+        SecondHand secondHand = secondHandService.findById(id);
+        UserDto.Info user = userService.getUserByUserId(secondHand.getUser().getUserId());
+        HttpSession session = httpServletRequest.getSession();
+        String email = (String)session.getAttribute("email");
+        User loginUser = userService.getLoginUserByEmail(email);
+
+        ModelAndView mav = new ModelAndView("secondHand/secondHandDetail");
+        mav.addObject("secondHand", secondHand);
+        mav.addObject("user", user);
+        mav.addObject("loginUser", loginUser);
+
+        if(loginUser != null) {
+            mav.addObject("email", loginUser.getEmail());
+        }
+
+        return mav;
     }
 
 }
