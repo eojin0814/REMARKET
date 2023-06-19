@@ -58,6 +58,9 @@
 - 브랜치 규칙 → feature/#이슈번호-기능간략설명
 - `ex) feature/#1-login`
 
+#### TABLE
+![image](https://github.com/DDWU-Re-Market/REMARKET/assets/78431728/42534d64-d168-4e4b-b6f6-926f19e6dc09)
+
 #### 🛠 Development Environment
 <p align="left">
 <img src ="https://img.shields.io/badge/Thymeleaf-5.0-005F0F">
