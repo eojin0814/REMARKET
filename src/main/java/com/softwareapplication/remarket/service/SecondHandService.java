@@ -9,8 +9,8 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -25,12 +25,23 @@ public class SecondHandService {
 
         return secondHandRepository.save(secondHandDto.toEntity(user)).getSecondHandId();
     }
-
     public SecondHand findById(Long id) {
-       return secondHandRepository.findById(id).orElseThrow(()->new IllegalArgumentException("해당 게시글이 없습니다. id:"+id));
+        return secondHandRepository.findById(id).orElseThrow(()->new IllegalArgumentException("해당 게시글이 없습니다. id:"+id));
     }
-    public List<SecondHand> findByAll() {
-        return secondHandRepository.findAll();
+    public SecondHandDto findByDtoId(Long id) {
+        SecondHand secondHand=secondHandRepository.findById(id).orElseThrow(()->new IllegalArgumentException("해당 게시글이 없습니다. id:"+id));
+        SecondHandDto secondHandDto= new SecondHandDto(secondHand);
+       return secondHandDto;
+    }
+    public List<SecondHandDto> findByAll() {
+
+        List<SecondHand> secondHandList = secondHandRepository.findAll();
+        List<SecondHandDto> SecondHandDtoList = new ArrayList<>();
+        for(SecondHand secondHand : secondHandList){
+            SecondHandDto secondHandDto1 = new SecondHandDto(secondHand);
+            SecondHandDtoList.add(secondHandDto1);
+
+        }        return SecondHandDtoList;
     }
     @Transactional
     public Long update(Long id, SecondHandDto secondHandDto){
@@ -53,9 +64,10 @@ public class SecondHandService {
     }
 
     @Transactional
-    public Long updateStatus(Long id){
-
+    public SecondHand updateStatus(Long id){
+        SecondHand secondHand= secondHandRepository.findById(id).orElseThrow(()->new IllegalArgumentException("해당 게시글이 없습니다. id:"+id));
+        secondHand.update("판매완료");
         //secondHand.update(secondHandDto.toEntity());
-        return secondHandRepository.updateStatus(id);
+        return secondHandRepository.save(secondHand);
     }
 }

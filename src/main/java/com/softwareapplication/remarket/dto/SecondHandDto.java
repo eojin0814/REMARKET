@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -17,6 +18,13 @@ import java.util.Date;
 @Setter
 @NoArgsConstructor
 public class SecondHandDto {
+
+
+
+
+    public static String getUploadDirPath(String imageUrl) {
+        return "/upload/" + imageUrl;
+    }
     private Long secondHandId;
     private String content;
     @CreatedDate
@@ -28,6 +36,9 @@ public class SecondHandDto {
     private Long userId;
 
     private String status;
+
+    private String imgUrl;
+    private MultipartFile file;
 
 //    @Builder
 //    public SecondHandDto(Long secondHandId, String title, Long price, String image, Date createdDate, String content, User user){
@@ -52,4 +63,20 @@ public class SecondHandDto {
                 .status(status)
                 .build();
     }
+    public SecondHandDto(SecondHand secondHand) {
+        this.secondHandId=secondHand.getSecondHandId();
+        this.createdDate=secondHand.getCreatedDate();
+        this.title=secondHand.getTitle();
+        this.content=secondHand.getContent();
+        this.image=secondHand.getImage();
+        this.userId=secondHand.getSecondHandId();
+
+        try {
+            this.imgUrl = getUploadDirPath(secondHand.getImage().getUrl());
+        }catch (Exception e ) {
+            this.imgUrl = "";
+        }
+        this.price=secondHand.getPrice();
+    }
+
 }

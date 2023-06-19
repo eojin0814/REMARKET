@@ -43,9 +43,12 @@
     <table style = "margin-left:auto; margin-right: auto;">
         <tr>
             <td>
-                <th:block th:if="${secondHand.image == null}" >
-                    <img src="/image/curby.png" width="500px" height="300px">
-                </th:block>
+                <img th:if = "${not #strings.isEmpty(secondHand.imgUrl)}" th:src="@{${secondHand.imgUrl}}" class="card-img-top"
+                     id="postList-img" alt="...">
+
+                <div class="card-img-top" th:unless = "${not #strings.isEmpty(secondHand.imgUrl)}">
+                    <img src="/image/curby.png" style="width: 100%; padding-bottom: 4px;">
+                </div>
                 <br>
             </td>
             <td>&nbsp;&nbsp;</td>
@@ -58,6 +61,10 @@
                     <tr>
                         <td>중고가</td>
                         <td th:text = "${secondHand.price}">원</td>
+                    </tr>
+                    <tr>
+                        <td>판매상태:</td>
+                        <td th:text = "${secondHand.status}"></td>
                     </tr>
                     <tr>
                         <td>상품설명</td>
