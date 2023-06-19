@@ -50,7 +50,7 @@
                     <img src="/image/curby.png" class="card-img-top" >
                 </th:block><br>
                 <div class ="card-body">
-                    제목:<a th:href="@{/secondHand/detail(id=${secondHand.secondHandId})}"><h3 th:text ="${secondHand.title}"></h3></a>
+                    제목:<a th:href="@{/secondHand/detail(id=${secondHand.secondHandId})}"><h3 th:text ="${secondHand.title}"></h3><h3 th:text ="${secondHand.status}"></h3></a>
                 </div>
             </div>
         </div>

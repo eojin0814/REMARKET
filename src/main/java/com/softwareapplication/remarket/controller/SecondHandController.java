@@ -1,10 +1,13 @@
 package com.softwareapplication.remarket.controller;
 
+import com.softwareapplication.remarket.domain.Image;
 import com.softwareapplication.remarket.domain.SecondHand;
 import com.softwareapplication.remarket.domain.User;
 import com.softwareapplication.remarket.dto.GroupPostDto;
+import com.softwareapplication.remarket.dto.ImageDto;
 import com.softwareapplication.remarket.dto.SecondHandDto;
 import com.softwareapplication.remarket.dto.UserDto;
+import com.softwareapplication.remarket.service.ImageService;
 import com.softwareapplication.remarket.service.SecondHandService;
 
 import com.softwareapplication.remarket.service.UserService;
@@ -14,6 +17,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
@@ -28,6 +32,9 @@ public class SecondHandController {
 
     private final SecondHandService secondHandService;
     private final UserService userService;
+
+    private final ImageService imageService;
+
     @GetMapping("/create")
     public String createPost(HttpServletRequest httpServletRequest, Model model, SecondHandDto secondHandDto){
         HttpSession session = httpServletRequest.getSession();
@@ -44,9 +51,21 @@ public class SecondHandController {
     }
     @ResponseBody
     @PostMapping("/create")
-    public RedirectView savepost(@Valid SecondHandDto secondHandDto)throws Exception{
+    public RedirectView savepost(@Validated SecondHandDto secondHandDto)throws Exception{
         //System.out.println(secondHandDto.getTitle());
+        //System.out.println(secondHandDto.getImgUrl());
+        //System.out.println(secondHandDto.getImage().getUrl());
+        if (secondHandDto.getFile().getOriginalFilename().equals("")) {
+            secondHandDto.setImage(null);
+        } else {
+            ImageDto.Request imgDto = new ImageDto.Request(secondHandDto.getFile());
+            Image img = imageService.uploadFile(imgDto.getImageFile());
+            System.out.println(img.getUrl());
+            secondHandDto.setImage(img);
+        }
         secondHandService.save(secondHandDto);
+
+
         return new RedirectView("/secondHand/post/list");
         //new ModelAndView("redirect: /secondHand"); //수정 될 가능성 ..
     }
