@@ -65,6 +65,10 @@ public class GroupPost{
 
     private String status;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "groupPost", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("id asc")
+    private List<GroupApply> groupApplies;
+
     @PrePersist
     public void prePersist() {
         this.status = this.status == null ? "신청 중" : this.status;
