@@ -18,6 +18,10 @@ import java.util.Date;
 @Setter
 @NoArgsConstructor
 public class SecondHandDto {
+
+
+
+
     public static String getUploadDirPath(String imageUrl) {
         return "/upload/" + imageUrl;
     }
@@ -59,7 +63,7 @@ public class SecondHandDto {
                 .status(status)
                 .build();
     }
-    public SecondHandDto(SecondHand secondHand){
+    public SecondHandDto(SecondHand secondHand) {
         this.secondHandId=secondHand.getSecondHandId();
         this.createdDate=secondHand.getCreatedDate();
         this.title=secondHand.getTitle();
@@ -73,7 +77,6 @@ public class SecondHandDto {
             this.imgUrl = "";
         }
         this.price=secondHand.getPrice();
-
-
     }
+
 }

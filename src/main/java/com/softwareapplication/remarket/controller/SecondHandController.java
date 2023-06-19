@@ -72,9 +72,9 @@ public class SecondHandController {
 
     @GetMapping("/post/list")
     public ModelAndView postList()throws Exception{
-        List<SecondHand> secondHand = secondHandService.findByAll();
+        List<SecondHandDto> secondHand = secondHandService.findByAll();
         ModelAndView mav = new ModelAndView("secondHand/secondHandList");
-        mav.addObject("secondHand", secondHand);
+        mav.addObject("secondHand1", secondHand);
         return mav;
     }
     @GetMapping("/post/{keyword}")
@@ -89,15 +89,15 @@ public class SecondHandController {
     }
     @GetMapping("/detail")
     public ModelAndView detailPost(@RequestParam("id")Long id, HttpServletRequest httpServletRequest){
-        SecondHand secondHand = secondHandService.findById(id);
-        UserDto.Info user = userService.getUserByUserId(secondHand.getUser().getUserId());
+        SecondHandDto secondHand = secondHandService.findByDtoId(id);
+        //UserDto.Info user = userService.getUserByUserId(secondHand.getUserId());
         HttpSession session = httpServletRequest.getSession();
         String email = (String)session.getAttribute("email");
         User loginUser = userService.getLoginUserByEmail(email);
 
         ModelAndView mav = new ModelAndView("secondHand/secondHandDetail");
         mav.addObject("secondHand", secondHand);
-        mav.addObject("user", user);
+        //mav.addObject("user", user);
         mav.addObject("loginUser", loginUser);
 
         if(loginUser != null) {
