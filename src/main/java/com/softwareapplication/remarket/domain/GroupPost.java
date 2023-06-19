@@ -69,10 +69,9 @@ public class GroupPost{
     public void prePersist() {
         this.status = this.status == null ? "신청 중" : this.status;
     }
-    public void updateGroupPost(LocalDateTime updated, String title, LocalDateTime dueDate, String product, String content, int numPeople, int price){
+    public void updateGroupPost(LocalDateTime updated, String title, String product, String content, int numPeople, int price){
         this.updated = updated;
         this.title = title;
-        this.dueDate = dueDate;
         this.product = product;
         this.content = content;
         this.numPeople = numPeople;
