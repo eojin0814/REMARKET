@@ -1,9 +1,6 @@
 package com.softwareapplication.remarket.controller;
 
-import com.softwareapplication.remarket.domain.BankCode;
-import com.softwareapplication.remarket.domain.Order;
-import com.softwareapplication.remarket.domain.SecondHand;
-import com.softwareapplication.remarket.domain.User;
+import com.softwareapplication.remarket.domain.*;
 import com.softwareapplication.remarket.dto.OrderDto;
 import com.softwareapplication.remarket.dto.PaymentDto;
 import com.softwareapplication.remarket.dto.SecondHandDto;
@@ -52,7 +49,7 @@ public class PaymentController {
     }
 
     @GetMapping("/create/{secondHandId}")
-    public String createPost(@PathVariable("secondHandId") Long secondHandId, HttpServletRequest httpServletRequest, Model model, OrderDto orderDto){
+    public String createPost(@PathVariable("secondHandId") Long secondHandId, HttpServletRequest httpServletRequest, Model model, OrderDto orderDto, Payment payment){
         System.out.println(secondHandId);
         HttpSession session = httpServletRequest.getSession();
         String email = (String)session.getAttribute("email");
@@ -62,6 +59,7 @@ public class PaymentController {
         model.addAttribute("orderDto", orderDto);
         model.addAttribute("BankCodes", BankCodes());
         model.addAttribute("secondHandId", secondHandId);
+        model.addAttribute("payment1", payment);
         if(loginUser != null) {
             model.addAttribute("email", loginUser.getEmail());
         }
@@ -69,15 +67,17 @@ public class PaymentController {
     }
     @ResponseBody
     @PostMapping("/create/{secondHandId}")
-    public RedirectView save(@SessionAttribute(name = "email", required = false) String email, @Valid OrderDto orderdto, @PathVariable("secondHandId")Long secondHandId)throws Exception{
+    public RedirectView save(@SessionAttribute(name = "email", required = false) String email, @Valid OrderDto orderdto, @PathVariable("secondHandId")Long secondHandId, PaymentDto payment)throws Exception{
         System.out.println(orderdto.getPayment().getCardNum());
         System.out.println(email);
         System.out.println(secondHandId);
-
-        paymentService.save(email,orderdto,secondHandId);
+        System.out.println(payment.getCardNum());
+        //paymentService.save(email,orderdto,secondHandId);
+        secondHandService.updateStatus(secondHandId);
         //new ModelAndView("redirect: /secondHand"); //수정 될 가능성 ..
         return new RedirectView("/secondHand/post/list");
     }
+
 
     @ModelAttribute("BankCodes")
     public List<BankCode> BankCodes() {
