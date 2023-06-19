@@ -72,10 +72,15 @@ public class PaymentController {
         System.out.println(email);
         System.out.println(secondHandId);
         System.out.println(payment.getCardNum());
-        //paymentService.save(email,orderdto,secondHandId);
-        secondHandService.updateStatus(secondHandId);
+        paymentService.save(email,orderdto,secondHandId);
+
+        updateStatus(secondHandId);
         //new ModelAndView("redirect: /secondHand"); //수정 될 가능성 ..
         return new RedirectView("/secondHand/post/list");
+    }
+    public SecondHand updateStatus(Long id){
+
+        return secondHandService.updateStatus(id);
     }
 
 

@@ -55,6 +55,9 @@ public class SecondHand {
         this.image=image;
         this.content=content;
     }
+    public void update(String status){
+        this.status=status;
+    }
 
 }
 //ㄷㅏ음주까지 엔티티 서비스 컨트롤러 할 수 있는 곳까지, 엔티티 다해오기

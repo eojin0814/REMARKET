@@ -53,9 +53,10 @@ public class SecondHandService {
     }
 
     @Transactional
-    public Long updateStatus(Long id){
-
+    public SecondHand updateStatus(Long id){
+        SecondHand secondHand= secondHandRepository.findById(id).orElseThrow(()->new IllegalArgumentException("해당 게시글이 없습니다. id:"+id));
+        secondHand.update("판매완료");
         //secondHand.update(secondHandDto.toEntity());
-        return secondHandRepository.updateStatus(id);
+        return secondHandRepository.save(secondHand);
     }
 }

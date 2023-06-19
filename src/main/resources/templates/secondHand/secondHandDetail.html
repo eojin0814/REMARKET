@@ -60,6 +60,10 @@
                         <td th:text = "${secondHand.price}">원</td>
                     </tr>
                     <tr>
+                        <td>판매상태:</td>
+                        <td th:text = "${secondHand.status}"></td>
+                    </tr>
+                    <tr>
                         <td>상품설명</td>
                         <th:block th:if="${secondHand.content == null}" >
                             <td>...</td>
