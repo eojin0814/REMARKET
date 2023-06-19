@@ -56,6 +56,7 @@ public class GroupPostDto {
     private MultipartFile file;
 
     private List<GroupCommentDto.ResponseDto> groupComments;
+    private List<GroupApplyDto> groupApplies;
 
     private User user;
 
@@ -96,6 +97,9 @@ public class GroupPostDto {
         }
         if(groupPost.getGroupComments() != null) {
             this.groupComments = groupPost.getGroupComments().stream().map(c -> new GroupCommentDto.ResponseDto(c)).collect(Collectors.toList());
+        }
+        if(groupPost.getGroupApplies() != null) {
+            this.groupApplies = groupPost.getGroupApplies().stream().map(a -> new GroupApplyDto(a)).collect(Collectors.toList());
         }
         this.user = groupPost.getUser();
         this.status = groupPost.getStatus();

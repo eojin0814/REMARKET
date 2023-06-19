@@ -44,12 +44,12 @@
             <a th:href="@{/group/createGroup}" class="btn btn-primary" role="button">작성하기</a>
         </div><br>
         <th:block th:each ="groupPost:${gList}">
-            <div style=" display:inline-block; margin-left: 20px">
+            <div style=" display:inline-block; margin-left: 60px">
                 <div class = "card" style = "width: 18rem;">
                     <img th:if = "${not #strings.isEmpty(groupPost.imgUrl)}" th:src="@{${groupPost.imgUrl}}" class="card-img-top"
-                         id="communityList-img" alt="...">
+                         id="communityList-img" alt="..." style="width: 18rem; height: 13rem; padding-bottom: 4px;">
 
-                    <img th:unless = "${not #strings.isEmpty(groupPost.imgUrl)}" src="/image/curby.png" class="card-img-top" style="width: 100%; padding-bottom: 4px;">
+                    <img th:unless = "${not #strings.isEmpty(groupPost.imgUrl)}" src="/image/curby.png" class="card-img-top" style="width: 18rem; height: 13rem; padding-bottom: 4px;">
 
                     <div class ="card-body">
                         제목:<a th:href="@{/group/detailGroup(id=${groupPost.id})}"><h4 th:text ="${groupPost.title}"></h4></a>
