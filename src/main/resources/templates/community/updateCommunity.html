@@ -4,7 +4,7 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/default_form}">
 <th:block layout:fragment="head">
-    <title>공동구매 게시글 수정</title>
+    <title>커뮤니티 게시글 수정</title>
     <meta charset="utf-8">
 
     <!-- css -->
@@ -38,52 +38,35 @@
         function update(){
             var form = document.getElementById("form");
             var title = document.getElementById("title");
-            var product = document.getElementById("product");
-            var numPeople = document.getElementById("numPeople");
-            var price = document.getElementById("price");
-            var dueDate = document.getElementById("dueDate");
+            var contentCommunity = document.getElementById("contentCommunity");
+
             if(title.value.trim() == "") {
                 alert("제목을 입력하시오.");
                 title.focus();
                 return false;
             }
-            else if(product.value.trim()== ""){
-                alert("공동구매 물품명을 입력하시오.");
-                product.focus();
+            else if(contentCommunity.value.trim()== ""){
+                alert("작성내용을 입력하시오.");
+                contentCommunity.focus();
                 return false;
             }
-            else if(numPeople.value.trim()== 0){
-                alert("목표 인원수를 입력하시오.");
-                numPeople.focus();
-                return false;
-            }
-            else if(price.value.trim()== 0){
-                alert("물품 1개당 가격을 입력하시오.");
-                price.focus();
-                return false;
-            }
-            else if(dueDate.value.trim()== ""){
-                alert("희망 종료 예정일을 입력하시오.");
-                dueDate.focus();
-                return false;
-            }
-
             form.submit();
         }
 
     </script>
     <meta charset="UTF-8">
-    <title>공동구매 게시글 수정</title>
+    <title>커뮤니티 게시글 수정</title>
 </head>
 <body>
 <div layout:fragment="content" class="content">
-    <h1 style = "text-align: center">공동구매 게시글 수정</h1>
+    <h1 style = "text-align: center">커뮤니티 게시글 수정</h1>
     <div class="container w-75">
-        <form id = "form" th:action = "@{/group/updateGroup}" th:object = "${groupPostDto}" th:method="PUT" enctype="multipart/form-data" accept-charset="UTF-8">
+        <form id = "form" th:action = "@{/community/updateCommunity}" th:object = "${communityDto}" th:method="PUT" enctype="multipart/form-data" accept-charset="UTF-8">
             <input type="hidden" id = "id" th:field="*{id}">
             <input type="hidden" id = "user" th:field="*{user}">
-            <input type ="hidden" id = "updatedAt" th:field = "*{updated}">
-            <input type="hidden" id ="dueDate" th:field="*{dueDate}">
+            <input type="hidden" id = "createdAt" th:field="*{created}">
+            <input type="hidden" id = "updatedAt" th:field="*{updated}">
+
             <div class="form-group">
                 <label for="title">제목</label>
                 <input type = "text" id = "title" th:field="*{title}" class="form-control">
@@ -91,42 +74,20 @@
                 <span class='text-danger' th:errors="*{title}"></span>
             </div>
             <div class="form-group">
-                <label for="product">공동구매 물품명</label>
-                <input type = "text" id = "product" th:field="*{product}" class="form-control">
+                <label for="contentCommunity">작성내용</label>
+                <textarea cols="50" rows = "10" id = "contentCommunity" th:field="*{contentCommunity}" class="form-control"></textarea>
                 <span class = "help-block">반드시 입력하세요</span>
-                <span class='text-danger' th:errors="*{product}"></span>
-            </div>
-            <div class="form-group">
-                <label for="numPeople">목표 인원수</label>
-                <div style = "width: 300px">
-                    <input type = "number" id = "numPeople" th:field="*{numPeople}" class="form-control">
-                </div>
-                <span class = "help-block">반드시 입력하세요</span>
-                <span class='text-danger' th:errors="*{numPeople}"></span>
-            </div>
-            <div class="form-group">
-                <label for="price"> 물품 1개당 가격</label>
-                <input type = "number" id = "price" th:field="*{price}" class="form-control">
-                <span class = "help-block">반드시 입력하세요</span>
-                <span class='text-danger' th:errors="*{price}"></span>
-            </div>
-            <div class="form-group">
-                <label for="content">기타사항</label>
-                <input type = "text" id = "content" th:field="*{content}" class="form-control">
-                <span class='text-danger' th:errors="*{content}"></span>
-            </div>
-            <div class="form-group">
-                <label for="dueDate">희망 종료 예정일(수정 불가입니다.)</label>
-                <span th:text="${#temporals.format(groupPostDto.dueDate,'yyyy-MM-dd HH:mm')}"></span>
+                <span class='text-danger' th:errors="*{contentCommunity}"></span>
             </div>
             <div class="form-group">
                 <label for = "imgfile">이미지 첨부</label><br>
                 <input class="form-control" type="file" id="imgfile" th:field="*{file}" accept="image/*">
 
                 <div class="col-11 ms-5" id="div-thumbnail">
-                    <img th:src="@{${groupPostDto.imgUrl}}" id="img-thumbnail">
+                    <img th:src="@{${communityDto.imgUrl}}" id="img-thumbnail">
                 </div>
             </div>
+
             <br><br>
             <div class="d-flex justify-content-center">
                 <div class ="row">
@@ -134,7 +95,7 @@
                         <button class="btn btn-primary" type="button" th:onclick="update()">수정하기</button>
                     </div>
                     <div>
-                        <a th:href="@{/group/detailGroup(id=${groupPostDto.id})}" class="btn btn-danger" role="button">취소하기</a>
+                        <a th:href="@{/community/detailCommunity(id=${communityDto.id})}" class="btn btn-danger" role="button">취소하기</a>
                     </div>
                 </div>
             </div>

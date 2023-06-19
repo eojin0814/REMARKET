@@ -14,27 +14,26 @@ import java.util.List;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class GroupComment {
-
+public class CommunityComment {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "comment_id")
-    private Long id; //공동 구매 댓글 id
+    private Long id; //커뮤니티 댓글 id
 
     @Column(name = "comment_content", nullable = false)
     private String commentContent; //댓글 내용
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")
-    private GroupComment parent;
+    private CommunityComment parent;
 
     @Builder.Default
     @OneToMany(mappedBy = "parent", orphanRemoval = true)
-    private List<GroupComment> children = new ArrayList<>();
+    private List<CommunityComment> children = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "group_id")
-    private GroupPost groupPost; //공동구매 게시글 id
+    @JoinColumn(name = "community_id")
+    private Community community; //커뮤니티 게시글 id
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
@@ -43,7 +42,7 @@ public class GroupComment {
     public void updateCommentContent(String commentContent){
         this.commentContent = commentContent;
     }
-    public void updateParent(GroupComment parent){
+    public void updateParent(CommunityComment parent){
         this.parent = parent;
         parent.getChildren().add(this);
     }

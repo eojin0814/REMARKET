@@ -4,7 +4,7 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/default_form}">
 <th:block layout:fragment="head">
-    <title>공동구매 게시판</title>
+    <title>공동구매 신청</title>
     <meta charset="utf-8">
 
     <!-- css -->
@@ -35,30 +35,34 @@
 </th:block>
 <head>
     <meta charset="UTF-8">
-    <title>공동구매 게시판</title>
+    <title>공동구매 신청</title>
 </head>
 <body>
-    <div layout:fragment="content" class="content">
-        <h1 style="margin-left: 20px">공동구매 게시판</h1>
-        <div style="margin-left: 20px">
-            <a th:href="@{/group/createGroup}" class="btn btn-primary" role="button">작성하기</a>
-        </div><br>
-        <th:block th:each ="groupPost:${gList}">
-            <div style=" display:inline-block; margin-left: 20px">
-                <div class = "card" style = "width: 18rem;">
-                    <img th:if = "${not #strings.isEmpty(groupPost.imgUrl)}" th:src="@{${groupPost.imgUrl}}" class="card-img-top"
-                         id="communityList-img" alt="...">
-
-                    <img th:unless = "${not #strings.isEmpty(groupPost.imgUrl)}" src="/image/curby.png" class="card-img-top" style="width: 100%; padding-bottom: 4px;">
-
-                    <div class ="card-body">
-                        제목:<a th:href="@{/group/detailGroup(id=${groupPost.id})}"><h4 th:text ="${groupPost.title}"></h4></a>
-                    </div>
-                </div>
-            </div>
-        </th:block>
-        <br>
-
+<div layout:fragment="content" class="content">
+    <h1 style="margin-left: 20px">공동구매 신청</h1>
+    <div class="w-50 p-3" style="margin-left:auto; margin-right: auto;">
+        <table class = "table table-bordered">
+            <thead class = "thead-dark">
+                <tr>
+                    <th scope="col">번호</th>
+                    <th scope="col">이름</th>
+                    <th scope="col">신청 개수</th>
+                    <th scope="col">전화 번호</th>
+                </tr>
+            </thead>
+            <tbody>
+                <th:block th:each ="groupApply, groupApplyState:${gApplyList}">
+                    <tr>
+                        <a th:href="@{/groupApply/detailApply(id=${groupApply.getId()})}"><td th:text = "${groupApplyState.count}"></td></a>
+                        <td th:text = "${groupApply.getName()}"></td>
+                        <td th:text ="${groupApply.getCount()}"></td>
+                        <td th:text = "${groupApply.getPhone()}"></td>
+                    </tr>
+                </th:block>
+            </tbody>
+        </table>
     </div>
+    <br>
+</div>
 </body>
 </html>
