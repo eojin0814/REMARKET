@@ -39,6 +39,9 @@ public class SecondHand {
     @Column
     private String content;
 
+    @Column(columnDefinition = "VARCHAR(255) default '판매중'")
+    private String status;
+
     @OneToOne
     @JoinColumn(name="img_id")
     private Image  image; //이미지 첨부

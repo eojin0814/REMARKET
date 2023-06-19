@@ -27,6 +27,8 @@ public class SecondHandDto {
 
     private Long userId;
 
+    private String status;
+
 //    @Builder
 //    public SecondHandDto(Long secondHandId, String title, Long price, String image, Date createdDate, String content, User user){
 //        this.secondHandId=secondHandId;
@@ -47,6 +49,7 @@ public class SecondHandDto {
                 .createdDate(createdDate)
                 .content(content)
                 .user(user)
+                .status(status)
                 .build();
     }
 }

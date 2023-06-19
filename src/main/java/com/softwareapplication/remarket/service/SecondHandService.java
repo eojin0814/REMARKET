@@ -52,4 +52,10 @@ public class SecondHandService {
         return postList;
     }
 
+    @Transactional
+    public Long updateStatus(Long id){
+
+        //secondHand.update(secondHandDto.toEntity());
+        return secondHandRepository.updateStatus(id);
+    }
 }

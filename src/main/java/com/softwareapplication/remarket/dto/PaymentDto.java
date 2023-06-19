@@ -1,9 +1,5 @@
 package com.softwareapplication.remarket.dto;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -22,4 +18,6 @@ public class PaymentDto {
     private String expiryDate;
 
     private String cardPwd;
+
+    private String address;
 }
