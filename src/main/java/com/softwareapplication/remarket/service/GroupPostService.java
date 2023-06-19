@@ -60,7 +60,7 @@ public class GroupPostService {
         GroupPost groupPost = groupPostRepository.findGroupPostById(groupPostDto.getId());
         if(!groupPostDto.getFile().getOriginalFilename().equals(""))
             groupPost.updatePostImg(groupPostDto.getImage());
-        groupPost.updateGroupPost(groupPostDto.getUpdated(), groupPostDto.getTitle(), groupPostDto.getDueDate(), groupPostDto.getProduct(), groupPostDto.getContent(), groupPostDto.getNumPeople(), groupPostDto.getPrice());
+        groupPost.updateGroupPost(groupPostDto.getUpdated(), groupPostDto.getTitle(), groupPostDto.getProduct(), groupPostDto.getContent(), groupPostDto.getNumPeople(), groupPostDto.getPrice());
     }
 
 
