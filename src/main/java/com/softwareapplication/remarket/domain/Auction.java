@@ -62,6 +62,12 @@ public class Auction {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
-
+    public void update(String status){
+        this.status=status;
+    }
+    public void update(String status, int auctionPrice){
+        this.status=status;
+        this.auctionPrice=auctionPrice;
+    }
 
 }

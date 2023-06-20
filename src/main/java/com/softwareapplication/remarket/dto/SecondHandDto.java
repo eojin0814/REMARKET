@@ -60,7 +60,7 @@ public class SecondHandDto {
                 .createdDate(createdDate)
                 .content(content)
                 .user(user)
-                .status(status)
+                .status("판매중")
                 .build();
     }
     public SecondHandDto(SecondHand secondHand) {
@@ -70,7 +70,7 @@ public class SecondHandDto {
         this.content=secondHand.getContent();
         this.image=secondHand.getImage();
         this.userId=secondHand.getSecondHandId();
-
+        this.status=secondHand.getStatus();
         try {
             this.imgUrl = getUploadDirPath(secondHand.getImage().getUrl());
         }catch (Exception e ) {

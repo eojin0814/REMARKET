@@ -1,10 +1,8 @@
 package com.softwareapplication.remarket.controller;
 
-import com.softwareapplication.remarket.domain.Auction;
-import com.softwareapplication.remarket.domain.SecondHand;
-import com.softwareapplication.remarket.domain.TenderPrice;
-import com.softwareapplication.remarket.domain.User;
+import com.softwareapplication.remarket.domain.*;
 import com.softwareapplication.remarket.dto.*;
+import com.softwareapplication.remarket.service.ImageService;
 import com.softwareapplication.remarket.service.SchedulerService;
 import com.softwareapplication.remarket.service.SecondHandService;
 import com.softwareapplication.remarket.service.UserService;
@@ -38,11 +36,17 @@ public class SchedulerController {
     private final SchedulerService schedulerService;
 
     private final UserService userService;
+    private final ImageService imageService;
 
 
-    @Scheduled(fixedDelay=6000000)
-    public void init() {
+    @ResponseBody
+    @GetMapping("/update/{tenderPriceId}")
+    public RedirectView updateStatus(@PathVariable("tenderPriceId") Long tenderPriceId){
+        TenderPrice tender = schedulerService.findByTenderId(tenderPriceId);
+        tender.getAuction().getAuctionId();
 
+        schedulerService.updateStatusAndPrice(tender.getAuction().getAuctionId(), Math.toIntExact(tender.getApplicationPrice()));
+        return new RedirectView("/auction/detail?id="+tender.getAuction().getAuctionId());
     }
     @GetMapping("/list/{auctionId}")
     public ModelAndView findAuctionTenderList (@PathVariable("auctionId") Long auctionId){
@@ -64,7 +68,7 @@ public class SchedulerController {
     }
     @GetMapping("/list/auction")
     public ModelAndView findAuctionList (){
-        List<Auction> auction = schedulerService.findByList();
+        List<AuctionDto> auction = schedulerService.findByList();
         ModelAndView mav = new ModelAndView("auction/auctionList");
 
 
@@ -87,16 +91,27 @@ public class SchedulerController {
     }
     @ResponseBody
     @PostMapping("/create")
-    public Long savepost(@Valid AuctionDto auctionDto)throws Exception{
+    public  RedirectView savepost(@Valid AuctionDto auctionDto)throws Exception{
         //System.out.println(secondHandDto.getTitle());
-
-        return schedulerService.save(auctionDto);
+        if (auctionDto.getFile().getOriginalFilename().equals("")) {
+            auctionDto.setImage(null);
+        } else {
+            ImageDto.Request imgDto = new ImageDto.Request(auctionDto.getFile());
+            Image img = imageService.uploadFile(imgDto.getImageFile());
+            System.out.println(img.getUrl());
+            auctionDto.setImage(img);
+        }
+        Date dueDate = java.sql.Timestamp.valueOf(auctionDto.getDueDate());
+        schedulerService.auctionScheduler(dueDate, auctionDto);
+        schedulerService.save(auctionDto);
+        return new RedirectView("/auction/list/auction");
         //new ModelAndView("redirect: /secondHand"); //수정 될 가능성 ..
     }
     @GetMapping("/detail")
     public ModelAndView detailPost(@RequestParam("id")Long id, HttpServletRequest httpServletRequest){
-        Auction aauction = schedulerService.findById(id);
-        UserDto.Info user = userService.getUserByUserId(aauction.getUser().getUserId());
+        AuctionDto aauction = schedulerService.findByDtoId(id);
+        UserDto.Info user = userService.getUserByUserId(aauction.getUserId());
+        System.out.println(aauction.getImgUrl());
         HttpSession session = httpServletRequest.getSession();
         String email = (String)session.getAttribute("email");
         User loginUser = userService.getLoginUserByEmail(email);
@@ -106,7 +121,8 @@ public class SchedulerController {
         mav.addObject("user", user);
         mav.addObject("loginUser", loginUser);
         mav.addObject("tenderLList", tenderList);
-
+        System.out.println(aauction.getUserId());
+        System.out.println(loginUser.getUserId());
         if(loginUser != null) {
             mav.addObject("email", loginUser.getEmail());
         }
@@ -138,4 +154,5 @@ public class SchedulerController {
          schedulerService.saveTender(tenderPrice);
         return new RedirectView("/auction/detail?id="+auctionId);
     }
+
 }
