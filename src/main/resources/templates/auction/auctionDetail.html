@@ -63,6 +63,10 @@
                         <td th:text = "${aauction.auctionPrice}">원</td>
                     </tr>
                     <tr>
+                        <td>상태:</td>
+                        <td th:text = "${aauction.status}"></td>
+                    </tr>
+                    <tr>
                         <td>상품설명</td>
                         <th:block th:if="${aauction.content == null}" >
                             <td>...</td>

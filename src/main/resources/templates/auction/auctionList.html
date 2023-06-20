@@ -54,6 +54,7 @@
                 </div><br>
                 <div class ="card-body">
                     제목:<a th:href="@{/auction/detail(id=${auction.auctionId})}"><h3 th:text ="${auction.title}"></h3></a>
+                    <td th:text = "${auction.status}"></td>
                 </div>
             </div>
         </div>
