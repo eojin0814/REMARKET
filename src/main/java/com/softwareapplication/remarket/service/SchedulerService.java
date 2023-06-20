@@ -1,9 +1,6 @@
 package com.softwareapplication.remarket.service;
 
-import com.softwareapplication.remarket.domain.Auction;
-import com.softwareapplication.remarket.domain.SecondHand;
-import com.softwareapplication.remarket.domain.TenderPrice;
-import com.softwareapplication.remarket.domain.User;
+import com.softwareapplication.remarket.domain.*;
 import com.softwareapplication.remarket.dto.AuctionDto;
 import com.softwareapplication.remarket.dto.GroupPostDto;
 import com.softwareapplication.remarket.dto.SecondHandDto;
@@ -15,6 +12,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +29,9 @@ public class SchedulerService {
 
     private final UserRepository userRepository;
     private final TenderPriceRepository tenderPriceRepository;
+
+    @Autowired		// SchedulerConfig에 설정된 TaskScheduler 빈을 주입 받음
+    private TaskScheduler scheduler;
 
     @Transactional
     public Long save(AuctionDto auctionDto) {
@@ -100,9 +101,21 @@ public class SchedulerService {
         return schedulerRepository.save(auction);
     }
     @Transactional
-    @Scheduled(fixedDelay=6000000)
     public void auctionScheduler(@DateTimeFormat(pattern="yyyy-MM-dd HH:mm") Date dueDate, AuctionDto auctionDto) {
+        Runnable r = new Runnable() {
+            @Override
+            public void run() {
+                auctionDto.setStatus("기한마감");
+                updateStatus(auctionDto);
+            }
+        };
+        scheduler.schedule(r, dueDate);
 
+    }
+    @Transactional
+    public void updateStatus(AuctionDto auctionDto){
+        User user =userRepository.findByUserId(auctionDto.getUserId());
+        schedulerRepository.save(auctionDto.toEntity(user));
     }
 
 }
