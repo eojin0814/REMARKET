@@ -38,10 +38,7 @@ public class SchedulerController {
     private final UserService userService;
     private final ImageService imageService;
 
-    @Scheduled(fixedDelay=6000000)
-    public void init() {
 
-    }
     @ResponseBody
     @GetMapping("/update/{tenderPriceId}")
     public RedirectView updateStatus(@PathVariable("tenderPriceId") Long tenderPriceId){
@@ -104,6 +101,8 @@ public class SchedulerController {
             System.out.println(img.getUrl());
             auctionDto.setImage(img);
         }
+        Date dueDate = java.sql.Timestamp.valueOf(auctionDto.getDueDate());
+        schedulerService.auctionScheduler(dueDate, auctionDto);
         schedulerService.save(auctionDto);
         return new RedirectView("/auction/list/auction");
         //new ModelAndView("redirect: /secondHand"); //수정 될 가능성 ..

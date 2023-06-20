@@ -5,6 +5,7 @@ import com.softwareapplication.remarket.domain.SecondHand;
 import com.softwareapplication.remarket.domain.TenderPrice;
 import com.softwareapplication.remarket.domain.User;
 import com.softwareapplication.remarket.dto.AuctionDto;
+import com.softwareapplication.remarket.dto.GroupPostDto;
 import com.softwareapplication.remarket.dto.SecondHandDto;
 import com.softwareapplication.remarket.dto.TenderPriceDto;
 import com.softwareapplication.remarket.repository.SchedulerRepository;
@@ -13,9 +14,12 @@ import com.softwareapplication.remarket.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -94,6 +98,11 @@ public class SchedulerService {
         auction.update("채택완료",price);
         //secondHand.update(secondHandDto.toEntity());
         return schedulerRepository.save(auction);
+    }
+    @Transactional
+    @Scheduled(fixedDelay=6000000)
+    public void auctionScheduler(@DateTimeFormat(pattern="yyyy-MM-dd HH:mm") Date dueDate, AuctionDto auctionDto) {
+
     }
 
 }
