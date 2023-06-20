@@ -102,7 +102,7 @@ public class SchedulerController {
     @GetMapping("/detail")
     public ModelAndView detailPost(@RequestParam("id")Long id, HttpServletRequest httpServletRequest){
         AuctionDto aauction = schedulerService.findByDtoId(id);
-        //UserDto.Info user = userService.getUserByUserId(aauction.getUser().getUserId());
+        UserDto.Info user = userService.getUserByUserId(aauction.getUserId());
         System.out.println(aauction.getImgUrl());
         HttpSession session = httpServletRequest.getSession();
         String email = (String)session.getAttribute("email");
@@ -110,10 +110,11 @@ public class SchedulerController {
         List<TenderPrice> tenderList = schedulerService.findByAuctionList(id);
         ModelAndView mav = new ModelAndView("auction/auctionDetail");
         mav.addObject("aauction", aauction);
-        //mav.addObject("user", user);
+        mav.addObject("user", user);
         mav.addObject("loginUser", loginUser);
         mav.addObject("tenderLList", tenderList);
-
+        System.out.println(aauction.getUserId());
+        System.out.println(loginUser.getUserId());
         if(loginUser != null) {
             mav.addObject("email", loginUser.getEmail());
         }
@@ -144,5 +145,11 @@ public class SchedulerController {
 
          schedulerService.saveTender(tenderPrice);
         return new RedirectView("/auction/detail?id="+auctionId);
+    }
+    @ResponseBody
+    @GetMapping("/update/{auctionId}")
+    public RedirectView updateStatus(Long id){
+        schedulerService.updateStatus(id);
+        return new RedirectView("/auction/detail?id="+id);
     }
 }
