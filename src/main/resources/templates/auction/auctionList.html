@@ -46,9 +46,12 @@
     <th:block th:each ="auction:${auction}">
         <div style=" display:inline-block; margin-left: 20px">
             <div class = "card" style = "width: 18rem;">
-                <th:block th:if="${auction.image == null}" >
-                    <img src="/image/curby.png" class="card-img-top" >
-                </th:block><br>
+                <img th:if = "${not #strings.isEmpty(auction.imgUrl)}" th:src="@{${auction.imgUrl}}" class="card-img-top"
+                     id="postList-img" alt="...">
+
+                <div class="card-img-top" th:unless = "${not #strings.isEmpty(auction.imgUrl)}">
+                    <img src="/image/curby.png" style="width: 100%; padding-bottom: 4px;">
+                </div><br>
                 <div class ="card-body">
                     제목:<a th:href="@{/auction/detail(id=${auction.auctionId})}"><h3 th:text ="${auction.title}"></h3></a>
                 </div>

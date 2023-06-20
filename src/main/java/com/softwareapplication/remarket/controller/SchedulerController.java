@@ -1,10 +1,8 @@
 package com.softwareapplication.remarket.controller;
 
-import com.softwareapplication.remarket.domain.Auction;
-import com.softwareapplication.remarket.domain.SecondHand;
-import com.softwareapplication.remarket.domain.TenderPrice;
-import com.softwareapplication.remarket.domain.User;
+import com.softwareapplication.remarket.domain.*;
 import com.softwareapplication.remarket.dto.*;
+import com.softwareapplication.remarket.service.ImageService;
 import com.softwareapplication.remarket.service.SchedulerService;
 import com.softwareapplication.remarket.service.SecondHandService;
 import com.softwareapplication.remarket.service.UserService;
@@ -38,7 +36,7 @@ public class SchedulerController {
     private final SchedulerService schedulerService;
 
     private final UserService userService;
-
+    private final ImageService imageService;
 
     @Scheduled(fixedDelay=6000000)
     public void init() {
@@ -64,7 +62,7 @@ public class SchedulerController {
     }
     @GetMapping("/list/auction")
     public ModelAndView findAuctionList (){
-        List<Auction> auction = schedulerService.findByList();
+        List<AuctionDto> auction = schedulerService.findByList();
         ModelAndView mav = new ModelAndView("auction/auctionList");
 
 
@@ -87,23 +85,32 @@ public class SchedulerController {
     }
     @ResponseBody
     @PostMapping("/create")
-    public Long savepost(@Valid AuctionDto auctionDto)throws Exception{
+    public  RedirectView savepost(@Valid AuctionDto auctionDto)throws Exception{
         //System.out.println(secondHandDto.getTitle());
-
-        return schedulerService.save(auctionDto);
+        if (auctionDto.getFile().getOriginalFilename().equals("")) {
+            auctionDto.setImage(null);
+        } else {
+            ImageDto.Request imgDto = new ImageDto.Request(auctionDto.getFile());
+            Image img = imageService.uploadFile(imgDto.getImageFile());
+            System.out.println(img.getUrl());
+            auctionDto.setImage(img);
+        }
+        schedulerService.save(auctionDto);
+        return new RedirectView("/auction/list/auction");
         //new ModelAndView("redirect: /secondHand"); //수정 될 가능성 ..
     }
     @GetMapping("/detail")
     public ModelAndView detailPost(@RequestParam("id")Long id, HttpServletRequest httpServletRequest){
-        Auction aauction = schedulerService.findById(id);
-        UserDto.Info user = userService.getUserByUserId(aauction.getUser().getUserId());
+        AuctionDto aauction = schedulerService.findByDtoId(id);
+        //UserDto.Info user = userService.getUserByUserId(aauction.getUser().getUserId());
+        System.out.println(aauction.getImgUrl());
         HttpSession session = httpServletRequest.getSession();
         String email = (String)session.getAttribute("email");
         User loginUser = userService.getLoginUserByEmail(email);
         List<TenderPrice> tenderList = schedulerService.findByAuctionList(id);
         ModelAndView mav = new ModelAndView("auction/auctionDetail");
         mav.addObject("aauction", aauction);
-        mav.addObject("user", user);
+        //mav.addObject("user", user);
         mav.addObject("loginUser", loginUser);
         mav.addObject("tenderLList", tenderList);
 

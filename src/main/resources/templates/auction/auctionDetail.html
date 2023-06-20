@@ -43,9 +43,12 @@
     <table style = "margin-left:auto; margin-right: auto;">
         <tr>
             <td>
-                <th:block th:if="${aauction.image == null}" >
-                    <img src="/image/curby.png" width="500px" height="300px">
-                </th:block>
+                <img th:if = "${not #strings.isEmpty(aauction.imgUrl)}" th:src="@{${aauction.imgUrl}}" class="card-img-top"
+                     id="postList-img" alt="...">
+
+                <div class="card-img-top" th:unless = "${not #strings.isEmpty(aauction.imgUrl)}">
+                    <img src="/image/curby.png" style="width: 100%; padding-bottom: 4px;">
+                </div>
                 <br>
             </td>
             <td>&nbsp;&nbsp;</td>

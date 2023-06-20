@@ -1,9 +1,11 @@
 package com.softwareapplication.remarket.service;
 
 import com.softwareapplication.remarket.domain.Auction;
+import com.softwareapplication.remarket.domain.SecondHand;
 import com.softwareapplication.remarket.domain.TenderPrice;
 import com.softwareapplication.remarket.domain.User;
 import com.softwareapplication.remarket.dto.AuctionDto;
+import com.softwareapplication.remarket.dto.SecondHandDto;
 import com.softwareapplication.remarket.dto.TenderPriceDto;
 import com.softwareapplication.remarket.repository.SchedulerRepository;
 import com.softwareapplication.remarket.repository.TenderPriceRepository;
@@ -13,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -50,8 +53,15 @@ public class SchedulerService {
 
     }
 
-    public List<Auction> findByList() {
-        return schedulerRepository.findAll();
+    public List<AuctionDto> findByList() {
+        List<Auction> AuctionList =  schedulerRepository.findAll();
+        List<AuctionDto> auctionDtoList = new ArrayList<>();
+        for(Auction auction : AuctionList){
+            AuctionDto auctionDto = new AuctionDto(auction);
+            auctionDtoList.add(auctionDto);
+
+        }
+        return auctionDtoList;
 
     }
 
@@ -65,4 +75,11 @@ public class SchedulerService {
         return tenderPriceRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id:" + id));
 
     }
+    public AuctionDto findByDtoId(Long id) {
+        Auction auction=schedulerRepository.findById(id).orElseThrow(()->new IllegalArgumentException("해당 게시글이 없습니다. id:"+id));
+        AuctionDto auctionDto = new AuctionDto(auction);
+        return auctionDto;
+
+    }
+
 }
