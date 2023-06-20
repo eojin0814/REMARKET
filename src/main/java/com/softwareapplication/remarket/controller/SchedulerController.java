@@ -42,6 +42,15 @@ public class SchedulerController {
     public void init() {
 
     }
+    @ResponseBody
+    @GetMapping("/update/{tenderPriceId}")
+    public RedirectView updateStatus(@PathVariable("tenderPriceId") Long tenderPriceId){
+        TenderPrice tender = schedulerService.findByTenderId(tenderPriceId);
+        tender.getAuction().getAuctionId();
+
+        schedulerService.updateStatusAndPrice(tender.getAuction().getAuctionId(), Math.toIntExact(tender.getApplicationPrice()));
+        return new RedirectView("/auction/detail?id="+tender.getAuction().getAuctionId());
+    }
     @GetMapping("/list/{auctionId}")
     public ModelAndView findAuctionTenderList (@PathVariable("auctionId") Long auctionId){
         List<TenderPrice> tenderList = schedulerService.findByAuctionList(auctionId);
@@ -146,10 +155,5 @@ public class SchedulerController {
          schedulerService.saveTender(tenderPrice);
         return new RedirectView("/auction/detail?id="+auctionId);
     }
-    @ResponseBody
-    @GetMapping("/update/{auctionId}")
-    public RedirectView updateStatus(Long id){
-        schedulerService.updateStatus(id);
-        return new RedirectView("/auction/detail?id="+id);
-    }
+
 }

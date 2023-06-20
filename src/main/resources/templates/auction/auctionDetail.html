@@ -89,14 +89,14 @@
                 <th>제시번호 </th>
                 <th>제시날짜(날짜 순)</th>
                 <th>제시가격  </th>
-                <th th:if = "${aauction.userId} != ${loginUser.userId}"> 채택 </th>
+                <th th:if = "${aauction.userId} == ${loginUser.userId}"> 채택 </th>
             </tr>
              <tr th:each="tenderL : ${tenderLList}">
                  <td th:text = "${tenderL.tenderPriceId}" style = "border:1px solid black;"></td>
                  <td th:text = "${tenderL.createdDate}" style = "border:1px solid black;"></td><br>
                  <td th:text = "${tenderL.applicationPrice}" style = "border:1px solid black;"></td>
-                 <td th:if = "${user.userId} != ${loginUser.userId}">
-                     <a th:href="@{/auction/update(auctionId=${aauction.auctionId})}" class="btn btn-primary" role="button">채택하기</a>
+                 <td th:if = "${user.userId} == ${loginUser.userId}">
+                     <a th:href="@{/auction/update/{tenderPriceId}(tenderPriceId=${tenderL.tenderPriceId})}" class="btn btn-primary" role="button">채택하기</a>
                  </td>
              </tr>
 

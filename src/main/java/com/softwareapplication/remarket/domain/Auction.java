@@ -65,5 +65,9 @@ public class Auction {
     public void update(String status){
         this.status=status;
     }
+    public void update(String status, int auctionPrice){
+        this.status=status;
+        this.auctionPrice=auctionPrice;
+    }
 
 }

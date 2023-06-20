@@ -88,5 +88,12 @@ public class SchedulerService {
         //secondHand.update(secondHandDto.toEntity());
         return schedulerRepository.save(auction);
     }
+    @Transactional
+    public Auction updateStatusAndPrice(Long id, int price){
+        Auction auction= schedulerRepository.findById(id).orElseThrow(()->new IllegalArgumentException("해당 게시글이 없습니다. id:"+id));
+        auction.update("채택완료",price);
+        //secondHand.update(secondHandDto.toEntity());
+        return schedulerRepository.save(auction);
+    }
 
 }
